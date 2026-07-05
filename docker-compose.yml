@@ -1,0 +1,29 @@
+networks:
+  shared_network:
+    external: true
+
+services:
+  app:
+    build:
+      context: ./docker/php
+    container_name: kinerja-app-php
+    restart: unless-stopped
+    volumes:
+      - .:/var/www/kinerja
+    networks:
+      - shared_network
+    depends_on:
+      - node
+
+  node:
+    image: node:20-alpine
+    container_name: kinerja-app-node
+    restart: unless-stopped
+    working_dir: /var/www/kinerja
+    volumes:
+      - .:/var/www/kinerja
+    ports:
+      - "5195:5195"
+    command: sh -c "npm install && npm run dev"
+    networks:
+      - shared_network

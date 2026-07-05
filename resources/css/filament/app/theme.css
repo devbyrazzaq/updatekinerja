@@ -1,0 +1,151 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+
+@source '../../../../app/Filament/**/*';
+@source '../../../../resources/views/filament/**/*';
+
+/* ============================================================
+   Apple design system untuk Filament v5 (DESIGN-apple.md)
+
+   Hanya bentuk, tipografi, dan elevasi yang diubah. Warna tetap
+   mengalir dari CSS variable yang diatur Filament (--primary-*,
+   --gray-*, dst), jadi konfigurasi ->colors() panel tetap berlaku.
+
+   Grammar radius: pill (9999px) untuk aksi, 18px untuk kartu,
+   11px untuk input. Tanpa shadow pada chrome — elevasi datang
+   dari hairline ring dan backdrop blur.
+   ============================================================ */
+
+/* --- Tipografi: "Apple tight" -------------------------------- */
+
+/* Tracking negatif hanya untuk heading (ukuran display);
+   teks body 12–14px dibiarkan normal sesuai DESIGN-apple.md. */
+.fi-header-heading {
+    @apply font-semibold tracking-[-0.02em];
+}
+
+.fi-header-subheading {
+    @apply text-base;
+}
+
+.fi-section-header-heading {
+    @apply text-[1.0625rem] tracking-[-0.01em];
+}
+
+/* Ladder bobot Apple: 300/400/600 — label memakai 600, bukan 500 */
+.fi-fo-field-label,
+.fi-fieldset > legend {
+    @apply font-semibold;
+}
+
+/* --- Tombol: pill capsule + press scale ----------------------- */
+
+.fi-btn {
+    @apply rounded-full font-normal;
+}
+
+.fi-btn.fi-outlined {
+    @apply shadow-none;
+}
+
+.fi-btn:not(.fi-disabled):not([disabled]):active,
+.fi-icon-btn:not(.fi-disabled):not([disabled]):active {
+    transform: scale(0.96);
+}
+
+.fi-btn-group {
+    @apply rounded-full shadow-none;
+
+    & > .fi-btn {
+        &:nth-child(1 of .fi-btn) {
+            @apply rounded-s-full;
+        }
+
+        &:nth-last-child(1 of .fi-btn) {
+            @apply rounded-e-full;
+        }
+    }
+}
+
+.fi-icon-btn {
+    @apply rounded-full;
+}
+
+.fi-badge {
+    @apply rounded-full;
+}
+
+/* --- Input: kapsul 11px, search pill -------------------------- */
+
+.fi-input-wrp {
+    @apply rounded-[11px] shadow-none;
+}
+
+.fi-global-search .fi-input-wrp,
+.fi-ta-search-field .fi-input-wrp {
+    @apply rounded-full;
+}
+
+/* --- Kartu & section: radius 18px, hairline tanpa shadow ------ */
+
+.fi-section:not(.fi-section-not-contained):not(.fi-aside) {
+    @apply rounded-[18px] shadow-none;
+}
+
+.fi-section:not(.fi-section-not-contained).fi-aside > .fi-section-content-ctn {
+    @apply rounded-[18px] shadow-none;
+}
+
+.fi-fieldset {
+    @apply rounded-[14px];
+}
+
+.fi-ta-ctn {
+    @apply rounded-[18px] shadow-none;
+}
+
+.fi-wi-stats-overview-stat {
+    @apply rounded-[18px] shadow-none;
+}
+
+.fi-simple-main {
+    @apply shadow-none sm:rounded-[22px];
+}
+
+/* --- Tab: segmented control ala Apple -------------------------- */
+
+.fi-tabs:not(.fi-contained):not(.fi-vertical) {
+    @apply rounded-full shadow-none;
+}
+
+.fi-tabs-item {
+    @apply rounded-full;
+}
+
+/* --- Overlay: dropdown, modal, notifikasi ---------------------- */
+
+.fi-dropdown-panel {
+    @apply rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.08)];
+}
+
+.fi-modal:not(.fi-modal-slide-over) .fi-modal-window {
+    @apply rounded-t-[20px] shadow-[0_10px_40px_rgba(0,0,0,0.12)] sm:rounded-[20px];
+}
+
+.fi-no-notification:not(.fi-inline) {
+    @apply rounded-[16px] shadow-[0_10px_30px_rgba(0,0,0,0.08)];
+}
+
+/* --- Chrome: topbar frosted-glass, sidebar hairline ------------ */
+
+.fi-topbar {
+    @apply bg-white/80 shadow-none backdrop-blur-xl dark:bg-gray-900/80;
+}
+
+.fi-sidebar {
+    @apply lg:border-e lg:border-gray-950/5 dark:lg:border-white/10;
+}
+
+.fi-sidebar-item-btn,
+.fi-sidebar-group-btn {
+    @apply rounded-full;
+}
