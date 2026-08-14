@@ -1,0 +1,89 @@
+<?php
+
+namespace {{ namespace }};
+
+use App\Imports\Import;
+use App\Models\{{ model }};
+
+class {{ class }} extends Import
+{
+    /**
+     * Kolom wajib yang harus ada di berkas.
+     *
+     * @return list<string>
+     */
+    public function headings(): array
+    {
+        return [
+            // TODO: kolom wajib, mis. 'name'.
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function rules(): array
+    {
+        return [
+            // 'name' => ['required', 'string', 'max:255'],
+        ];
+    }
+
+    // Pesan validasi kustom untuk rules() (opsional):
+    // public function messages(): array
+    // {
+    //     return ['name.required' => 'Kolom nama wajib diisi.'];
+    // }
+
+    // Validasi bisnis per baris (opsional). Panggil $fail('pesan') untuk menolak
+    // baris; satu kegagalan membatalkan SELURUH impor (all-or-nothing):
+    // public function validateRow(array $row, int $rowNumber, \Closure $fail): void
+    // {
+    //     if (/* aturan bisnis gagal */) {
+    //         $fail("Baris {$rowNumber}: alasan.");
+    //     }
+    // }
+
+    /**
+     * Dipanggil hanya jika seluruh berkas sudah dinyatakan valid.
+     *
+     * @param  array<string, mixed>  $row
+     */
+    public function storeRow(array $row): void
+    {
+        // Nilai dari field form modal tersedia via $this->context('nama_field').
+        {{ model }}::updateOrCreate(
+            // ['name' => $row['name']],
+            // [ /* atribut lain */ ],
+        );
+    }
+
+    /**
+     * Seluruh kolom (wajib + opsional) untuk berkas template.
+     *
+     * @return list<string>
+     */
+    public function templateColumns(): array
+    {
+        return [
+            // TODO: mis. 'name', 'description'.
+        ];
+    }
+
+    /**
+     * Baris contoh pada template, sejajar dengan templateColumns().
+     *
+     * @return list<array<int, mixed>>
+     */
+    public function sampleRows(): array
+    {
+        return [
+            // ['Contoh Nama', 'Contoh deskripsi'],
+        ];
+    }
+
+    public function templateFilename(): string
+    {
+        return 'template-impor-{{ filename }}';
+    }
+}

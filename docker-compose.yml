@@ -20,6 +20,10 @@ services:
     container_name: kinerja-app-node
     restart: unless-stopped
     working_dir: /var/www/kinerja
+    environment:
+      # Paket puppeteer hanya dibutuhkan sebagai modul (browser.cjs milik browsershot
+      # me-require-nya); binary Chrome-nya datang dari paket chromium di image PHP.
+      PUPPETEER_SKIP_DOWNLOAD: "true"
     volumes:
       - .:/var/www/kinerja
     ports:

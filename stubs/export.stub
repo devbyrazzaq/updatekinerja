@@ -1,0 +1,33 @@
+<?php
+
+namespace {{ namespace }};
+
+use App\Exports\Export;
+use App\Models\{{ model }};
+
+class {{ class }} extends Export
+{
+    public function filename(): string
+    {
+        return '{{ filename }}-'.now()->format('Y-m-d');
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function headings(): array
+    {
+        return [
+            // TODO: judul kolom, mis. 'name', 'email'.
+        ];
+    }
+
+    public function rows(): iterable
+    {
+        return {{ model }}::query()
+            ->lazy()
+            ->map(fn ({{ model }} ${{ modelVariable }}): array => [
+                // TODO: petakan tiap kolom, mis. ${{ modelVariable }}->name,
+            ]);
+    }
+}

@@ -29,6 +29,11 @@
         <env name="MAIL_MAILER" value="array"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
         <env name="SESSION_DRIVER" value="array"/>
+        <!-- Blade/Livewire menulis path absolut ke dalam berkas compiled-nya. Tes yang
+             dijalankan dari terminal host memakai path /Users/..., sementara aplikasi
+             berjalan di container dengan path /var/www/kinerja, sehingga cache yang
+             dipakai bersama membuat filemtime() gagal. Cache tes karena itu dipisah. -->
+        <env name="VIEW_COMPILED_PATH" value="storage/framework/testing/views"/>
         <env name="PULSE_ENABLED" value="false"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
         <env name="NIGHTWATCH_ENABLED" value="false"/>

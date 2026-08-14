@@ -2,6 +2,7 @@
 
 @source '../../../../app/Filament/**/*';
 @source '../../../../resources/views/filament/**/*';
+@source '../../../../resources/views/components/**/*';
 
 /* ============================================================
    Apple design system untuk Filament v5 (DESIGN-apple.md)
@@ -72,6 +73,14 @@
 
 .fi-badge {
     @apply rounded-full;
+}
+
+/* Badge bawaan Filament memakai tracking rapat sehingga teks pendek seperti
+   "1 realisasi" terlihat menempel. Kembalikan ke tracking normal sesuai
+   DESIGN-apple.md: teks body 12–14px tanpa tracking negatif. */
+.fi-badge.fi-size-xs,
+.fi-badge.fi-size-sm {
+    @apply tracking-normal;
 }
 
 /* --- Input: kapsul 11px, search pill -------------------------- */

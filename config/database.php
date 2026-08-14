@@ -64,6 +64,41 @@ return [
             ]) : [],
         ],
 
+        /*
+         * Basis data aplikasi lama, dipakai sekali jalan oleh perintah
+         * `impor:data-lama` untuk memindahkan pengajuan, realisasi, dan dokumen
+         * tahun kerja sebelumnya. Keduanya hanya dibaca, tidak pernah ditulis.
+         */
+        'lama_2025' => [
+            'driver' => 'mysql',
+            'host' => env('DB_LAMA_HOST', env('DB_HOST', '127.0.0.1')),
+            'port' => env('DB_LAMA_PORT', env('DB_PORT', '3306')),
+            'database' => env('DB_LAMA_2025_DATABASE', 'kinerja_2025'),
+            'username' => env('DB_LAMA_USERNAME', env('DB_USERNAME', 'root')),
+            'password' => env('DB_LAMA_PASSWORD', env('DB_PASSWORD', '')),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => false,
+            'engine' => null,
+        ],
+
+        'lama_2023' => [
+            'driver' => 'mysql',
+            'host' => env('DB_LAMA_HOST', env('DB_HOST', '127.0.0.1')),
+            'port' => env('DB_LAMA_PORT', env('DB_PORT', '3306')),
+            'database' => env('DB_LAMA_2023_DATABASE', 'kinerja_2023'),
+            'username' => env('DB_LAMA_USERNAME', env('DB_USERNAME', 'root')),
+            'password' => env('DB_LAMA_PASSWORD', env('DB_PASSWORD', '')),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => false,
+            'engine' => null,
+        ],
+
         'mariadb' => [
             'driver' => 'mariadb',
             'url' => env('DB_URL'),

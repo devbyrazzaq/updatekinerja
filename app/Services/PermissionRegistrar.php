@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\UnitKerja;
 use App\Models\User;
 use Filament\Forms\Components\ViewField;
 use Filament\Infolists\Components\TextEntry;
@@ -49,6 +50,16 @@ class PermissionRegistrar
     protected const NAV_GROUP_ORDER = [
         'Dashboard',
         'Master Data',
+        'Anggaran',
+        'Program Kerja',
+        'Pelaksanaan',
+        'Pemasukan',
+        'Verifikasi Pengajuan',
+        'Verifikasi Realisasi',
+        'Perencanaan',
+        'Verifikasi Pengajuan Perencanaan',
+        'Monitoring',
+        'Pengguna',
         'Manajemen Akses',
         'Pengaturan Sistem',
     ];
@@ -76,6 +87,16 @@ class PermissionRegistrar
     public static array $groupDescriptions = [
         'Dashboard' => 'Akses halaman dashboard dan widget yang tampil di dalamnya.',
         'Master Data' => 'Data referensi utama aplikasi.',
+        'Anggaran' => 'Pengelolaan rekening dan pagu anggaran tahun kerja.',
+        'Program Kerja' => 'Acuan dan penawaran program kerja.',
+        'Pelaksanaan' => 'Daftar, pengajuan, dan realisasi program kerja unit kerja.',
+        'Pemasukan' => 'Pencatatan pemasukan/pendapatan per unit kerja.',
+        'Verifikasi Pengajuan' => 'Verifikasi tahap 1 atas pengajuan program kerja tahun berjalan.',
+        'Verifikasi Realisasi' => 'Verifikasi realisasi oleh Rektor, Wakil Rektor, Biro Keuangan, dan laporan.',
+        'Perencanaan' => 'Daftar dan pengajuan program kerja untuk tahun kerja yang sedang direncanakan.',
+        'Verifikasi Pengajuan Perencanaan' => 'Verifikasi tahap 1 atas pengajuan program kerja tahun yang sedang direncanakan.',
+        'Monitoring' => 'Pemantauan penyerapan anggaran dan capaian program kerja, termasuk rekap dan perbandingannya.',
+        'Pengguna' => 'Pengelolaan akun pengguna, dipisah menurut role utamanya.',
         'Manajemen Akses' => 'Pengelolaan role dan hak akses pengguna.',
         'Pengaturan Sistem' => 'Pengaturan perilaku sistem.',
     ];
@@ -90,16 +111,128 @@ class PermissionRegistrar
     protected static function dataScopeEntities(): array
     {
         return [
-            // Struktur scope sudah disiapkan namun belum ada entitas. Tambahkan entri
-            // di sini ketika model entitas pembatas datanya sudah ada, contoh:
-            // 'unit' => [
-            //     'label' => 'Akses Data per Unit Kerja',
-            //     'options' => fn (): array => \App\Models\UnitKerja::query()
-            //         ->orderBy('nama')
-            //         ->pluck('nama', 'id')
-            //         ->all(),
-            // ],
+            'unit' => [
+                'label' => 'Akses Data per Unit Kerja',
+                'options' => fn (): array => UnitKerja::query()
+                    ->where('is_active', true)
+                    ->orderBy('name')
+                    ->pluck('name', 'id')
+                    ->all(),
+            ],
         ];
+    }
+
+    /**
+     * Id Unit Kerja yang menjadi cakupan data user SAAT INI. Bila user berwenang atas
+     * lebih dari satu unit, hasilnya dipersempit ke unit yang sedang aktif (dipilih
+     * lewat pengalih unit di topbar) sehingga seluruh menu memandang satu unit saja.
+     * Untuk daftar lengkap unit yang boleh diakses, pakai allPermittedUnitIds().
+     *
+     * @return Collection<int, int>
+     */
+    public static function permittedUnitIds(User|int|null $user): Collection
+    {
+        $user = $user instanceof User ? $user : ($user !== null ? User::find($user) : null);
+
+        if (! $user instanceof User) {
+            return collect();
+        }
+
+        $ids = static::allPermittedUnitIds($user);
+        $aktif = UnitKerjaAktif::id($user);
+
+        return $aktif !== null && $ids->contains($aktif)
+            ? collect([$aktif])
+            : $ids;
+    }
+
+    /**
+     * Seluruh Id Unit Kerja yang boleh diakses user: unit miliknya sendiri (kolom
+     * `unit_kerja_id`) digabung dengan unit yang diberikan lewat permission scope
+     * (umumnya dari role pembatas data "Unit: ...").
+     *
+     * @return Collection<int, int>
+     */
+    public static function allPermittedUnitIds(User|int|null $user): Collection
+    {
+        $user = $user instanceof User ? $user : ($user !== null ? User::find($user) : null);
+
+        if (! $user instanceof User) {
+            return collect();
+        }
+
+        $ids = static::permittedScopeIds($user, 'unit');
+
+        if ($user->unit_kerja_id !== null) {
+            $ids = $ids->push($user->unit_kerja_id);
+        }
+
+        return $ids->unique()->values();
+    }
+
+    /**
+     * Nama seluruh permission milik resource/page/widget yang berada pada grup menu
+     * tertentu. Dipakai RoleSeeder untuk memberi hak akses satu grup menu utuh tanpa
+     * perlu menuliskan nama permission satu per satu.
+     *
+     * @param  array<int, string>  $navGroups
+     * @return array<int, string>
+     */
+    public static function permissionNamesForNavGroups(array $navGroups): array
+    {
+        $names = [];
+
+        foreach (static::collect() as $group) {
+            if (! in_array($group['nav_group'] ?? null, $navGroups, true)) {
+                continue;
+            }
+
+            $names = array_merge($names, array_keys($group['permissions']));
+        }
+
+        return array_values(array_unique($names));
+    }
+
+    /**
+     * Nama permission milik menu tertentu (resource/page/widget), untuk memberi hak
+     * akses satu menu saja tanpa membawa seluruh grupnya. Nilai tiap kelas berisi
+     * daftar ability yang diberikan (mis. `['view_any', 'create']`), atau `null` bila
+     * seluruh permission menu tersebut ikut diberikan.
+     *
+     * @param  array<class-string, array<int, string>|null>  $menus
+     * @return array<int, string>
+     */
+    public static function permissionNamesForMenus(array $menus): array
+    {
+        $names = [];
+
+        foreach (static::collect() as $group) {
+            $className = $group['resource_class'] ?? null;
+
+            if ($className === null || ! array_key_exists($className, $menus)) {
+                continue;
+            }
+
+            $abilities = $menus[$className];
+
+            if ($abilities === null) {
+                $names = array_merge($names, array_keys($group['permissions']));
+
+                continue;
+            }
+
+            foreach ($abilities as $ability) {
+                $name = method_exists($className, 'getPermissionName')
+                    ? $className::getPermissionName($ability)
+                    : $ability;
+
+                if (array_key_exists($name, $group['permissions'])) {
+                    $names[] = $name;
+                }
+            }
+        }
+
+        return array_values(array_unique($names));
     }
 
     /**

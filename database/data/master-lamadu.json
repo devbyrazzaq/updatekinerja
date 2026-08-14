@@ -1,0 +1,373 @@
+{
+  "periode": {
+    "name": "Periode 2023 - 2027",
+    "description": "Periode jabatan 2023-2027 di bawah pimpinan Prof Dr A. Aziz Alimul Hidayat S.Kep,Ns, M.Kes.",
+    "start_datetime": "2023-09-01 00:00:00",
+    "end_datetime": "2028-09-01 00:00:00"
+  },
+  "tahun_kerja": [
+    {
+      "name": "Tahun Kerja 2024",
+      "tahun": 2024,
+      "status": "selesai",
+      "description": "Tahun anggaran 2024.",
+      "start_datetime": "2024-09-01 00:00:00",
+      "end_datetime": "2025-09-01 23:59:59"
+    },
+    {
+      "name": "Tahun Kerja 2025",
+      "tahun": 2025,
+      "status": "berjalan",
+      "description": "Tahun anggaran 2025.",
+      "start_datetime": "2025-09-20 00:00:00",
+      "end_datetime": "2026-08-31 23:59:59"
+    }
+  ],
+  "kategoris": [
+    {
+      "code": "KAT-01",
+      "name": "IKU",
+      "description": "Indikator Kinerja Utama"
+    },
+    {
+      "code": "KAT-02",
+      "name": "IKT",
+      "description": "Indikator Kinerja Tambahan"
+    }
+  ],
+  "bidangs": [
+    {
+      "code": "BID-01",
+      "name": "Akademik"
+    },
+    {
+      "code": "BID-02",
+      "name": "Kemahasiswaan"
+    },
+    {
+      "code": "BID-03",
+      "name": "Keuangan"
+    },
+    {
+      "code": "BID-04",
+      "name": "Sarana dan Prasarana"
+    },
+    {
+      "code": "BID-05",
+      "name": "Pengabdian Masyarakat"
+    },
+    {
+      "code": "BID-06",
+      "name": "Kerja Sama & Internasional"
+    },
+    {
+      "code": "BID-07",
+      "name": "AIK"
+    },
+    {
+      "code": "BID-08",
+      "name": "Penjaminan Mutu"
+    },
+    {
+      "code": "BID-09",
+      "name": "Penelitian"
+    },
+    {
+      "code": "BID-10",
+      "name": "Publikasi"
+    },
+    {
+      "code": "BID-11",
+      "name": "Sumber Daya Manusia"
+    }
+  ],
+  "programs": [
+    "Peningkatan Mutu AIK",
+    "Peningkatan Mutu Akademik",
+    "Peningkatan Mutu Kemahasiswaan",
+    "Peningkatan Mutu Kerjasama & Internasional",
+    "Peningkatan Mutu Keuangan",
+    "Peningkatan Mutu Penelitian & Publikasi",
+    "Peningkatan Mutu Pengabdian Masyarakat",
+    "Peningkatan Mutu SDM",
+    "Peningkatan Mutu Sarana Pembelajaran",
+    "Peningkatan Mutu Tata Kelola dan Kelembagaan"
+  ],
+  "pagu_anggaran": [
+    {
+      "tahun_kerja": "Tahun Kerja 2024",
+      "unit_kerja": "biro-administrasi-akademik-dan-kemahasiswaan-baak",
+      "amount": 25000000
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2024",
+      "unit_kerja": "biro-administrasi-keuangan-bak",
+      "amount": 0
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2024",
+      "unit_kerja": "biro-administrasi-umum-bau",
+      "amount": 577400000
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2024",
+      "unit_kerja": "biro-perencanaan-pembangunan-dan-pemeliharaan-sarana-prasarana-bp3s",
+      "amount": 840000000
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2024",
+      "unit_kerja": "fakultas-ilmu-kesehatan-fik",
+      "amount": 3475436400
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2024",
+      "unit_kerja": "fakultas-sains-teknologi-dan-pendidikan-fstp",
+      "amount": 494718000
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2024",
+      "unit_kerja": "halal-center",
+      "amount": 25000000
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2024",
+      "unit_kerja": "kantor-urusan-internasional-kui",
+      "amount": 125000000
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2024",
+      "unit_kerja": "lembaga-informasi-dan-komunikasi-lesikom",
+      "amount": 200000000
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2024",
+      "unit_kerja": "lembaga-kemahasiswaan",
+      "amount": 276000000
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2024",
+      "unit_kerja": "lembaga-kemakmuran-masjid",
+      "amount": 50000000
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2024",
+      "unit_kerja": "lembaga-penelitian-dan-pengabdian-kepada-masyarakat-lppm",
+      "amount": 779200000
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2024",
+      "unit_kerja": "lembaga-pengembangan-al-islam-dan-kemuhammadiyahan-labaik",
+      "amount": 150000000
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2024",
+      "unit_kerja": "lembaga-penjaminan-mutu-lpm",
+      "amount": 100000000
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2024",
+      "unit_kerja": "lembaga-sertifikasi",
+      "amount": 25000000
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2024",
+      "unit_kerja": "perpustakaan",
+      "amount": 100000000
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2024",
+      "unit_kerja": "pusat-bahasa",
+      "amount": 100000000
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2024",
+      "unit_kerja": "pusat-hak-kekayaan-intelektual-dan-publikasi-ilmiah",
+      "amount": 70000000
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2024",
+      "unit_kerja": "pusat-layanan-bimbingan-konseling",
+      "amount": 15000000
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2024",
+      "unit_kerja": "pusat-pengembangan-jurnal",
+      "amount": 30000000
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2024",
+      "unit_kerja": "pusat-pengembangan-pembelajaran-dan-rpl",
+      "amount": 2527200000
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2024",
+      "unit_kerja": "pusat-teknologi-informasi-pti",
+      "amount": 198400000
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2024",
+      "unit_kerja": "pusat-tracer-study",
+      "amount": 50000000
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2024",
+      "unit_kerja": "satuan-pengawas-internal-spi",
+      "amount": 75000000
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2024",
+      "unit_kerja": "sekretariat-rektor",
+      "amount": 200000000
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2024",
+      "unit_kerja": "sumber-daya-insan-sdi",
+      "amount": 350000000
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2025",
+      "unit_kerja": "biro-administrasi-akademik-dan-kemahasiswaan-baak",
+      "amount": 25000000
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2025",
+      "unit_kerja": "biro-administrasi-dan-keuangan-bak",
+      "amount": 0
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2025",
+      "unit_kerja": "biro-administrasi-keuangan-bak",
+      "amount": 24595265680
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2025",
+      "unit_kerja": "biro-administrasi-umum-bau",
+      "amount": 608200000
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2025",
+      "unit_kerja": "biro-perencanaan-pembangunan-dan-pemeliharaan-sarana-prasarana-bp3s",
+      "amount": 1020000000
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2025",
+      "unit_kerja": "fakultas-ekonomi-dan-bisnis-feb",
+      "amount": 707220000
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2025",
+      "unit_kerja": "fakultas-ilmu-kesehatan-fik",
+      "amount": 3690545000
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2025",
+      "unit_kerja": "fakultas-sains-teknologi-dan-pendidikan-fstp",
+      "amount": 665950000
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2025",
+      "unit_kerja": "halal-center",
+      "amount": 25000000
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2025",
+      "unit_kerja": "kantor-urusan-internasional-kui",
+      "amount": 125000000
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2025",
+      "unit_kerja": "lembaga-informasi-dan-komunikasi-lesikom",
+      "amount": 200000000
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2025",
+      "unit_kerja": "lembaga-kemahasiswaan",
+      "amount": 276000000
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2025",
+      "unit_kerja": "lembaga-kemakmuran-masjid",
+      "amount": 50000000
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2025",
+      "unit_kerja": "lembaga-penelitian-dan-pengabdian-kepada-masyarakat-lppm",
+      "amount": 670000000
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2025",
+      "unit_kerja": "lembaga-pengembangan-al-islam-dan-kemuhammadiyahan-labaik",
+      "amount": 182000000
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2025",
+      "unit_kerja": "lembaga-penjaminan-mutu-lpm",
+      "amount": 100000000
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2025",
+      "unit_kerja": "lembaga-sertifikasi",
+      "amount": 25000000
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2025",
+      "unit_kerja": "perpustakaan",
+      "amount": 100000000
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2025",
+      "unit_kerja": "pusat-bahasa",
+      "amount": 100000000
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2025",
+      "unit_kerja": "pusat-bisnis",
+      "amount": 100000000
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2025",
+      "unit_kerja": "pusat-hak-kekayaan-intelektual-dan-publikasi-ilmiah",
+      "amount": 100000000
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2025",
+      "unit_kerja": "pusat-laboratorium",
+      "amount": 671674320
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2025",
+      "unit_kerja": "pusat-layanan-bimbingan-konseling",
+      "amount": 15000000
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2025",
+      "unit_kerja": "pusat-pengembangan-pembelajaran-dan-rpl",
+      "amount": 3925725000
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2025",
+      "unit_kerja": "pusat-teknologi-informasi-pti",
+      "amount": 660400000
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2025",
+      "unit_kerja": "pusat-tracer-study",
+      "amount": 50000000
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2025",
+      "unit_kerja": "satuan-pengawas-internal-spi",
+      "amount": 25000000
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2025",
+      "unit_kerja": "sekretariat-rektor",
+      "amount": 200000000
+    },
+    {
+      "tahun_kerja": "Tahun Kerja 2025",
+      "unit_kerja": "sumber-daya-insan-sdi",
+      "amount": 1590000000
+    }
+  ]
+}

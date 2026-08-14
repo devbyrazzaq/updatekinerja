@@ -31,7 +31,20 @@ trait HasResourceAuthorization
             "update_{$prefix}" => 'Ubah',
             "delete_{$prefix}" => 'Hapus',
             "delete_any_{$prefix}" => 'Hapus Massal',
+            ...static::getExtraPermissionDefinitions(),
         ];
+    }
+
+    /**
+     * Permission tambahan spesifik resource (mis. export/import). Resource cukup
+     * meng-override method ini alih-alih getPermissionDefinitions() agar tidak
+     * kehilangan permission dasar CRUD.
+     *
+     * @return array<string, string>
+     */
+    public static function getExtraPermissionDefinitions(): array
+    {
+        return [];
     }
 
     public static function getPermissionHeading(): string
@@ -110,7 +123,13 @@ trait HasResourceAuthorization
         return static::currentUserCan(static::getPermissionName('delete_any'));
     }
 
-    protected static function getPermissionName(string $ability): string
+    /**
+     * Nama permission lengkap sebuah ability pada resource ini. Publik supaya halaman
+     * dan aksi bisa menyebut permission resource yang sedang aktif alih-alih
+     * menuliskannya sebagai literal — penting bagi resource yang punya salinan
+     * per slot tahun kerja, karena prefix permission tiap salinan berbeda.
+     */
+    public static function getPermissionName(string $ability): string
     {
         return $ability.'_'.static::getPermissionPrefix();
     }

@@ -1,0 +1,7032 @@
+[
+  {
+    "name": "Pembuatan Sistem Layanan Mahasiswa Terpadu ( Layanan Akademik, Kemahasiswaan, Beasiswa, Alumni, Feeder Dan Importer )",
+    "unit_kerja": "biro-administrasi-akademik-dan-kemahasiswaan-baak",
+    "bidang": "Akademik",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Akademik",
+    "indikator": "Persentase ketersediaan layanan mahasiswa terpadu al. akademik, kemahasiswaan, ebasiswa, alumni feeder, dll yang berjalan dengan baik",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pembuatan Ijazah",
+    "unit_kerja": "biro-administrasi-akademik-dan-kemahasiswaan-baak",
+    "bidang": "Akademik",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Akademik",
+    "indikator": "Persentase ketersediaan layanan ijazah lulusan saat wisuda",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Layanan Beasiswa",
+    "unit_kerja": "biro-administrasi-akademik-dan-kemahasiswaan-baak",
+    "bidang": "Kemahasiswaan",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Kemahasiswaan",
+    "indikator": "Persentase mahasiswa yang memeroleh beasiswa",
+    "nilai_standar": ">10%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "1.79",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "8",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "10",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "10",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "10",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Penyusunan Laporan keuangan",
+    "unit_kerja": "biro-administrasi-keuangan-bak",
+    "bidang": "Keuangan",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Keuangan",
+    "indikator": "Penggunaan anggaran pendidikan per mahasiswa (dalam juta) (DOM) (standar minimal > 20 Juta)",
+    "nilai_standar": "> 20 Juta",
+    "satuan_nilai_standar": "rupiah",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "15000000",
+        "satuan": "rupiah"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "20000000",
+        "satuan": "rupiah"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "20000000",
+        "satuan": "rupiah"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "20000000",
+        "satuan": "rupiah"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "20000000",
+        "satuan": "rupiah"
+      }
+    ]
+  },
+  {
+    "name": "Honorarium dan belanja pegawai",
+    "unit_kerja": "biro-administrasi-keuangan-bak",
+    "bidang": "Keuangan",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Keuangan",
+    "indikator": "Persentase gaji pokok dosen dan tendik sesuai standar ASN",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "60",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "65",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "70",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "75",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "80",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Honorarium dosen Tidak tetap",
+    "unit_kerja": "biro-administrasi-keuangan-bak",
+    "bidang": "Keuangan",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Keuangan",
+    "indikator": "Persentase gaji dosen tidak tetap sesuai standar kementerian keuangan",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "60",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "65",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "70",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "75",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "80",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pendampingan/penbiayaan Akreditasi",
+    "unit_kerja": "biro-administrasi-keuangan-bak",
+    "bidang": "Keuangan",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Keuangan",
+    "indikator": "Persentase penggunaan anggaran akreditasi dari RAB",
+    "nilai_standar": "0.02",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "2",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "2",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "2",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "2",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "2",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Bantuan/kegiatan soaial",
+    "unit_kerja": "biro-administrasi-keuangan-bak",
+    "bidang": "Keuangan",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Keuangan",
+    "indikator": "Persentase bantuan/kegiatan sosial dan AUM dari RAB",
+    "nilai_standar": "0.02",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "2",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "2",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "2",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "2",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "2",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pembiayaan jasa kantor al. litrik, air, telp/internet",
+    "unit_kerja": "biro-administrasi-keuangan-bak",
+    "bidang": "Keuangan",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Keuangan",
+    "indikator": "Persentase beban biaya Jasa Kantor (listrik, air, tellp, internet/rutin lainya) dari RAB",
+    "nilai_standar": "0.03",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "3",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "3",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "3",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "3",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "3",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pembiayaan makan dan minum kantor",
+    "unit_kerja": "biro-administrasi-keuangan-bak",
+    "bidang": "Keuangan",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Keuangan",
+    "indikator": "Persentase biaya makan dan minum kantor dari RAB",
+    "nilai_standar": "0.02",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "2",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "2",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "2",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "2",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "2",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "pembiayaan jasa pihak ketiga/lainya",
+    "unit_kerja": "biro-administrasi-keuangan-bak",
+    "bidang": "Keuangan",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Keuangan",
+    "indikator": "Persentase biaya jasa pihak ketiga dari RAB",
+    "nilai_standar": "0,4%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "0.4",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "0.4",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "0.4",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "0.4",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "0.4",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Perjalanan dinas",
+    "unit_kerja": "biro-administrasi-keuangan-bak",
+    "bidang": "Keuangan",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Keuangan",
+    "indikator": "Persentase biaya perjalanan dinas dari RAB",
+    "nilai_standar": "1,5%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "1.5",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "1.5",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "1.5",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "1.5",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "1.5",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pembiayaan biaya pokok lainnya/iuran asosiasi/sejenisnya",
+    "unit_kerja": "biro-administrasi-keuangan-bak",
+    "bidang": "Keuangan",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Keuangan",
+    "indikator": "Persentase biaya pokok lainya (iuran asosiasi) dari RAB",
+    "nilai_standar": "0,49%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "0.49",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "0.49",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "0.49",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "0.49",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "0.49",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pembiayaan kelengkapan studi",
+    "unit_kerja": "biro-administrasi-keuangan-bak",
+    "bidang": "Keuangan",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Keuangan",
+    "indikator": "Persentase biaya kelengkapan studi dari RAB",
+    "nilai_standar": "1,8%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "1.8",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "1.8",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "1.8",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "1.8",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "1.8",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pembiayaan beaya beban pokok lainya/bank/sejenisnya",
+    "unit_kerja": "biro-administrasi-keuangan-bak",
+    "bidang": "Keuangan",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Keuangan",
+    "indikator": "Persentase beaya beban non pokok lainyan (bank) dari RAB",
+    "nilai_standar": "16,1%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "16.1",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "16.1",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "16.1",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "16.1",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "16.1",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pengadaan Sarana Prasarana Kantor (laundry)",
+    "unit_kerja": "biro-administrasi-umum-bau",
+    "bidang": "Sarana dan Prasarana",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Sarana Pembelajaran",
+    "indikator": "Persentase ketersediaan alat/sarana penunjang kantor/kelas yang berfungsi baik",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pengadaan Sarana Prasarana Kantor (cetak/sablon bahan kantor)",
+    "unit_kerja": "biro-administrasi-umum-bau",
+    "bidang": "Sarana dan Prasarana",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Sarana Pembelajaran",
+    "indikator": "Persentase ketersediaan alat/sarana penunjang kantor/kelas yang berfungsi baik",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pengadaan Sarana Prasarana Kantor (fotocopy)",
+    "unit_kerja": "biro-administrasi-umum-bau",
+    "bidang": "Sarana dan Prasarana",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Sarana Pembelajaran",
+    "indikator": "Persentase ketersediaan alat/sarana penunjang kantor/kelas yang berfungsi baik",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pengadaan Sarana Prasarana Kantor (percetakaa buku akademik)",
+    "unit_kerja": "biro-administrasi-umum-bau",
+    "bidang": "Sarana dan Prasarana",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Sarana Pembelajaran",
+    "indikator": "Persentase ketersediaan alat/sarana penunjang kantor/kelas yang berfungsi baik",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pengadaan Sarana Prasarana Kantor (ATK)",
+    "unit_kerja": "biro-administrasi-umum-bau",
+    "bidang": "Sarana dan Prasarana",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Sarana Pembelajaran",
+    "indikator": "Persentase ketersediaan alat/sarana penunjang kantor/kelas yang berfungsi baik",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pengadaan Sarana Prasarana Kantor (Bahan dan Peralatan Kebersihan)",
+    "unit_kerja": "biro-administrasi-umum-bau",
+    "bidang": "Sarana dan Prasarana",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Sarana Pembelajaran",
+    "indikator": "Persentase ketersediaan alat/sarana penunjang kantor/kelas yang berfungsi baik",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pengadaan Sarana Prasarana Kantor (Bahan komputer)",
+    "unit_kerja": "biro-administrasi-umum-bau",
+    "bidang": "Sarana dan Prasarana",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Sarana Pembelajaran",
+    "indikator": "Persentase ketersediaan alat/sarana penunjang kantor/kelas yang berfungsi baik",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pengadaan Sarana Prasarana Kantor (Bahan percontohan)",
+    "unit_kerja": "biro-administrasi-umum-bau",
+    "bidang": "Sarana dan Prasarana",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Sarana Pembelajaran",
+    "indikator": "Persentase ketersediaan alat/sarana penunjang kantor/kelas yang berfungsi baik",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pemeliharaan Kendaraan",
+    "unit_kerja": "biro-administrasi-umum-bau",
+    "bidang": "Sarana dan Prasarana",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Sarana Pembelajaran",
+    "indikator": "Persentase ketersediaan alat transportasi/kendaraan yang memadai",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pengelolaan Bisnis sewa aula",
+    "unit_kerja": "biro-administrasi-umum-bau",
+    "bidang": "Keuangan",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Keuangan",
+    "indikator": "Jumlah Perolehan dana bersumber dari selain mahasiswa",
+    "nilai_standar": ">20%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "50000000",
+        "satuan": "rupiah"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "50000000",
+        "satuan": "rupiah"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "50000000",
+        "satuan": "rupiah"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "50000000",
+        "satuan": "rupiah"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "50000000",
+        "satuan": "rupiah"
+      }
+    ]
+  },
+  {
+    "name": "Pengadaan/pemeliharaan perawatan gedung dan sarana/ peralatan kuliah/kantor/penunjang perkuliahan",
+    "unit_kerja": "biro-perencanaan-pembangunan-dan-pemeliharaan-sarana-prasarana-bp3s",
+    "bidang": "Sarana dan Prasarana",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Sarana Pembelajaran",
+    "indikator": "persentase ketersediaan sarana prasarana kampus yang berfungsi baik",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "80",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "85",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "85",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "90",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "95",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pemelihataan AC dan Alat Listrik",
+    "unit_kerja": "biro-perencanaan-pembangunan-dan-pemeliharaan-sarana-prasarana-bp3s",
+    "bidang": "Sarana dan Prasarana",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Sarana Pembelajaran",
+    "indikator": "Persentase ketersediaan AC/Alat Listrik yang berfungsi baik",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pengelolaan Sampah",
+    "unit_kerja": "biro-perencanaan-pembangunan-dan-pemeliharaan-sarana-prasarana-bp3s",
+    "bidang": "Sarana dan Prasarana",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Sarana Pembelajaran",
+    "indikator": "Persentase ketersediaan tempat pengelolaan sampah yang berfungsi baik",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Kuliah pakar",
+    "unit_kerja": "fakultas-ekonomi-dan-bisnis-feb",
+    "bidang": "Akademik",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Akademik",
+    "indikator": "Jumlah kegiatan tenaga ahli/pakar sebagai pembicara dalam seminar/pelatihan/kuliah tamu",
+    "nilai_standar": "> 4",
+    "satuan_nilai_standar": "Seminar",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "4",
+        "satuan": "Seminar"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "4",
+        "satuan": "Seminar"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "4",
+        "satuan": "Seminar"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "4",
+        "satuan": "Seminar"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "4",
+        "satuan": "Seminar"
+      }
+    ]
+  },
+  {
+    "name": "Bimbingan dan Ujian Tugas Akhir",
+    "unit_kerja": "fakultas-ekonomi-dan-bisnis-feb",
+    "bidang": "Akademik",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Akademik",
+    "indikator": "Persentase masa studi lulusan sarjana/sarjana terapan (< 4 tahun), dan Diploma (<3 tahun)",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Seminar/Workshop/Lokakarya",
+    "unit_kerja": "fakultas-ekonomi-dan-bisnis-feb",
+    "bidang": "Sumber Daya Manusia",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu SDM",
+    "indikator": "Persentase dosen yang berpartisipasi dalam kegiatan seminar/workshop/pelatihan minimal 1kali/dosen",
+    "nilai_standar": ">50%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "25",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "30",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "35",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "40",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "50",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Praktik Kerja Lapangan/Magang/Praktik Klinik",
+    "unit_kerja": "fakultas-ekonomi-dan-bisnis-feb",
+    "bidang": "Akademik",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Akademik",
+    "indikator": "Persentase mahasiswa mendapatkan pengalaman di luar kampus",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pelaksanaan Perkuliahan dan Evaluasi Pembelajaran (UTS/UAS)",
+    "unit_kerja": "fakultas-ekonomi-dan-bisnis-feb",
+    "bidang": "Akademik",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Akademik",
+    "indikator": "Persentase rata-rata IPK minimal > 3,50",
+    "nilai_standar": "> 80%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "80",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "90",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pelaksanaan Praktikum/Lab",
+    "unit_kerja": "fakultas-ekonomi-dan-bisnis-feb",
+    "bidang": "Akademik",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Akademik",
+    "indikator": "Persentase mata kuliah yang memiliki kegaiatan Praktikum",
+    "nilai_standar": ">40%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": ">40.1",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": ">40.1",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": ">40.1",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": ">40.1",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": ">40.1",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Kuliah pakar",
+    "unit_kerja": "fakultas-ilmu-kesehatan-fik",
+    "bidang": "Akademik",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Akademik",
+    "indikator": "Jumlah kegiatan tenaga ahli/pakar sebagai pembicara dalam seminar/pelatihan/kuliah tamu",
+    "nilai_standar": "> 4",
+    "satuan_nilai_standar": "Seminar",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "4",
+        "satuan": "Seminar"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "4",
+        "satuan": "Seminar"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "4",
+        "satuan": "Seminar"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "4",
+        "satuan": "Seminar"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "4",
+        "satuan": "Seminar"
+      }
+    ]
+  },
+  {
+    "name": "Bimbingan dan Ujian Tugas Akhir",
+    "unit_kerja": "fakultas-ilmu-kesehatan-fik",
+    "bidang": "Akademik",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Akademik",
+    "indikator": "Persentase masa studi lulusan sarjana/sarjana terapan (< 4 tahun), dan Diploma (<3 tahun)",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Seminar/Workshop/Lokakarya",
+    "unit_kerja": "fakultas-ilmu-kesehatan-fik",
+    "bidang": "Sumber Daya Manusia",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu SDM",
+    "indikator": "Persentase dosen yang berpartisipasi dalam kegiatan seminar/workshop/pelatihan minimal 1kali/dosen",
+    "nilai_standar": ">50%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "25",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "30",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "35",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "40",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "50",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Praktik Kerja Lapangan/Magang/Praktik Klinik",
+    "unit_kerja": "fakultas-ilmu-kesehatan-fik",
+    "bidang": "Akademik",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Akademik",
+    "indikator": "Persentase mahasiswa mendapatkan pengalaman di luar kampus",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pelaksanaan Perkuliahan dan Evaluasi Pembelajaran (UTS/UAS)",
+    "unit_kerja": "fakultas-ilmu-kesehatan-fik",
+    "bidang": "Akademik",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Akademik",
+    "indikator": "Persentase rata-rata IPK minimal > 3,50",
+    "nilai_standar": "> 80%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "80",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "90",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pelaksanaan Praktikum/Lab",
+    "unit_kerja": "fakultas-ilmu-kesehatan-fik",
+    "bidang": "Akademik",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Akademik",
+    "indikator": "Persentase mata kuliah yang memiliki kegaiatan Praktikum",
+    "nilai_standar": ">40%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": ">40.1",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": ">40.1",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": ">40.1",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": ">40.1",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": ">40.1",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Kuliah pakar",
+    "unit_kerja": "fakultas-sains-teknologi-dan-pendidikan-fstp",
+    "bidang": "Akademik",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Akademik",
+    "indikator": "Jumlah kegiatan tenaga ahli/pakar sebagai pembicara dalam seminar/pelatihan/kuliah tamu",
+    "nilai_standar": "> 4",
+    "satuan_nilai_standar": "Seminar",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "4",
+        "satuan": "Seminar"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "4",
+        "satuan": "Seminar"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "4",
+        "satuan": "Seminar"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "4",
+        "satuan": "Seminar"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "4",
+        "satuan": "Seminar"
+      }
+    ]
+  },
+  {
+    "name": "Bimbingan dan Ujian Tugas Akhir",
+    "unit_kerja": "fakultas-sains-teknologi-dan-pendidikan-fstp",
+    "bidang": "Akademik",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Akademik",
+    "indikator": "Persentase masa studi lulusan sarjana/sarjana terapan (< 4 tahun), dan Diploma (<3 tahun)",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Seminar/Workshop/Lokakarya",
+    "unit_kerja": "fakultas-sains-teknologi-dan-pendidikan-fstp",
+    "bidang": "Sumber Daya Manusia",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu SDM",
+    "indikator": "Persentase dosen yang berpartisipasi dalam kegiatan seminar/workshop/pelatihan minimal 1kali/dosen",
+    "nilai_standar": ">50%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "25",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "30",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "35",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "40",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "50",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Praktik Kerja Lapangan/Magang/Praktik Klinik",
+    "unit_kerja": "fakultas-sains-teknologi-dan-pendidikan-fstp",
+    "bidang": "Akademik",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Akademik",
+    "indikator": "Persentase mahasiswa mendapatkan pengalaman di luar kampus",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pelaksanaan Perkuliahan dan Evaluasi Pembelajaran (UTS/UAS)",
+    "unit_kerja": "fakultas-sains-teknologi-dan-pendidikan-fstp",
+    "bidang": "Akademik",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Akademik",
+    "indikator": "Persentase rata-rata IPK minimal > 3,50",
+    "nilai_standar": "> 80%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "80",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "90",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pelaksanaan Praktikum/Lab",
+    "unit_kerja": "fakultas-sains-teknologi-dan-pendidikan-fstp",
+    "bidang": "Akademik",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Akademik",
+    "indikator": "Persentase mata kuliah yang memiliki kegaiatan Praktikum",
+    "nilai_standar": ">40%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": ">40.1",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": ">40.1",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": ">40.1",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": ">40.1",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": ">40.1",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pelatihan auditor halal",
+    "unit_kerja": "halal-center",
+    "bidang": "Pengabdian Masyarakat",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Pengabdian Masyarakat",
+    "indikator": "Jumlah auditor tersertifikasi",
+    "nilai_standar": "> 5",
+    "satuan_nilai_standar": "Auditor",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "1",
+        "satuan": "Auditor"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "2",
+        "satuan": "Auditor"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "3",
+        "satuan": "Auditor"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "4",
+        "satuan": "Auditor"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "5",
+        "satuan": "Auditor"
+      }
+    ]
+  },
+  {
+    "name": "Pelayanan Halal Center",
+    "unit_kerja": "halal-center",
+    "bidang": "Pengabdian Masyarakat",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Pengabdian Masyarakat",
+    "indikator": "Jumlah Produk tersertifikasi Halal",
+    "nilai_standar": "> 100",
+    "satuan_nilai_standar": "Produk",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "70",
+        "satuan": "Produk"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "90",
+        "satuan": "Produk"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "110",
+        "satuan": "Produk"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "120",
+        "satuan": "Produk"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "140",
+        "satuan": "Produk"
+      }
+    ]
+  },
+  {
+    "name": "Pengelolaan Bisnis Halal Center",
+    "unit_kerja": "halal-center",
+    "bidang": "Keuangan",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Keuangan",
+    "indikator": "Persentase Perolehan dana bersumber dari selain mahasiswa",
+    "nilai_standar": ">20%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "100000000",
+        "satuan": "rupiah"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100000000",
+        "satuan": "rupiah"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100000000",
+        "satuan": "rupiah"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100000000",
+        "satuan": "rupiah"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100000000",
+        "satuan": "rupiah"
+      }
+    ]
+  },
+  {
+    "name": "Magang",
+    "unit_kerja": "kantor-urusan-internasional-kui",
+    "bidang": "Kerja Sama & Internasional",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Kerjasama & Internasional",
+    "indikator": "Persentase jumlah kerjasama tingkat nasional/lokal yang terimplementasi (jumlah kerjasama/jumlah total dosen)",
+    "nilai_standar": ">20%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "60",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "70",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "80",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "90",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pertemuan/Kegiatan ASKUI PTMA",
+    "unit_kerja": "kantor-urusan-internasional-kui",
+    "bidang": "Kerja Sama & Internasional",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Kerjasama & Internasional",
+    "indikator": "Persentase jumlah kerjasama tingkat nasional/lokal yang terimplementasi (jumlah kerjasama/jumlah jumlah total dosen)",
+    "nilai_standar": ">20%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "60",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "70",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "80",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "90",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "MoU",
+    "unit_kerja": "kantor-urusan-internasional-kui",
+    "bidang": "Kerja Sama & Internasional",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Kerjasama & Internasional",
+    "indikator": "Persentase jumlah kerjasama tingkat nasional/lokal yang terimplementasi (jumlah kerjasama/jumlah total dosen)",
+    "nilai_standar": ">20%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "60",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "70",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "80",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "90",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "FGD Kerjasama",
+    "unit_kerja": "kantor-urusan-internasional-kui",
+    "bidang": "Kerja Sama & Internasional",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Kerjasama & Internasional",
+    "indikator": "Persentase kepuasaan sangat baik dari mitra kerjasama",
+    "nilai_standar": "> 90%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "80",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "80",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "90",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "90",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "90",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Guest lecture",
+    "unit_kerja": "kantor-urusan-internasional-kui",
+    "bidang": "Kerja Sama & Internasional",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Kerjasama & Internasional",
+    "indikator": "Persentase jumlah kerjasama internasional terimplementasi (jumlah kerja sama/jumlah total dosen)",
+    "nilai_standar": ">2%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "20",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "30",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "40",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "40",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "50",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Magang",
+    "unit_kerja": "kantor-urusan-internasional-kui",
+    "bidang": "Kerja Sama & Internasional",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Kerjasama & Internasional",
+    "indikator": "Persentase jumlah kerjasama internasional terimplementasi (jumlah kerja sama/jumlah total dosen)",
+    "nilai_standar": ">2%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "20",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "30",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "40",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "40",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "50",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "MoU",
+    "unit_kerja": "kantor-urusan-internasional-kui",
+    "bidang": "Kerja Sama & Internasional",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Kerjasama & Internasional",
+    "indikator": "Persentase jumlah kerjasama internasional terimplementasi (jumlah kerja sama/jumlah total dosen)",
+    "nilai_standar": ">2%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "20",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "30",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "40",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "40",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "50",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Online summer course (Outbound)",
+    "unit_kerja": "kantor-urusan-internasional-kui",
+    "bidang": "Kerja Sama & Internasional",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Kerjasama & Internasional",
+    "indikator": "Persentase jumlah kerjasama internasional terimplementasi (jumlah kerja sama/jumlah total dosen)",
+    "nilai_standar": ">2%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "20",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "30",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "40",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "40",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "50",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Summer course",
+    "unit_kerja": "kantor-urusan-internasional-kui",
+    "bidang": "Kerja Sama & Internasional",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Kerjasama & Internasional",
+    "indikator": "Persentase jumlah kerjasama internasional terimplementasi (jumlah kerja sama/jumlah total dosen)",
+    "nilai_standar": ">2%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "20",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "30",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "40",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "40",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "50",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Student exchange/Virtual exchange fall semester",
+    "unit_kerja": "kantor-urusan-internasional-kui",
+    "bidang": "Kerja Sama & Internasional",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Kerjasama & Internasional",
+    "indikator": "Persentase jumlah kerjasama internasional terimplementasi (jumlah kerja sama/jumlah total dosen)",
+    "nilai_standar": ">2%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "20",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "30",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "40",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "40",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "50",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Student Exchange/Virtual exchange spring semester",
+    "unit_kerja": "kantor-urusan-internasional-kui",
+    "bidang": "Kerja Sama & Internasional",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Kerjasama & Internasional",
+    "indikator": "Persentase jumlah kerjasama internasional terimplementasi (jumlah kerja sama/jumlah total dosen)",
+    "nilai_standar": ">2%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "20",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "30",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "40",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "40",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "50",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Workshop/Lokakarya/Seminar",
+    "unit_kerja": "kantor-urusan-internasional-kui",
+    "bidang": "Kerja Sama & Internasional",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Kerjasama & Internasional",
+    "indikator": "Persentase jumlah kerjasama internasional terimplementasi (jumlah kerja sama/jumlah total dosen)",
+    "nilai_standar": ">2%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "20",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "30",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "40",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "40",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "50",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Baitul Arqom Pimpinan",
+    "unit_kerja": "lembaga-pengembangan-al-islam-dan-kemuhammadiyahan-labaik",
+    "bidang": "AIK",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu AIK",
+    "indikator": "Jumah kegiatan Baitul Arqam untuk pimpinan/tahun (standar minimal 2 kali)",
+    "nilai_standar": "2",
+    "satuan_nilai_standar": "Kegiatan",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "2",
+        "satuan": "Kegiatan"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "2",
+        "satuan": "Kegiatan"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "2",
+        "satuan": "Kegiatan"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "2",
+        "satuan": "Kegiatan"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "2",
+        "satuan": "Kegiatan"
+      }
+    ]
+  },
+  {
+    "name": "Baitul Arqom Dosen dan Tendik",
+    "unit_kerja": "lembaga-pengembangan-al-islam-dan-kemuhammadiyahan-labaik",
+    "bidang": "AIK",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu AIK",
+    "indikator": "Jumlah kegiatan Baitul Arqam untuk dosen/tendik/tahun (standar minimal 2 kali)",
+    "nilai_standar": "2",
+    "satuan_nilai_standar": "Kegiatan",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "2",
+        "satuan": "Kegiatan"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "2",
+        "satuan": "Kegiatan"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "2",
+        "satuan": "Kegiatan"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "2",
+        "satuan": "Kegiatan"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "2",
+        "satuan": "Kegiatan"
+      }
+    ]
+  },
+  {
+    "name": "Baitul Arqom Mahasiswa",
+    "unit_kerja": "lembaga-pengembangan-al-islam-dan-kemuhammadiyahan-labaik",
+    "bidang": "AIK",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu AIK",
+    "indikator": "Jumlah kegiatan baitul Arqam untuk mahasiswa/tahun (standar minimal 2 kali)",
+    "nilai_standar": "2",
+    "satuan_nilai_standar": "Kegiatan",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "2",
+        "satuan": "Kegiatan"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "2",
+        "satuan": "Kegiatan"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "2",
+        "satuan": "Kegiatan"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "2",
+        "satuan": "Kegiatan"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "2",
+        "satuan": "Kegiatan"
+      }
+    ]
+  },
+  {
+    "name": "Bimbingan BTA Mahasiswa",
+    "unit_kerja": "lembaga-pengembangan-al-islam-dan-kemuhammadiyahan-labaik",
+    "bidang": "AIK",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu AIK",
+    "indikator": "Persentase mahasiswa yang mampu menghafal dan memahami 37 surat (Juzz 30)",
+    "nilai_standar": "70%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "60",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "70",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "80",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "90",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Tahsin & Tahfidz Al-Quran Dosen & Tendik",
+    "unit_kerja": "lembaga-pengembangan-al-islam-dan-kemuhammadiyahan-labaik",
+    "bidang": "AIK",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu AIK",
+    "indikator": "Persentase pimpinan, dosen dan tendik yang mampu menghapal dan memahami 37 surat (Juzz 30)",
+    "nilai_standar": "70%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "60",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "70",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "80",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "90",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pengajian Triwulan seluruh Civitas",
+    "unit_kerja": "lembaga-pengembangan-al-islam-dan-kemuhammadiyahan-labaik",
+    "bidang": "AIK",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu AIK",
+    "indikator": "Persentase Pemahaman baik sekali bidang AIK bagi Civitas",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "95",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "95",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "95",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pengajian Dan Buka Puasa Bersama Seluruh Civitas",
+    "unit_kerja": "lembaga-pengembangan-al-islam-dan-kemuhammadiyahan-labaik",
+    "bidang": "AIK",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu AIK",
+    "indikator": "Persentase Civitas yang melakukan jamaah di Masjid",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "80",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "80",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "80",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "90",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Daurah Mubaliqh Mahasiswa",
+    "unit_kerja": "lembaga-pengembangan-al-islam-dan-kemuhammadiyahan-labaik",
+    "bidang": "AIK",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu AIK",
+    "indikator": "Persentase Pemahaman baik sekali tentang AIK bagi Civitas",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "70",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "75",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "80",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "90",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "95",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Sertifikasi BTA (Ujian Membaca Al-Qur'an)",
+    "unit_kerja": "lembaga-pengembangan-al-islam-dan-kemuhammadiyahan-labaik",
+    "bidang": "AIK",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu AIK",
+    "indikator": "Persentase mahasiswa yang lulus baca alquran dengan baik",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "80",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Seminar AIK",
+    "unit_kerja": "lembaga-pengembangan-al-islam-dan-kemuhammadiyahan-labaik",
+    "bidang": "AIK",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu AIK",
+    "indikator": "Persentase Pemahaman baik sekali bidang AIK bagi Civitas",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "80",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "80",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "80",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "90",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Kajian Rutin Tiap Bulan Sekali",
+    "unit_kerja": "lembaga-kemakmuran-masjid",
+    "bidang": "AIK",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu AIK",
+    "indikator": "Persentase Civitas yang melakukan jamaah di Masjid",
+    "nilai_standar": "0.8",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "85",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "90",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "95",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "95",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "95",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pemelihaaraan sarana dan prasarana masjid",
+    "unit_kerja": "lembaga-kemakmuran-masjid",
+    "bidang": "AIK",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu AIK",
+    "indikator": "Persentase Ketersediaan sarana prasarana masjid yang berfungsi baik",
+    "nilai_standar": "0.8",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "85",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "90",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "95",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "95",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "95",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pendampingan Kompetisi Tingkat Internasioal",
+    "unit_kerja": "lembaga-kemahasiswaan",
+    "bidang": "Kemahasiswaan",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Kemahasiswaan",
+    "indikator": "Perentase jumlah prestasi mahasiswa bidang akademik dan non akademik tingkat internasional",
+    "nilai_standar": ">0,05%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "0.00",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "0.00",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "0.00",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "0.00",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "0.00",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pembinaan/Kegiataan ormawa meliputi ) BEM, DPM 2) Ortom (IMM, HW Tapak Suci), 3) UKM, 4) HIMA",
+    "unit_kerja": "lembaga-kemahasiswaan",
+    "bidang": "Kemahasiswaan",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Kemahasiswaan",
+    "indikator": "Persentase ketersediaan layanan pengembangan penalaran dan soft skill, bakat minat mahasiswa yang berjalan dengan baik",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Penghargaan Prestasi mahasiswa",
+    "unit_kerja": "lembaga-kemahasiswaan",
+    "bidang": "Kemahasiswaan",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Kemahasiswaan",
+    "indikator": "Persentase jumlah lulusan dengan Nilai Ekstra Kurikuler Baik",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "60",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "70",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "80",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "90",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pendampingan Kompetisi Tingkat Nasional",
+    "unit_kerja": "lembaga-kemahasiswaan",
+    "bidang": "Kemahasiswaan",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Kemahasiswaan",
+    "indikator": "Persentase jumlah prestasi mahasiswa bidang akademik dan non akademik tingkat nasional",
+    "nilai_standar": ">1%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "0.00",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "0.01",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "0.01",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "0.01",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "0.01",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pendampingan Kompetisi Tingkat Wilayah/Lokal",
+    "unit_kerja": "lembaga-kemahasiswaan",
+    "bidang": "Kemahasiswaan",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Kemahasiswaan",
+    "indikator": "Persentase jumlah prestasi mahasiswa bidang akademik dan non akademik tingkat wilayah/lokal",
+    "nilai_standar": ">1%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "0.01",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "0.02",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "0.03",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "0.04",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "0.05",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pelatihan/Sertifikasi Digital Literacy",
+    "unit_kerja": "lembaga-sertifikasi",
+    "bidang": "Akademik",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Akademik",
+    "indikator": "Persentase lulusan yang memiliki sertifikat kemampuan dasar komputer/digital literacy",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "25",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "90",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "95",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "95",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "95",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pelatihan/Sertifikasi keahlian sesuai industri/sejenisnya",
+    "unit_kerja": "lembaga-sertifikasi",
+    "bidang": "Akademik",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Akademik",
+    "indikator": "Persentase lulusan yang memiliki sertifikat dari BNSP/Dunia Industri/Usaha/Sejenisnya",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "25",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "90",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "95",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "95",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "95",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pengelolaan Bisnis lembaga sertifikasi",
+    "unit_kerja": "lembaga-sertifikasi",
+    "bidang": "Keuangan",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Keuangan",
+    "indikator": "Persentase Perolehan dana bersumber dari selain mahasiswa",
+    "nilai_standar": ">20%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "25000000",
+        "satuan": "rupiah"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "25000000",
+        "satuan": "rupiah"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "25000000",
+        "satuan": "rupiah"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "25000000",
+        "satuan": "rupiah"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "25000000",
+        "satuan": "rupiah"
+      }
+    ]
+  },
+  {
+    "name": "Admisi & Promosi Universitas",
+    "unit_kerja": "lembaga-informasi-dan-komunikasi-lesikom",
+    "bidang": "Kemahasiswaan",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Kemahasiswaan",
+    "indikator": "Jumlah Mahasiswa baru",
+    "nilai_standar": "> 1800",
+    "satuan_nilai_standar": "Mahasiswa",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "1000",
+        "satuan": "Mahasiswa"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "1200",
+        "satuan": "Mahasiswa"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "1400",
+        "satuan": "Mahasiswa"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "1600",
+        "satuan": "Mahasiswa"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "1800",
+        "satuan": "Mahasiswa"
+      }
+    ]
+  },
+  {
+    "name": "Expo/Pameran dalam Negeri",
+    "unit_kerja": "lembaga-informasi-dan-komunikasi-lesikom",
+    "bidang": "Kemahasiswaan",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Kemahasiswaan",
+    "indikator": "Jumlah Mahasiswa baru",
+    "nilai_standar": "> 1800",
+    "satuan_nilai_standar": "Mahasiswa",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "1000",
+        "satuan": "Mahasiswa"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "1200",
+        "satuan": "Mahasiswa"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "1400",
+        "satuan": "Mahasiswa"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "1600",
+        "satuan": "Mahasiswa"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "1800",
+        "satuan": "Mahasiswa"
+      }
+    ]
+  },
+  {
+    "name": "Iklan",
+    "unit_kerja": "lembaga-informasi-dan-komunikasi-lesikom",
+    "bidang": "Kemahasiswaan",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Kemahasiswaan",
+    "indikator": "Jumlah Mahasiswa baru",
+    "nilai_standar": "> 1800",
+    "satuan_nilai_standar": "Mahasiswa",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "1000",
+        "satuan": "Mahasiswa"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "1200",
+        "satuan": "Mahasiswa"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "1400",
+        "satuan": "Mahasiswa"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "1600",
+        "satuan": "Mahasiswa"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "1800",
+        "satuan": "Mahasiswa"
+      }
+    ]
+  },
+  {
+    "name": "Kegiatan Duta Kampus/Volunteer",
+    "unit_kerja": "lembaga-informasi-dan-komunikasi-lesikom",
+    "bidang": "Kemahasiswaan",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Kemahasiswaan",
+    "indikator": "Jumlah Mahasiswa baru",
+    "nilai_standar": "> 1800",
+    "satuan_nilai_standar": "Mahasiswa",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "1000",
+        "satuan": "Mahasiswa"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "1200",
+        "satuan": "Mahasiswa"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "1400",
+        "satuan": "Mahasiswa"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "1600",
+        "satuan": "Mahasiswa"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "1800",
+        "satuan": "Mahasiswa"
+      }
+    ]
+  },
+  {
+    "name": "Promosi Program Studi",
+    "unit_kerja": "lembaga-informasi-dan-komunikasi-lesikom",
+    "bidang": "Kemahasiswaan",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Kemahasiswaan",
+    "indikator": "Jumlah Mahasiswa baru",
+    "nilai_standar": "> 1800",
+    "satuan_nilai_standar": "Mahasiswa",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "1000",
+        "satuan": "Mahasiswa"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "1200",
+        "satuan": "Mahasiswa"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "1400",
+        "satuan": "Mahasiswa"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "1600",
+        "satuan": "Mahasiswa"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "1800",
+        "satuan": "Mahasiswa"
+      }
+    ]
+  },
+  {
+    "name": "Expo/Promosi/Pameran ke Luar Negeri/lainya",
+    "unit_kerja": "lembaga-informasi-dan-komunikasi-lesikom",
+    "bidang": "Kemahasiswaan",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Kemahasiswaan",
+    "indikator": "Persentase jumlah mahasiswa asing/jumlah seluruh mhs",
+    "nilai_standar": ">1%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "1",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "1",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "1",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "1",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "1",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pendampingan Akreditasi Perguruan Tinggi",
+    "unit_kerja": "lembaga-penjaminan-mutu-lpm",
+    "bidang": "Penjaminan Mutu",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Tata Kelola dan Kelembagaan",
+    "indikator": "Akreditasi Institusi (APT) (nilai Unggul=3, Baik Sekali=2, Baik=1)",
+    "nilai_standar": "3",
+    "satuan_nilai_standar": "Baik Sekali",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "Terakreditasi",
+        "satuan": "Baik Sekali"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "Terakreditasi",
+        "satuan": "Baik Sekali"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "Terakreditasi",
+        "satuan": "Baik Sekali"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "Terakreditasi",
+        "satuan": "Baik Sekali"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "Terakreditasi",
+        "satuan": "Baik Sekali"
+      }
+    ]
+  },
+  {
+    "name": "Pelatihan Auditor Mutu",
+    "unit_kerja": "lembaga-penjaminan-mutu-lpm",
+    "bidang": "Penjaminan Mutu",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Tata Kelola dan Kelembagaan",
+    "indikator": "Jumlah auditor mutu tersertifikasi (standar minimal (>35)",
+    "nilai_standar": "> 35",
+    "satuan_nilai_standar": "Auditor",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "15",
+        "satuan": "Auditor"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "20",
+        "satuan": "Auditor"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "25",
+        "satuan": "Auditor"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "30",
+        "satuan": "Auditor"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "35",
+        "satuan": "Auditor"
+      }
+    ]
+  },
+  {
+    "name": "Survey Kepuasan Mahasiswa",
+    "unit_kerja": "lembaga-penjaminan-mutu-lpm",
+    "bidang": "Kemahasiswaan",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Kemahasiswaan",
+    "indikator": "Perentase survey kepuasan dengan hasil sangat baik pada layanan mahasiswa terhadap proses pendidikan",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "90",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "90",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "90",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "90",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "90",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Monitoring dan Evaluasi Kinerja SDM",
+    "unit_kerja": "lembaga-penjaminan-mutu-lpm",
+    "bidang": "Sumber Daya Manusia",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu SDM",
+    "indikator": "Persentase hasil monev Kinerja SDM (dosen dan tendik) sesuai dengan standar nilai minimal baik",
+    "nilai_standar": "> 90%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Monitoring dan Evaluasi Penelitian",
+    "unit_kerja": "lembaga-penjaminan-mutu-lpm",
+    "bidang": "Penelitian",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Penelitian & Publikasi",
+    "indikator": "Persentase hasil monev penelitian sesuai dengan standar nilai minimal baik",
+    "nilai_standar": "> 90%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Monitoring dan Evaluasi Pengabdian Masyarakat",
+    "unit_kerja": "lembaga-penjaminan-mutu-lpm",
+    "bidang": "Pengabdian Masyarakat",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Pengabdian Masyarakat",
+    "indikator": "Persentase hasil monev pengabdian kepada masyarakat sesuai standar nilai minimal baik",
+    "nilai_standar": "> 90%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Workshop/Lokakarya/Seminar",
+    "unit_kerja": "lembaga-penjaminan-mutu-lpm",
+    "bidang": "Penjaminan Mutu",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Tata Kelola dan Kelembagaan",
+    "indikator": "Persentase kelegkapan dokumen dan pencapaian standar mutu nilai minimal baik",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Audit Mutu Kemahasiswaan",
+    "unit_kerja": "lembaga-penjaminan-mutu-lpm",
+    "bidang": "Kemahasiswaan",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Kemahasiswaan",
+    "indikator": "Persentase ketersediaan laporan Audit Sistem Seleksi dan Layanan Kemahasiswaan dengan hasil minimal baik",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Audit Mutu Internal & RTM",
+    "unit_kerja": "lembaga-penjaminan-mutu-lpm",
+    "bidang": "Penjaminan Mutu",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Tata Kelola dan Kelembagaan",
+    "indikator": "Persentase kinerja program studi/fakultas/biro dengan hasil kinerja minimal baik.",
+    "nilai_standar": "> 90%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Audit Mutu Internal & RTM",
+    "unit_kerja": "lembaga-penjaminan-mutu-lpm",
+    "bidang": "Penjaminan Mutu",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Tata Kelola dan Kelembagaan",
+    "indikator": "Persentase hasil laporan Audit mutu Internal (akademik dan Non Akademik) dengan hasil sesuai standar mnimal nilai baik",
+    "nilai_standar": "> 90%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Monitoring dan Evaluasi",
+    "unit_kerja": "lembaga-penjaminan-mutu-lpm",
+    "bidang": "Penjaminan Mutu",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Tata Kelola dan Kelembagaan",
+    "indikator": "Persentase hasil laporan Monev Renstra dengan hasil sesuai standar minimal baik",
+    "nilai_standar": "> 90%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Monitoring dan Evaluasi",
+    "unit_kerja": "lembaga-penjaminan-mutu-lpm",
+    "bidang": "Akademik",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Akademik",
+    "indikator": "Persentase hasil monev pembelajaran (kurikulum, karakteristik, RPS, Hasil PBM) yang sesuai standar minimal baik",
+    "nilai_standar": "> 90%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pendampingan Akreditasi prodi",
+    "unit_kerja": "lembaga-penjaminan-mutu-lpm",
+    "bidang": "Penjaminan Mutu",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Tata Kelola dan Kelembagaan",
+    "indikator": "Persentase prodi terakreditasi Internasional/unggul",
+    "nilai_standar": ">30%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "5",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "10",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "15",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "20",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "25",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Surveilence ISO",
+    "unit_kerja": "lembaga-penjaminan-mutu-lpm",
+    "bidang": "Penjaminan Mutu",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Tata Kelola dan Kelembagaan",
+    "indikator": "Persentase prodi/biro/upt tersertifikasi ISO 9001:2008/Sertifikasi ISO 9001:2015",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "60",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "70",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "80",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "90",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Survey Kepuasan",
+    "unit_kerja": "lembaga-penjaminan-mutu-lpm",
+    "bidang": "Penjaminan Mutu",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Tata Kelola dan Kelembagaan",
+    "indikator": "Persentase kepuasan (nilai minimal baik) terhadap layanan manajemen PT",
+    "nilai_standar": "> 90%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "90",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pembentukan/Pengembangan Pusat Studi/Lembaga Kajian",
+    "unit_kerja": "lembaga-penelitian-dan-pengabdian-kepada-masyarakat-lppm",
+    "bidang": "Penelitian",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Penelitian & Publikasi",
+    "indikator": "Jumlah pusat studi/lembaga kajian yang berjalan efektif",
+    "nilai_standar": "> 4",
+    "satuan_nilai_standar": "Lembaga",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "3",
+        "satuan": "Lembaga"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "3",
+        "satuan": "Lembaga"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "3",
+        "satuan": "Lembaga"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "4",
+        "satuan": "Lembaga"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "4",
+        "satuan": "Lembaga"
+      }
+    ]
+  },
+  {
+    "name": "KKN",
+    "unit_kerja": "lembaga-penelitian-dan-pengabdian-kepada-masyarakat-lppm",
+    "bidang": "Pengabdian Masyarakat",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Pengabdian Masyarakat",
+    "indikator": "Persentase jumlah pengabdian masyarakat yang terkait dengan pemberdayaan amal usaha/persyarikan muhammadiyah (dari jumlah total dosen)",
+    "nilai_standar": ">10%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "5",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "10",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "15",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "20",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "20",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pendampingan proposal penelitian kemendikbud/brin/Luar Negeri",
+    "unit_kerja": "lembaga-penelitian-dan-pengabdian-kepada-masyarakat-lppm",
+    "bidang": "Penelitian",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Penelitian & Publikasi",
+    "indikator": "Persentase judul penelitian dosen dengan sumber dana dari luar negeri (dari jumlah total dosen)",
+    "nilai_standar": ">5%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "1",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "2",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "3",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "5",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "10",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Hibah Riset MU",
+    "unit_kerja": "lembaga-penelitian-dan-pengabdian-kepada-masyarakat-lppm",
+    "bidang": "Penelitian",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Penelitian & Publikasi",
+    "indikator": "Persentase judul penelitian dosen dengan sumber dana di luar PT (dalam negeri/Internal Muhammadyah) (dari jumlah total dosen)",
+    "nilai_standar": ">20%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "10",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "10",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "10",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "15",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "20",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pendampingan proposal penelitian kemendikbud/brin/Luar Negeri",
+    "unit_kerja": "lembaga-penelitian-dan-pengabdian-kepada-masyarakat-lppm",
+    "bidang": "Penelitian",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Penelitian & Publikasi",
+    "indikator": "Persentase judul penelitian dosen dengan sumber dana di luar PT (dalam negeri kementerian/Brin) (dari jumlah total dosen)",
+    "nilai_standar": ">10%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "10",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "10",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "10",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "10",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "15",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Hibah Internal",
+    "unit_kerja": "lembaga-penelitian-dan-pengabdian-kepada-masyarakat-lppm",
+    "bidang": "Penelitian",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Penelitian & Publikasi",
+    "indikator": "Persentase judul penelitian dosen dengan sumber dana PT/mandiri (dari jumlah total dosen)",
+    "nilai_standar": ">30%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "25",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "30",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "30",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "30",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "35",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pendampingan proposal penelitian kemendikbud/brin/LN",
+    "unit_kerja": "lembaga-penelitian-dan-pengabdian-kepada-masyarakat-lppm",
+    "bidang": "Pengabdian Masyarakat",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Pengabdian Masyarakat",
+    "indikator": "Persentase judul pengabdian masyarakat oleh dosen dengan sumber dana dari luar negeri (dari jumlah total dosen)",
+    "nilai_standar": "> 5%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "1",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "2",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "3",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "5",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "10",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Hibah Riset MU",
+    "unit_kerja": "lembaga-penelitian-dan-pengabdian-kepada-masyarakat-lppm",
+    "bidang": "Pengabdian Masyarakat",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Pengabdian Masyarakat",
+    "indikator": "Persentase judul pengabdian masyarakat oleh dosen dengan sumber dana di luar PT (dalam negeri/Internal Muhammadiyah) (dari jumlah total dosen)",
+    "nilai_standar": "> 10%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "10",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "10",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "10",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "10",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "15",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pendampingan proposal penelitian kemendikbud/brin/LN",
+    "unit_kerja": "lembaga-penelitian-dan-pengabdian-kepada-masyarakat-lppm",
+    "bidang": "Pengabdian Masyarakat",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Pengabdian Masyarakat",
+    "indikator": "Persentase judul pengabdian masyarakat oleh dosen dengan sumber dana di luar PT (dalam negeri/kementeria/Brin) (dari jumlah total dosen)",
+    "nilai_standar": "> 10%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "10",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "10",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "10",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "10",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "15",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Hibah Internal",
+    "unit_kerja": "lembaga-penelitian-dan-pengabdian-kepada-masyarakat-lppm",
+    "bidang": "Pengabdian Masyarakat",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Pengabdian Masyarakat",
+    "indikator": "Persentase judul pengabdian masyarakat oleh dosen dengan sumber dana PT/mandiri (dari jumlah total dosen)",
+    "nilai_standar": "> 30%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "25",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "30",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "35",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "40",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "45",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Monitoring dan Evaluasi Kerjasama Penelitan",
+    "unit_kerja": "lembaga-penelitian-dan-pengabdian-kepada-masyarakat-lppm",
+    "bidang": "Kerja Sama & Internasional",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Kerjasama & Internasional",
+    "indikator": "Persentase kepuasaan sangat baik dari mitra kerjasama bidang Penelitian",
+    "nilai_standar": "> 90%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "80",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "90",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "90",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "90",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "90",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Monitoring dan Evaluasi Kerjasama Pengabdian",
+    "unit_kerja": "lembaga-penelitian-dan-pengabdian-kepada-masyarakat-lppm",
+    "bidang": "Kerja Sama & Internasional",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Kerjasama & Internasional",
+    "indikator": "Persentase kepuasaan sangat baik dari mitra kerjasama bidang Pengabdian Masyaraat",
+    "nilai_standar": "> 90%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "80",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "90",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "90",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "90",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "90",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Workshop/Lokakarya/Seminar",
+    "unit_kerja": "lembaga-penelitian-dan-pengabdian-kepada-masyarakat-lppm",
+    "bidang": "Penelitian",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Penelitian & Publikasi",
+    "indikator": "Persentase ketersediaan pedoman penelitian/Resnstra Peneliiian/lainya yang berjalan baik",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Workshop/Lokakarya/Seminar",
+    "unit_kerja": "lembaga-penelitian-dan-pengabdian-kepada-masyarakat-lppm",
+    "bidang": "Pengabdian Masyarakat",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Pengabdian Masyarakat",
+    "indikator": "Persentase ketersediaan pedoman pengabdian masyarakat/renstra pengabdian/lainya yang berjalan baik",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Hibah Penelitian Kerjasama Luar Negeri",
+    "unit_kerja": "lembaga-penelitian-dan-pengabdian-kepada-masyarakat-lppm",
+    "bidang": "Penelitian",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Penelitian & Publikasi",
+    "indikator": "Persentase penelitian hasil kerjasama (penelitian kolaboratif) luar Negeri",
+    "nilai_standar": "> 5%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "1",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "2",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "3",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "5",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "10",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Hibah Penelitian Kerjasama Dalam Negeri",
+    "unit_kerja": "lembaga-penelitian-dan-pengabdian-kepada-masyarakat-lppm",
+    "bidang": "Penelitian",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Penelitian & Publikasi",
+    "indikator": "Persentase penelitian hasil kerjasama (penelitian kolaboratif) dalam negeri",
+    "nilai_standar": "> 5%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "1",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "2",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "3",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "5",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "10",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Hibah Pengabdian Kerjasama dalam Negeri",
+    "unit_kerja": "lembaga-penelitian-dan-pengabdian-kepada-masyarakat-lppm",
+    "bidang": "Pengabdian Masyarakat",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Pengabdian Masyarakat",
+    "indikator": "Persentase jumlah pengabdian hasil kerjasama dalam negeri",
+    "nilai_standar": "> 5%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "1",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "2",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "3",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "5",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "10",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Hibah Pengabdian Kerjasama Luar Negeri",
+    "unit_kerja": "lembaga-penelitian-dan-pengabdian-kepada-masyarakat-lppm",
+    "bidang": "Pengabdian Masyarakat",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Pengabdian Masyarakat",
+    "indikator": "Persentase jumlah pengabdian hasil kerjasama luar Negeri",
+    "nilai_standar": "> 5%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "1",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "2",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "3",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "5",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "10",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pengelolaan Bisnis LPPM",
+    "unit_kerja": "lembaga-penelitian-dan-pengabdian-kepada-masyarakat-lppm",
+    "bidang": "Keuangan",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Keuangan",
+    "indikator": "Persentase Perolehan dana bersumber dari selain mahasiswa",
+    "nilai_standar": ">20%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "100000000",
+        "satuan": "rupiah"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100000000",
+        "satuan": "rupiah"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100000000",
+        "satuan": "rupiah"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100000000",
+        "satuan": "rupiah"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100000000",
+        "satuan": "rupiah"
+      }
+    ]
+  },
+  {
+    "name": "Pengadaan cek plagiarism (turnitin)",
+    "unit_kerja": "perpustakaan",
+    "bidang": "Sarana dan Prasarana",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Sarana Pembelajaran",
+    "indikator": "Jumlah akun turnitin (cek plagiarisme)",
+    "nilai_standar": "> 6",
+    "satuan_nilai_standar": "Akun",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "2",
+        "satuan": "Akun"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "3",
+        "satuan": "Akun"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "4",
+        "satuan": "Akun"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "5",
+        "satuan": "Akun"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "6",
+        "satuan": "Akun"
+      }
+    ]
+  },
+  {
+    "name": "Pengadaan Buku Perpustakaan",
+    "unit_kerja": "perpustakaan",
+    "bidang": "Sarana dan Prasarana",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Sarana Pembelajaran",
+    "indikator": "Jumlah judul buku pengembangan keilmuan tiap prodi",
+    "nilai_standar": "> 300",
+    "satuan_nilai_standar": "Buku",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "310",
+        "satuan": "Buku"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "320",
+        "satuan": "Buku"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "330",
+        "satuan": "Buku"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "340",
+        "satuan": "Buku"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "350",
+        "satuan": "Buku"
+      }
+    ]
+  },
+  {
+    "name": "Pengadanaan Jurnal Internasional",
+    "unit_kerja": "perpustakaan",
+    "bidang": "Sarana dan Prasarana",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Sarana Pembelajaran",
+    "indikator": "Jumlah judul koleksi jurnal/e-journal Internasional tiap prodi",
+    "nilai_standar": "> 2",
+    "satuan_nilai_standar": "Jurnal",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "2",
+        "satuan": "Jurnal"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "2",
+        "satuan": "Jurnal"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "2",
+        "satuan": "Jurnal"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "3",
+        "satuan": "Jurnal"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "3",
+        "satuan": "Jurnal"
+      }
+    ]
+  },
+  {
+    "name": "Pengadaan Jurnal Nasional Terakreditasi",
+    "unit_kerja": "perpustakaan",
+    "bidang": "Sarana dan Prasarana",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Sarana Pembelajaran",
+    "indikator": "Jumlah judul koleksi jurnal/e-journal nasional terakreditasi tiap prodi",
+    "nilai_standar": "> 6",
+    "satuan_nilai_standar": "Jurnal",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "3",
+        "satuan": "Jurnal"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "3",
+        "satuan": "Jurnal"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "3",
+        "satuan": "Jurnal"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "4",
+        "satuan": "Jurnal"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "4",
+        "satuan": "Jurnal"
+      }
+    ]
+  },
+  {
+    "name": "Pengadanaan Proceeding",
+    "unit_kerja": "perpustakaan",
+    "bidang": "Sarana dan Prasarana",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Sarana Pembelajaran",
+    "indikator": "Jumlah proceeding tiap prodi",
+    "nilai_standar": "> 9",
+    "satuan_nilai_standar": "Proceeding",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "9",
+        "satuan": "Proceeding"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "9",
+        "satuan": "Proceeding"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "10",
+        "satuan": "Proceeding"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "10",
+        "satuan": "Proceeding"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "10",
+        "satuan": "Proceeding"
+      }
+    ]
+  },
+  {
+    "name": "Pendampingan Akreditasi Perpustakaan",
+    "unit_kerja": "perpustakaan",
+    "bidang": "Sarana dan Prasarana",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Sarana Pembelajaran",
+    "indikator": "Peringkat akreditasi Perpustakaan (nilai A=3, B=2, C=1)",
+    "nilai_standar": "3",
+    "satuan_nilai_standar": "B",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "Terakreditasi",
+        "satuan": "B"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "Terakreditasi",
+        "satuan": "B"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "Terakreditasi",
+        "satuan": "B"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "Terakreditasi",
+        "satuan": "B"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "Terakreditasi",
+        "satuan": "B"
+      }
+    ]
+  },
+  {
+    "name": "Pengadaaan e-Journal",
+    "unit_kerja": "perpustakaan",
+    "bidang": "Sarana dan Prasarana",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Sarana Pembelajaran",
+    "indikator": "Jumlah judul koleksi e-journal internasional tiap prodi",
+    "nilai_standar": "> 2",
+    "satuan_nilai_standar": "Jurnal",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "2",
+        "satuan": "Jurnal"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "2",
+        "satuan": "Jurnal"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "2",
+        "satuan": "Jurnal"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "3",
+        "satuan": "Jurnal"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "3",
+        "satuan": "Jurnal"
+      }
+    ]
+  },
+  {
+    "name": "Pelatihan/Sertifikasi TOEFL",
+    "unit_kerja": "pusat-bahasa",
+    "bidang": "Akademik",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Akademik",
+    "indikator": "Persentase lulusan yang memiliki nilai TOEFL/Sejenis 425",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "25",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "90",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "95",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "95",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "95",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pengelolaan Bisnis pusat bahasa",
+    "unit_kerja": "pusat-bahasa",
+    "bidang": "Keuangan",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Keuangan",
+    "indikator": "Persentase Perolehan dana bersumber dari selain mahasiswa",
+    "nilai_standar": ">20%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "10",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "10",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "15",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "20",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "25",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pengelolaan Bisnis Center/Hibah",
+    "unit_kerja": "pusat-bisnis",
+    "bidang": "Keuangan",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Keuangan",
+    "indikator": "Persentase Perolehan dana bersumber dari selain mahasiswa",
+    "nilai_standar": ">20%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "200000000",
+        "satuan": "rupiah"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "200000000",
+        "satuan": "rupiah"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "200000000",
+        "satuan": "rupiah"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "200000000",
+        "satuan": "rupiah"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "200000000",
+        "satuan": "rupiah"
+      }
+    ]
+  },
+  {
+    "name": "Layanan UMLA Press",
+    "unit_kerja": "pusat-hak-kekayaan-intelektual-dan-publikasi-ilmiah",
+    "bidang": "Publikasi",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Penelitian & Publikasi",
+    "indikator": "Persentase Jumlah Buku yang dihasilkan dari Penelitian/Pengabdian/pemikiran (dari total dosen)",
+    "nilai_standar": ">10%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "10",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "15",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "20",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "25",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "25",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pendampingan dan Layanan Pendaftaran Hak Cipta Di Luar Kegiatan PKM",
+    "unit_kerja": "pusat-hak-kekayaan-intelektual-dan-publikasi-ilmiah",
+    "bidang": "Publikasi",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Penelitian & Publikasi",
+    "indikator": "Persentase Hak Cipta/merek/teknologi tepat guna/karya seni hasil penelitian (jumlah hak cipta/jumlah dosen tetap)",
+    "nilai_standar": ">30%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "30",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "30",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "30",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "30",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "30",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "pendampingan dan Layanan Paten, Paten Sederhana, Dan Merk",
+    "unit_kerja": "pusat-hak-kekayaan-intelektual-dan-publikasi-ilmiah",
+    "bidang": "Publikasi",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Pengabdian Masyarakat",
+    "indikator": "Persentase Haki Paten, paten sederhana, merk hasil penelitian (jumlah paten/jumlah dosen tetap)",
+    "nilai_standar": "0.02",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "2",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "2",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "2",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "3",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "45",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pendampingan dan Layanan Pendaftaran Hak Cipta Di Luar Kegiatan PKM",
+    "unit_kerja": "pusat-hak-kekayaan-intelektual-dan-publikasi-ilmiah",
+    "bidang": "Publikasi",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Penelitian & Publikasi",
+    "indikator": "Persentase Hak Cipta//merek/teknologi tepat guna/karya seni hasil pengabdian (jumlah hak cipta/jumlah dosen tetap)",
+    "nilai_standar": ">30%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "30",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "30",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "30",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "30",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "30",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "pendampingan dan Layanan Paten, Paten Sederhana, Dan Merk",
+    "unit_kerja": "pusat-hak-kekayaan-intelektual-dan-publikasi-ilmiah",
+    "bidang": "Publikasi",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Pengabdian Masyarakat",
+    "indikator": "Persentase Haki Paten, paten sederhana, merk hasil pengabdian (jumlah paten/jumlah dosen)",
+    "nilai_standar": "0.02",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "2",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "2",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "2",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "3",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "45",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Top Sinta Score Award",
+    "unit_kerja": "pusat-hak-kekayaan-intelektual-dan-publikasi-ilmiah",
+    "bidang": "Publikasi",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Penelitian & Publikasi",
+    "indikator": "Persentase Jumlah karya ilmiah/artikel dosen/mahasiswa yang disitasi (jumlah artikel disitas/jumlah dosen)",
+    "nilai_standar": ">20%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "20",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "20",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "20",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "20",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "20",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Insentif Publikasi Jurnal Nasional",
+    "unit_kerja": "pusat-hak-kekayaan-intelektual-dan-publikasi-ilmiah",
+    "bidang": "Publikasi",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Penelitian & Publikasi",
+    "indikator": "Persentase Publikasi dosen//mahasiswa di Jurnal penelitian nasional terakreditasi dari jumlah total dosen",
+    "nilai_standar": ">20%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "10",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "15",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "20",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "25",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "30",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pendampingan Publikasi Internasional /Insentif Publikasi Jurnal Internasional Bereputasi",
+    "unit_kerja": "pusat-hak-kekayaan-intelektual-dan-publikasi-ilmiah",
+    "bidang": "Publikasi",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Penelitian & Publikasi",
+    "indikator": "Persentase publikasi dosen/mahasiswa di jurnal penelitian internasional bereputasi dari jumlah total dosen",
+    "nilai_standar": ">10%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "10",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "15",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "20",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "25",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "30",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Insentif Publikasi Ilmiah Pada Konferensi Internasional",
+    "unit_kerja": "pusat-hak-kekayaan-intelektual-dan-publikasi-ilmiah",
+    "bidang": "Publikasi",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Penelitian & Publikasi",
+    "indikator": "Persentase publikasi dosen/mahasiswa di Seminar internasional dari jumlah total dosen",
+    "nilai_standar": ">10%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "10",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "15",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "20",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "25",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "30",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Insentif Publikasi Ilmiah Di Konferensi Nasional",
+    "unit_kerja": "pusat-hak-kekayaan-intelektual-dan-publikasi-ilmiah",
+    "bidang": "Publikasi",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Penelitian & Publikasi",
+    "indikator": "Persentase publikasi dosen/mahasiswa di Seminar nasional dari jumlah total dosen",
+    "nilai_standar": ">20%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "10",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "15",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "20",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "25",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "30",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Insentif Publikasi Dosen/Mahasiswa Di Tulisan Di Media Massa/ Pagelaran/Pameran/Presentasi Dalam Forum Internasional",
+    "unit_kerja": "pusat-hak-kekayaan-intelektual-dan-publikasi-ilmiah",
+    "bidang": "Publikasi",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Penelitian & Publikasi",
+    "indikator": "Persentase publikasi dosen/mahasiswa di Tulisan di media massa/ Pagelaran/pameran/presentasi dalam forum internasional dari jumlah total dosen",
+    "nilai_standar": "> 10%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "10",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "15",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "20",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "25",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "30",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Insentif Publikasi Dosen/Mahasiswa Di Tulisan Di Media Massa/ Pagelaran/Pameran/Presentasi Dalam Forum Nasional",
+    "unit_kerja": "pusat-hak-kekayaan-intelektual-dan-publikasi-ilmiah",
+    "bidang": "Publikasi",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Penelitian & Publikasi",
+    "indikator": "Persentase publikasi dosen/mahasiswa di Tulisan di media massa/ Pagelaran/pameran/presentasi dalam forum nasional dari jumlah total dosen",
+    "nilai_standar": "> 20%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "10",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "15",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "20",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "25",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "30",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Insentif Publikasi Ilmiah Di Konferensi Tingkat Wilayah",
+    "unit_kerja": "pusat-hak-kekayaan-intelektual-dan-publikasi-ilmiah",
+    "bidang": "Publikasi",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Penelitian & Publikasi",
+    "indikator": "Persentase publikasi dosen/mahasiswa di Tulisan di media massa/ Pagelaran/pameran/presentasi dalam forum wilayah dari jumlah total dosen",
+    "nilai_standar": "> 10%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "10",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "15",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "20",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "25",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "30",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Langganan Zoom Meeting",
+    "unit_kerja": "pusat-teknologi-informasi-pti",
+    "bidang": "Sarana dan Prasarana",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Sarana Pembelajaran",
+    "indikator": "Jumlah sarana zoom meeting",
+    "nilai_standar": "> 40",
+    "satuan_nilai_standar": "Akun",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "6",
+        "satuan": "Akun"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "12",
+        "satuan": "Akun"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "24",
+        "satuan": "Akun"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "34",
+        "satuan": "Akun"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "40",
+        "satuan": "Akun"
+      }
+    ]
+  },
+  {
+    "name": "Pengembangan Sistem Informasi",
+    "unit_kerja": "pusat-teknologi-informasi-pti",
+    "bidang": "Sarana dan Prasarana",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Sarana Pembelajaran",
+    "indikator": "Jumlah Sistem Informasi",
+    "nilai_standar": "> 16",
+    "satuan_nilai_standar": "Sistem informasi",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "8",
+        "satuan": "Sistem informasi"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "10",
+        "satuan": "Sistem informasi"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "12",
+        "satuan": "Sistem informasi"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "14",
+        "satuan": "Sistem informasi"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "16",
+        "satuan": "Sistem informasi"
+      }
+    ]
+  },
+  {
+    "name": "Pengadaan Software berlisensi",
+    "unit_kerja": "pusat-teknologi-informasi-pti",
+    "bidang": "Sarana dan Prasarana",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Sarana Pembelajaran",
+    "indikator": "Jumlah software berlisensi",
+    "nilai_standar": "> 8",
+    "satuan_nilai_standar": "Software",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "4",
+        "satuan": "Software"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "5",
+        "satuan": "Software"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "6",
+        "satuan": "Software"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "7",
+        "satuan": "Software"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "8",
+        "satuan": "Software"
+      }
+    ]
+  },
+  {
+    "name": "Pengadaan Sarana Prarasana Wifi",
+    "unit_kerja": "pusat-teknologi-informasi-pti",
+    "bidang": "Sarana dan Prasarana",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Sarana Pembelajaran",
+    "indikator": "Jumlah titik hot spot area (wifi) di setiap lantai, ruang2 terbuka",
+    "nilai_standar": "> 90",
+    "satuan_nilai_standar": "Hotspot area",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "50",
+        "satuan": "Hotspot area"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "60",
+        "satuan": "Hotspot area"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "70",
+        "satuan": "Hotspot area"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "80",
+        "satuan": "Hotspot area"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "90",
+        "satuan": "Hotspot area"
+      }
+    ]
+  },
+  {
+    "name": "Penambahan Kapasitas Bandwith",
+    "unit_kerja": "pusat-teknologi-informasi-pti",
+    "bidang": "Sarana dan Prasarana",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Sarana Pembelajaran",
+    "indikator": "Kapasitan internet dengan rasio bandwith /mahasiswa (0,75 kbps/mahasiswa)",
+    "nilai_standar": "300 mbps",
+    "satuan_nilai_standar": "Mbps",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "300",
+        "satuan": "Mbps"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "300",
+        "satuan": "Mbps"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "300",
+        "satuan": "Mbps"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "300",
+        "satuan": "Mbps"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "300",
+        "satuan": "Mbps"
+      }
+    ]
+  },
+  {
+    "name": "Pengadaan Sarana Prasarana IT (Internet)",
+    "unit_kerja": "pusat-teknologi-informasi-pti",
+    "bidang": "Sarana dan Prasarana",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Sarana Pembelajaran",
+    "indikator": "Persentase kelas/ruang dengan jaringan internet yang berjalan dengan baik",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pengadanaan sarana prasarana e-learning",
+    "unit_kerja": "pusat-teknologi-informasi-pti",
+    "bidang": "Sarana dan Prasarana",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Sarana Pembelajaran",
+    "indikator": "Persentase ketersediaa fasilitas e-learning yang berjalan dengan baik",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Workshop/Lokakarya/Seminar",
+    "unit_kerja": "pusat-teknologi-informasi-pti",
+    "bidang": "Sarana dan Prasarana",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Sarana Pembelajaran",
+    "indikator": "Persentase ketersediaan Blue print pengembangan IT yang berjalan dengan baik",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pengadanaan Sarana Prasarana Laboratorium",
+    "unit_kerja": "pusat-laboratorium",
+    "bidang": "Sarana dan Prasarana",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Sarana Pembelajaran",
+    "indikator": "Persentase kelengkapan alat sesuai dengan standar setiap laboratorium",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pengajuan Bahan Habis Pakai, Kalibrasi, Pembuangan Limbah",
+    "unit_kerja": "pusat-laboratorium",
+    "bidang": "Sarana dan Prasarana",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Sarana Pembelajaran",
+    "indikator": "Persentase ketersediaan jumlah/jenis/bahan habis pakai laboratorium setiap program studi",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pengelolaan Bisnis laboratorium",
+    "unit_kerja": "pusat-laboratorium",
+    "bidang": "Keuangan",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Keuangan",
+    "indikator": "Persentase Perolehan dana bersumber dari selain mahasiswa",
+    "nilai_standar": ">20%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "100000000",
+        "satuan": "rupiah"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100000000",
+        "satuan": "rupiah"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100000000",
+        "satuan": "rupiah"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100000000",
+        "satuan": "rupiah"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100000000",
+        "satuan": "rupiah"
+      }
+    ]
+  },
+  {
+    "name": "Layanan Konseling, meliputi Bimbingan Dan Konseling Individu, Bimbingan Dan Konseling Kelompok, . Layanan Konsultasi, Layanan Mediasi, . Layanan Home Visit (Kunjungan Rumah)",
+    "unit_kerja": "pusat-layanan-bimbingan-konseling",
+    "bidang": "Kemahasiswaan",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Kemahasiswaan",
+    "indikator": "Persentase ketersediaan layanan kesejahteraan mahasiswa meliputi adanya fasilitas layanan bimbingan konseling yang berjalan sesuai standar baik",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pengelolaan terbitan berkala ilmiah/Percepatan Akreditasi Nasional Jurnal UMLA",
+    "unit_kerja": "pusat-pengembangan-jurnal",
+    "bidang": "Publikasi",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Penelitian & Publikasi",
+    "indikator": "Jumlah Jurnal Nasional UMLA terakreditasi SINTA",
+    "nilai_standar": "> 6",
+    "satuan_nilai_standar": "Jurnal",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "2",
+        "satuan": "Jurnal"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "3",
+        "satuan": "Jurnal"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "4",
+        "satuan": "Jurnal"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "5",
+        "satuan": "Jurnal"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "6",
+        "satuan": "Jurnal"
+      }
+    ]
+  },
+  {
+    "name": "Program dosen mengajar/berkegiatan di Luar Kampus",
+    "unit_kerja": "pusat-pengembangan-pembelajaran-dan-rpl",
+    "bidang": "Akademik",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Akademik",
+    "indikator": "Persentase dosen berkegiatan/mengajar di luar kampus",
+    "nilai_standar": "> 20%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "15",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "20",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "25",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "30",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "40",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Workshop/lokakrya perangkat pembelajaran",
+    "unit_kerja": "pusat-pengembangan-pembelajaran-dan-rpl",
+    "bidang": "Akademik",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Akademik",
+    "indikator": "Persentase kelas kolaboratif dan partisipatif",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "90",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "95",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "95",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Workshop/lokakrya perangkat pembelajaran",
+    "unit_kerja": "pusat-pengembangan-pembelajaran-dan-rpl",
+    "bidang": "Akademik",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Akademik",
+    "indikator": "Persentase mata kuliah yang memiliki modul/bahan ajar",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "95",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Workshop/lokakrya perangkat pembelajaran",
+    "unit_kerja": "pusat-pengembangan-pembelajaran-dan-rpl",
+    "bidang": "Akademik",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Akademik",
+    "indikator": "Persentase mata kuliah yang menggunakan e-learning",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "25",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "50",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "75",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "85",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Workshop/lokakrya perangkat pembelajaran",
+    "unit_kerja": "pusat-pengembangan-pembelajaran-dan-rpl",
+    "bidang": "Akademik",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Akademik",
+    "indikator": "Persentase mata kuliah yang menggunakan metode SCL",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Workshop/Lokakarya Pengembangan Kurikulum",
+    "unit_kerja": "pusat-pengembangan-pembelajaran-dan-rpl",
+    "bidang": "Akademik",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Akademik",
+    "indikator": "Persentase PS melakukan peninjauan kurikulum 5 tahun terakhir",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Workshop/Lokakarya Pengembangan Kurikulum",
+    "unit_kerja": "pusat-pengembangan-pembelajaran-dan-rpl",
+    "bidang": "Akademik",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Akademik",
+    "indikator": "Persentase PS yang menerapkan Kurikulum Pendidikan Tinggi berdasarkan KKNI/OBE",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Workshop/lokakrya perangkat pembelajaran",
+    "unit_kerja": "pusat-pengembangan-pembelajaran-dan-rpl",
+    "bidang": "Akademik",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Akademik",
+    "indikator": "Persentasi mata kuliah yang memiliki RPS dan RP",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "95",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Rekognisi Pembelajaran Lampau ( RPL )",
+    "unit_kerja": "pusat-pengembangan-pembelajaran-dan-rpl",
+    "bidang": "Akademik",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Akademik",
+    "indikator": "Persentase lulusan RPL tepat waktu",
+    "nilai_standar": "0.8",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "85",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "85",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "95",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "95",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "95",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Tracer Study Dan Temu Pengguna Alumni",
+    "unit_kerja": "pusat-tracer-study",
+    "bidang": "Akademik",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Akademik",
+    "indikator": "Persentase kepuasan sangat baik oleh pengguna lulusan",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "90",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "90",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "95",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Tracer Study",
+    "unit_kerja": "pusat-tracer-study",
+    "bidang": "Akademik",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Akademik",
+    "indikator": "Persentase kesesuaian bidang kerja lulusan",
+    "nilai_standar": "> 80%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "80",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "80",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "85",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "95",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "95",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Tracer Study",
+    "unit_kerja": "pusat-tracer-study",
+    "bidang": "Akademik",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Akademik",
+    "indikator": "Persentase lulusan yang bekerja/berwirausaha di tingkat internasional/multinasional",
+    "nilai_standar": "> 5%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "2",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "3",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "5",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "75",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "9",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Tracer Study",
+    "unit_kerja": "pusat-tracer-study",
+    "bidang": "Akademik",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Akademik",
+    "indikator": "Persentase lulusan yang bekerja/berwirausaha di tingkat lokal/wilayah/tidak berbadan hukum",
+    "nilai_standar": "< 50%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "43",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "37",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "30",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "23",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "16.1",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Tracer Study",
+    "unit_kerja": "pusat-tracer-study",
+    "bidang": "Akademik",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Akademik",
+    "indikator": "Persentase lulusan yang bekerja/berwirausaha di tingkat nasional/berbadan hukum",
+    "nilai_standar": "> 20%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "55",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "60",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "65",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "70",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "75",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Tracer Study Dan Temu Pengguna Alumni",
+    "unit_kerja": "pusat-tracer-study",
+    "bidang": "Akademik",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Akademik",
+    "indikator": "Persentase tanggapan kepuasan dari pengguna yang terlacak (jumlah responden yg terlacak/Jumlah respoden ditargetkan)",
+    "nilai_standar": "> 80%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "80",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "80",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "80",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "80",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "80",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Career Mentoring daan Job Affair",
+    "unit_kerja": "pusat-tracer-study",
+    "bidang": "Akademik",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Akademik",
+    "indikator": "Persentase waktu tunggu lulusan Diploma 3 (< 3 bulan) dan sarjana/sarjana terapan (< 6 bulan)",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "80",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "90",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "90",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "90",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Lokakarya Asosiasi Pusat Karir PTMA",
+    "unit_kerja": "pusat-tracer-study",
+    "bidang": "Akademik",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Akademik",
+    "indikator": "Persentase ketersediaan layanan kesejahteraan mahasiswa meliputi adanya fasilitas layanan layanan karir yang berjalan efektif",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Rekrutmen Laboran",
+    "unit_kerja": "sumber-daya-insan-sdi",
+    "bidang": "Sumber Daya Manusia",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu SDM",
+    "indikator": "Jumlah laboran (minimal 2/PS)",
+    "nilai_standar": "38",
+    "satuan_nilai_standar": "Laboran",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "7",
+        "satuan": "Laboran"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "9",
+        "satuan": "Laboran"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "10",
+        "satuan": "Laboran"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "20",
+        "satuan": "Laboran"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "22",
+        "satuan": "Laboran"
+      }
+    ]
+  },
+  {
+    "name": "Rekrutmen Pustawakan",
+    "unit_kerja": "sumber-daya-insan-sdi",
+    "bidang": "Sumber Daya Manusia",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu SDM",
+    "indikator": "Jumlah pustakawan yang berpendidikan pustawakan minimal diploma (minimal > 6 pustawakan)",
+    "nilai_standar": "> 6",
+    "satuan_nilai_standar": "Pustakawan",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "6",
+        "satuan": "Pustakawan"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "6",
+        "satuan": "Pustakawan"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "6",
+        "satuan": "Pustakawan"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "6",
+        "satuan": "Pustakawan"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "7",
+        "satuan": "Pustakawan"
+      }
+    ]
+  },
+  {
+    "name": "Rekrutmen Teknisi",
+    "unit_kerja": "sumber-daya-insan-sdi",
+    "bidang": "Sumber Daya Manusia",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu SDM",
+    "indikator": "Jumlah teknisi (minimal 1/prodi)",
+    "nilai_standar": "14",
+    "satuan_nilai_standar": "Teknisi",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "8",
+        "satuan": "Teknisi"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "8",
+        "satuan": "Teknisi"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "10",
+        "satuan": "Teknisi"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "12",
+        "satuan": "Teknisi"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "14",
+        "satuan": "Teknisi"
+      }
+    ]
+  },
+  {
+    "name": "Rekrutmen tenaga kependidikan",
+    "unit_kerja": "sumber-daya-insan-sdi",
+    "bidang": "Sumber Daya Manusia",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu SDM",
+    "indikator": "Jumlah tenaga kependidikan minimal ijazah D3 (minimal 3/prodi)",
+    "nilai_standar": "57",
+    "satuan_nilai_standar": "Tendik",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "35",
+        "satuan": "Tendik"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "40",
+        "satuan": "Tendik"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "45",
+        "satuan": "Tendik"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "50",
+        "satuan": "Tendik"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "57",
+        "satuan": "Tendik"
+      }
+    ]
+  },
+  {
+    "name": "Rekrutmen Dosen",
+    "unit_kerja": "sumber-daya-insan-sdi",
+    "bidang": "Sumber Daya Manusia",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu SDM",
+    "indikator": "Rasio dosen dengan jumlah mahasiswa minimal <30 mhs",
+    "nilai_standar": "< 30 mhs",
+    "satuan_nilai_standar": "Mahasiswa",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "30",
+        "satuan": "Mahasiswa"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "30",
+        "satuan": "Mahasiswa"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "30",
+        "satuan": "Mahasiswa"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "25",
+        "satuan": "Mahasiswa"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "25",
+        "satuan": "Mahasiswa"
+      }
+    ]
+  },
+  {
+    "name": "Workshop Pendampingan JAFA",
+    "unit_kerja": "sumber-daya-insan-sdi",
+    "bidang": "Sumber Daya Manusia",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu SDM",
+    "indikator": "Persentase dosen dengan sertifikat pendidik",
+    "nilai_standar": "> 80%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "20",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "30",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "40",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "50",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "80",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Workshop Pendampingan JAFA",
+    "unit_kerja": "sumber-daya-insan-sdi",
+    "bidang": "Sumber Daya Manusia",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu SDM",
+    "indikator": "Persentase dosen dengan jabatan akademik minimal guru besar",
+    "nilai_standar": "> 15%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "0",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "0.5",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "1",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "2",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "3",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Workshop Pendampingan JAFA",
+    "unit_kerja": "sumber-daya-insan-sdi",
+    "bidang": "Sumber Daya Manusia",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu SDM",
+    "indikator": "Persentase dosen dengan jabatan akademik minimal lektor",
+    "nilai_standar": "> 60%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "20",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "30",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "40",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "50",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "60",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Workshop Pendampingan JAFA",
+    "unit_kerja": "sumber-daya-insan-sdi",
+    "bidang": "Sumber Daya Manusia",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu SDM",
+    "indikator": "Persentase dosen dengan jabatan akademik minimal lektor kepala",
+    "nilai_standar": "> 40%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "20",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "30",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "35",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "40",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "40",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Studi S3",
+    "unit_kerja": "sumber-daya-insan-sdi",
+    "bidang": "Sumber Daya Manusia",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu SDM",
+    "indikator": "Persentase dosen dengan pendidikan minimal S3",
+    "nilai_standar": "> 40%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "10",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "10",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "20",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "30",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "40",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pembinaan/Workshop/Lokakarya/Seminar",
+    "unit_kerja": "sumber-daya-insan-sdi",
+    "bidang": "Sumber Daya Manusia",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu SDM",
+    "indikator": "Persentase kinerja baik tenaga dosen dan tenaga kependidikan",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "80",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "90",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pelathan/Sertifikasi Tendik",
+    "unit_kerja": "sumber-daya-insan-sdi",
+    "bidang": "Sumber Daya Manusia",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu SDM",
+    "indikator": "Persentase tenaga kependidikan/laboran yang memperoleh sertifikat pelatihan keahlian",
+    "nilai_standar": "> 80%",
+    "satuan_nilai_standar": null,
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "80",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "80",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "80",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "80",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "80",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Pelatihan Pekerti/Sejenisnya",
+    "unit_kerja": "sumber-daya-insan-sdi",
+    "bidang": "Sumber Daya Manusia",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu SDM",
+    "indikator": "Persentase dosen yang memiliki sertfikat pekerti/sejenisnya",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Rapat/akomodasi/ konsums & pengadaaan kesekretariatan rektorat/Sejenisnya",
+    "unit_kerja": "sekretariat-rektor",
+    "bidang": "Akademik",
+    "kategori": "IKT",
+    "program": "Peningkatan Mutu Tata Kelola dan Kelembagaan",
+    "indikator": "Persentase kinerja program studi/fakultas/biro dengan hasil kinerja baik.",
+    "nilai_standar": "1",
+    "satuan_nilai_standar": "persen",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "100",
+        "satuan": "persen"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "100",
+        "satuan": "persen"
+      }
+    ]
+  },
+  {
+    "name": "Audit Keuangan",
+    "unit_kerja": "satuan-pengawas-internal-spi",
+    "bidang": "Penjaminan Mutu",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Tata Kelola dan Kelembagaan",
+    "indikator": "Hasil Audit Keuangan (akuntan publik) dengan Nilai WTP=3 WP=2, Tidak Wajar=1",
+    "nilai_standar": "WTP",
+    "satuan_nilai_standar": "Tingkat",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "3",
+        "satuan": "Tingkat"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "3",
+        "satuan": "Tingkat"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "3",
+        "satuan": "Tingkat"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "3",
+        "satuan": "Tingkat"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "3",
+        "satuan": "Tingkat"
+      }
+    ]
+  },
+  {
+    "name": "Audit Keuangan",
+    "unit_kerja": "satuan-pengawas-internal-spi",
+    "bidang": "Penjaminan Mutu",
+    "kategori": "IKU",
+    "program": "Peningkatan Mutu Tata Kelola dan Kelembagaan",
+    "indikator": "Hasil Audit Keuangan Internal dengan nilai WTP=3 WP=2, Tidak Wajar=1",
+    "nilai_standar": "WTP",
+    "satuan_nilai_standar": "Tingkat",
+    "targets": [
+      {
+        "tahun": 2023,
+        "nilai": "3",
+        "satuan": "Tingkat"
+      },
+      {
+        "tahun": 2024,
+        "nilai": "3",
+        "satuan": "Tingkat"
+      },
+      {
+        "tahun": 2025,
+        "nilai": "3",
+        "satuan": "Tingkat"
+      },
+      {
+        "tahun": 2026,
+        "nilai": "3",
+        "satuan": "Tingkat"
+      },
+      {
+        "tahun": 2027,
+        "nilai": "3",
+        "satuan": "Tingkat"
+      }
+    ]
+  }
+]

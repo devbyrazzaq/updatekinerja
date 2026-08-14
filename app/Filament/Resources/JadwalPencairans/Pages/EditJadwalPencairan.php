@@ -1,0 +1,53 @@
+<?php
+
+namespace App\Filament\Resources\JadwalPencairans\Pages;
+
+use App\Filament\Actions\AuthorizedViewAction;
+use App\Filament\Actions\CaptchaDeleteAction;
+use App\Filament\Resources\JadwalPencairans\JadwalPencairanResource;
+use Filament\Actions\Action;
+use Filament\Notifications\Notification;
+use Filament\Resources\Pages\EditRecord;
+
+class EditJadwalPencairan extends EditRecord
+{
+    protected static string $resource = JadwalPencairanResource::class;
+
+    public function getBreadcrumb(): string
+    {
+        return 'Ubah';
+    }
+
+    /**
+     * @return array<int, AuthorizedViewAction|CaptchaDeleteAction>
+     */
+    protected function getHeaderActions(): array
+    {
+        return [
+            AuthorizedViewAction::make()
+                ->icon('heroicon-o-eye')
+                ->label('Masuk Ke View Mode'),
+            CaptchaDeleteAction::make(),
+        ];
+    }
+
+    protected function getSaveFormAction(): Action
+    {
+        return parent::getSaveFormAction()->label('Simpan Perubahan');
+    }
+
+    protected function getCancelFormAction(): Action
+    {
+        return parent::getCancelFormAction()->label('Batal');
+    }
+
+    protected function getRedirectUrl(): ?string
+    {
+        return JadwalPencairanResource::getUrl('view', ['record' => $this->getRecord()]);
+    }
+
+    protected function getSavedNotification(): ?Notification
+    {
+        return parent::getSavedNotification()?->title('Jadwal pencairan berhasil diperbarui');
+    }
+}

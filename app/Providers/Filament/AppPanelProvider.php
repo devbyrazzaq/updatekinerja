@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Models\Setting;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -10,13 +11,15 @@ use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\View\PanelsRenderHook;
 use Filament\Widgets\AccountWidget;
-use Filament\Widgets\FilamentInfoWidget;
+use Illuminate\Contracts\View\View;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class AppPanelProvider extends PanelProvider
@@ -29,12 +32,30 @@ class AppPanelProvider extends PanelProvider
             ->path('app')
             ->viteTheme('resources/css/filament/app/theme.css')
             ->font('Plus Jakarta Sans')
-            ->login()
+            // Brand disusun sendiri agar nama aplikasi, logo, dan keterangan cakupan
+            // unit kerja bisa diatur lewat Pengaturan Sistem tanpa mengubah kode.
+            ->brandName(fn (): string => Setting::brandNama())
+            ->brandLogo(fn (): View => view('filament.app-logo'))
+            ->brandLogoHeight('auto')
+            ->login(fn () => redirect('/'))
+            ->databaseTransactions()
+            ->databaseNotifications()
             ->colors([
                 'primary' => Color::Amber,
             ])
             ->navigationGroups([
                 'Master Data',
+                'Anggaran',
+                'Program Kerja',
+                'Pelaksanaan',
+                'Pemasukan',
+                'Verifikasi Pemasukan',
+                'Verifikasi Pengajuan',
+                'Verifikasi Realisasi',
+                'Perencanaan',
+                'Verifikasi Pengajuan Perencanaan',
+                'Monitoring',
+                'Pengguna',
                 'Manajemen Akses',
                 'Pengaturan Sistem',
             ])
@@ -46,8 +67,15 @@ class AppPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([
                 AccountWidget::class,
-                FilamentInfoWidget::class,
             ])
+            // Pengalih unit kerja untuk pengguna yang berwenang atas lebih dari satu
+            // unit; komponennya sendiri yang menentukan perlu tampil atau tidak.
+            // Diletakkan di atas menu navigasi sidebar agar tetap rapi di layar kecil,
+            // karena sidebar berubah menjadi drawer pada tampilan mobile.
+            ->renderHook(
+                PanelsRenderHook::SIDEBAR_NAV_START,
+                fn (): string => Blade::render('<livewire:unit-kerja-switcher />'),
+            )
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

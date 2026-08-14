@@ -43,6 +43,23 @@ RUN apk add --no-cache --virtual .build-deps \
     && docker-php-ext-enable redis \
     && apk del .build-deps
 
+# Chromium untuk render laporan PDF (Browsershot).
+#
+# Chrome unduhan puppeteer di-build untuk glibc dan tidak jalan di Alpine (musl),
+# jadi dipakai paket chromium bawaan Alpine dan Browsershot diarahkan ke situ.
+# Paket npm `puppeteer` tetap perlu ada di node_modules karena browser.cjs milik
+# browsershot me-require-nya — hanya unduhan Chrome-nya yang dimatikan.
+RUN apk add --no-cache \
+    chromium \
+    nss \
+    harfbuzz \
+    ca-certificates \
+    ttf-freefont \
+    font-noto
+
+ENV BROWSERSHOT_CHROME_PATH=/usr/bin/chromium-browser \
+    PUPPETEER_SKIP_DOWNLOAD=true
+
 # Composer dari image resmi
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
