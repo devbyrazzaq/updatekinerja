@@ -54,10 +54,12 @@ abstract class Report
     }
 
     /**
-     * Path absolut logo brand di disk, siap disematkan sebagai data URI. Logo yang
-     * tidak dipasang atau hilang dari disk membuat kop tampil tanpa gambar.
+     * Logo brand sebagai data URI siap pasang pada atribut `src`. Sengaja disematkan
+     * ke dalam dokumen, bukan ditautkan: mesin render tidak dijamin bisa membaca
+     * disk aplikasi maupun menjangkau jaringan. Logo yang tidak dipasang atau hilang
+     * dari disk membuat kop tampil tanpa gambar.
      */
-    protected function logoPath(): ?string
+    protected function logoDataUri(): ?string
     {
         $path = Setting::brandLogoPath();
 
@@ -67,6 +69,12 @@ abstract class Report
 
         $absolute = Storage::disk(Setting::BRAND_LOGO_DISK)->path($path);
 
-        return is_file($absolute) ? $absolute : null;
+        if (! is_file($absolute)) {
+            return null;
+        }
+
+        $mime = mime_content_type($absolute) ?: 'image/png';
+
+        return 'data:'.$mime.';base64,'.base64_encode((string) file_get_contents($absolute));
     }
 }

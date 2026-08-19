@@ -5,10 +5,11 @@
     // dan penanda cukup sesempit isinya. Tanpa ini nominal panjang patah dua baris.
     //
     // Tabel memakai table-layout: fixed, jadi persentase seluruh kolom data disisakan
-    // di bawah 100% — sisanya jatah kolom nomor. Tanpa jatah itu Chromium menyusutkan
-    // kolom nomor sampai angka dua digit patah ke bawah.
+    // di bawah 100% — sisanya jatah kolom nomor. Tanpa jatah itu kolom nomor menyusut
+    // sampai angka dua digit patah ke bawah.
     $totalBobot = array_sum(array_map(fn (array $column): float => $column['format']->bobotLebar(), $columns));
-    $jatahKolomData = 94;
+    $jatahKolomNomor = 6;
+    $jatahKolomData = 100 - $jatahKolomNomor;
 
     // Di atas sepuluh kolom, huruf dan jarak dirapatkan supaya tabel tetap sehalaman.
     $rapat = count($columns) > 10;
@@ -19,11 +20,14 @@
 @endphp
 
 @section('content')
-    <table class="{{ $rapat ? 'dense' : '' }}">
+    <table class="data {{ $rapat ? 'dense' : '' }}">
         <colgroup>
-            <col class="col-index">
+            {{-- Lebar ditulis dua kali: atribut `width` dibaca mPDF, `style` dibaca
+                 Chromium. --}}
+            <col class="col-index" width="{{ $jatahKolomNomor }}%" style="width: {{ $jatahKolomNomor }}%;">
             @foreach ($columns as $column)
-                <col style="width: {{ round($column['format']->bobotLebar() / $totalBobot * $jatahKolomData, 2) }}%;">
+                @php $lebar = round($column['format']->bobotLebar() / $totalBobot * $jatahKolomData, 2); @endphp
+                <col width="{{ $lebar }}%" style="width: {{ $lebar }}%;">
             @endforeach
         </colgroup>
         <thead>
@@ -41,7 +45,7 @@
                         <td colspan="{{ count($columns) + 1 }}">{{ $groups[$index] }}</td>
                     </tr>
                 @endif
-                <tr>
+                <tr class="{{ $index % 2 === 1 ? 'zebra' : '' }}">
                     <td class="col-index">{{ $index + 1 }}</td>
                     @foreach ($cells as $cell)
                         {{-- Pada tabel rapat, aturan "jangan patah" dilepas: kolomnya

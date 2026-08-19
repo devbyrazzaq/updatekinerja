@@ -10,15 +10,19 @@ use App\Filament\Resources\Programs\Pages\ListPrograms;
 use App\Models\Program;
 use App\Models\User;
 use App\Reports\TabularReport;
+use App\Services\Pdf\Engines\BrowsershotEngine;
+use App\Services\Pdf\Engines\MpdfEngine;
+use App\Services\Pdf\PdfReporter;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\View;
+use InvalidArgumentException;
 use Livewire\Livewire;
 use Tests\TestCase;
 
 /**
- * Menguji perakitan data laporan dan hasil render Blade-nya. Render Chromium
- * sengaja tidak ikut diuji: terlalu berat untuk pengujian dan butuh binary yang
- * hanya ada di environment tertentu.
+ * Menguji perakitan data laporan, hasil render Blade-nya, dan render PDF oleh mesin
+ * PHP murni (mPDF). Render Chromium sengaja tidak ikut diuji: terlalu berat untuk
+ * pengujian dan butuh binary yang hanya ada di environment tertentu.
  */
 class LaporanPdfTest extends TestCase
 {
@@ -66,9 +70,42 @@ class LaporanPdfTest extends TestCase
         $this->assertStringContainsString('Nama Program Induk', $html);
         $this->assertStringContainsString('Tri Dharma', $html);
         $this->assertStringContainsString('Total 1 baris data.', $html);
-        // Font Plus Jakarta Sans tertanam, bukan ditautkan ke jaringan.
-        $this->assertStringContainsString('data:font/woff2', $html);
-        $this->assertStringNotContainsString('fonts.googleapis.com', $html);
+    }
+
+    public function test_font_disematkan_untuk_chromium_dan_dilewati_untuk_mpdf(): void
+    {
+        Program::create(['name' => 'Tri Dharma', 'is_active' => true]);
+
+        $report = new TabularReport(new ProgramsExport);
+
+        // Chromium membaca font dari @font-face; fontnya tertanam sebagai data URI,
+        // bukan ditautkan ke jaringan yang belum tentu terjangkau.
+        $chromium = View::make($report->view(), [...$report->data(), 'engine' => 'browsershot'])->render();
+        $this->assertStringContainsString('data:font/woff2', $chromium);
+        $this->assertStringNotContainsString('fonts.googleapis.com', $chromium);
+
+        // mPDF tidak mengenal @font-face; fontnya didaftarkan lewat config/pdf.php,
+        // jadi data URI-nya hanya jadi beban penguraian CSS.
+        $mpdf = View::make($report->view(), [...$report->data(), 'engine' => 'mpdf'])->render();
+        $this->assertStringNotContainsString('data:font/woff2', $mpdf);
+    }
+
+    public function test_tata_letak_laporan_tidak_memakai_css_yang_tak_dimengerti_mpdf(): void
+    {
+        Program::create(['name' => 'Tri Dharma', 'is_active' => true]);
+
+        $report = new TabularReport(new ProgramsExport);
+        $html = View::make($report->view(), [...$report->data(), 'engine' => 'mpdf'])->render();
+
+        // Komentar CSS dibuang lebih dahulu: yang dinilai aturan gayanya, bukan
+        // catatan yang justru menyebut konstruksi terlarang itu.
+        $css = preg_replace('#/\*.*?\*/#s', '', $html);
+
+        // mPDF hanya mengerti sebagian CSS 2.1: tanpa flexbox, tanpa custom property,
+        // tanpa pseudo-class. Semuanya harus sudah diganti tata letak tabel dan kelas.
+        $this->assertStringNotContainsString('display: flex', $css);
+        $this->assertStringNotContainsString('var(--', $css);
+        $this->assertStringNotContainsString(':nth-child', $css);
     }
 
     public function test_laporan_menyisipkan_pita_pembatas_saat_ekspor_mengelompokkan(): void
@@ -149,6 +186,37 @@ class LaporanPdfTest extends TestCase
             'laporan-program-'.now()->format('Y-m-d'),
             (new TabularReport(new ProgramsExport))->filename(),
         );
+    }
+
+    public function test_mesin_bawaan_merender_pdf_tanpa_chromium(): void
+    {
+        Program::create(['name' => 'Tri Dharma', 'is_active' => true]);
+
+        $path = tempnam(sys_get_temp_dir(), 'uji_laporan_').'.pdf';
+
+        try {
+            app(PdfReporter::class)->render(new TabularReport(new ProgramsExport), $path);
+
+            $this->assertFileExists($path);
+            $this->assertGreaterThan(1024, filesize($path));
+            $this->assertSame('%PDF', file_get_contents($path, length: 4));
+        } finally {
+            @unlink($path);
+        }
+    }
+
+    public function test_mesin_dipilih_lewat_konfigurasi(): void
+    {
+        $reporter = app(PdfReporter::class);
+
+        $this->assertInstanceOf(MpdfEngine::class, $reporter->engine());
+
+        config(['pdf.engine' => 'browsershot']);
+        $this->assertInstanceOf(BrowsershotEngine::class, $reporter->engine());
+
+        config(['pdf.engine' => 'entah-apa']);
+        $this->expectException(InvalidArgumentException::class);
+        $reporter->engine();
     }
 
     public function test_tombol_laporan_pdf_tersedia_di_halaman_daftar(): void

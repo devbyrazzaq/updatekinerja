@@ -31,6 +31,7 @@ use App\Models\TahunKerja;
 use App\Models\UnitKerja;
 use App\Models\User;
 use App\Reports\LaporanPencairanReport;
+use App\Services\Pdf\PdfReporter;
 use Filament\Actions\Testing\TestAction;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -241,6 +242,18 @@ class JadwalPencairanTest extends TestCase
         $this->assertStringContainsString('Kepala Biro Keuangan', $html);
         $this->assertStringContainsString('Dr. Hj. Siti Aminah, S.E., M.M.', $html);
         $this->assertStringContainsString('NIK 198701012015041002', $html);
+
+        // Tata letak khususnya juga harus lolos mesin render bawaan, bukan hanya
+        // terbaca sebagai HTML.
+        $path = tempnam(sys_get_temp_dir(), 'uji_pencairan_').'.pdf';
+
+        try {
+            app(PdfReporter::class)->render($report, $path);
+
+            $this->assertSame('%PDF', file_get_contents($path, length: 4));
+        } finally {
+            @unlink($path);
+        }
     }
 
     /**

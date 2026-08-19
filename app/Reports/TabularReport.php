@@ -67,7 +67,7 @@ class TabularReport extends Report
             'subtitle' => $this->export->subtitle(),
             'instansi' => Setting::brandInstansi(),
             'aplikasi' => Setting::brandNama(),
-            'logo' => $this->logoPath(),
+            'logo' => $this->logoDataUri(),
             'generatedAt' => now(),
             'columns' => $columns,
             'summary' => $this->export->summary(),

@@ -55,7 +55,7 @@ class LaporanPencairanReport extends Report
             'subtitle' => $this->jadwal->name.' — dicairkan '.$this->jadwal->tanggal_pencairan?->locale('id')->translatedFormat('d F Y'),
             'instansi' => Setting::brandInstansi(),
             'aplikasi' => Setting::brandNama(),
-            'logo' => $this->logoPath(),
+            'logo' => $this->logoDataUri(),
             'generatedAt' => now(),
             'jadwal' => $this->jadwal,
             'rincian' => $this->rincian($export),

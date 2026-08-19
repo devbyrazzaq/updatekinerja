@@ -1,5 +1,14 @@
 @php
     use App\Exports\ExportTheme;
+
+    /**
+     * Tata letak laporan sengaja dibangun dari tabel dan warna heksa tertulis penuh,
+     * bukan flexbox dan `var()`: view yang sama dirender dua mesin sekaligus
+     * (mPDF untuk PHP murni, Chromium lewat Browsershot) dan mPDF hanya mengerti
+     * sebagian CSS 2.1. Apa pun yang ditambahkan di sini harus lolos keduanya.
+     */
+    $engine ??= 'browsershot';
+    $ringkasan = $summary ?? [];
 @endphp
 <!DOCTYPE html>
 <html lang="id">
@@ -7,85 +16,92 @@
     <meta charset="utf-8">
     <title>{{ $title ?? 'Laporan' }}</title>
     <style>
-        {!! ExportTheme::fontFaceCss() !!}
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        :root {
-            --ink: {{ ExportTheme::css('INK') }};
-            --navy: {{ ExportTheme::css('NAVY') }};
-            --gold: {{ ExportTheme::css('GOLD') }};
-            --zebra: {{ ExportTheme::css('ZEBRA') }};
-            --surface: {{ ExportTheme::css('SURFACE') }};
-            --hairline: {{ ExportTheme::css('HAIRLINE') }};
-            --muted: {{ ExportTheme::css('MUTED') }};
-        }
+        @if ($engine !== 'mpdf')
+            {{-- mPDF tidak mengenal @font-face maupun .woff2; fontnya didaftarkan
+                 lewat config/pdf.php, jadi aturan ini hanya untuk Chromium. --}}
+            {!! ExportTheme::fontFaceCss() !!}
+        @endif
 
         body {
-            font-family: 'Plus Jakarta Sans', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
             font-weight: 400;
-            color: var(--ink);
+            color: {{ ExportTheme::css('INK') }};
             font-size: 9.5px;
             line-height: 1.5;
+            margin: 0;
+            padding: 0;
             -webkit-font-smoothing: antialiased;
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
         }
 
+        h1 { margin: 0; }
+
         /* --- Kop instansi ------------------------------------------------ */
 
         .letterhead {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding-bottom: 8px;
+            width: 100%;
+            border-collapse: collapse;
         }
 
-        .letterhead img {
+        .letterhead td {
+            vertical-align: middle;
+            padding: 0 0 8px 0;
+        }
+
+        .kop-logo {
+            width: 44px;
+        }
+
+        .kop-logo img {
             width: 34px;
-            height: 34px;
-            object-fit: contain;
         }
 
-        .letterhead .institution {
-            flex: 1;
-        }
-
-        .letterhead .institution .name {
+        /*
+         * Isi sel ditata lewat kelas tunggal, bukan selektor turunan seperti
+         * `.letterhead .name`: mPDF tidak menurunkan aturan semacam itu ke elemen
+         * di dalam <td>, sehingga gayanya diam-diam hilang pada laporan PHP murni.
+         */
+        .kop-nama {
             font-size: 11px;
             font-weight: 700;
             letter-spacing: 0.02em;
             text-transform: uppercase;
         }
 
-        .letterhead .institution .app {
+        .kop-app {
             font-size: 8.5px;
-            color: var(--muted);
+            color: {{ ExportTheme::css('MUTED') }};
             letter-spacing: 0.06em;
             text-transform: uppercase;
         }
 
-        .letterhead .printed {
+        .kop-cetak {
+            width: 28%;
             text-align: right;
             font-size: 8.5px;
-            color: var(--muted);
+            color: {{ ExportTheme::css('MUTED') }};
         }
 
-        /* Aturan dua warna: garis navy tebal ditimpa aksen emas pendek. */
+        /*
+         * Aturan dua warna: garis navy sepanjang halaman dengan aksen emas pendek
+         * di pangkalnya. Digambar sebagai border sel, bukan blok berlatar, karena
+         * mPDF meniadakan tinggi elemen kosong tetapi selalu menggambar border.
+         */
         .rule {
-            height: 2px;
-            background: var(--navy);
-            position: relative;
+            width: 100%;
+            border-collapse: collapse;
         }
 
-        .rule::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
+        .rule td {
+            font-size: 1px;
+            line-height: 1px;
+            border-bottom: 2px solid {{ ExportTheme::css('NAVY') }};
+        }
+
+        .rule .accent {
             width: 56px;
-            height: 2px;
-            background: var(--gold);
+            border-bottom-color: {{ ExportTheme::css('GOLD') }};
         }
 
         /* --- Judul laporan ----------------------------------------------- */
@@ -104,35 +120,34 @@
         .report-title .subtitle {
             margin-top: 3px;
             font-size: 9.5px;
-            color: var(--muted);
-            max-width: 78%;
+            color: {{ ExportTheme::css('MUTED') }};
         }
 
         /* --- Kartu ringkasan --------------------------------------------- */
 
         .summary {
-            display: flex;
-            gap: 8px;
+            width: 100%;
             margin-top: 12px;
+            border-collapse: separate;
+            border-spacing: 6px 0;
         }
 
-        .summary .card {
-            flex: 1;
-            border: 1px solid var(--hairline);
-            border-radius: 8px;
-            background: var(--surface);
+        .summary td {
+            border: 1px solid {{ ExportTheme::css('HAIRLINE') }};
+            background: {{ ExportTheme::css('SURFACE') }};
             padding: 8px 10px;
+            vertical-align: top;
         }
 
-        .summary .card .label {
+        .kartu-label {
             font-size: 7.5px;
-            font-weight: 600;
-            color: var(--muted);
+            font-weight: 700;
+            color: {{ ExportTheme::css('MUTED') }};
             text-transform: uppercase;
             letter-spacing: 0.07em;
         }
 
-        .summary .card .value {
+        .kartu-nilai {
             margin-top: 2px;
             font-size: 13px;
             font-weight: 700;
@@ -141,7 +156,7 @@
 
         /* --- Tabel -------------------------------------------------------- */
 
-        table {
+        table.data {
             width: 100%;
             margin-top: 14px;
             border-collapse: collapse;
@@ -150,13 +165,13 @@
 
         /* Kepala tabel diulang di tiap halaman, dan tidak ada baris yang terbelah. */
         thead { display: table-header-group; }
-        tr { page-break-inside: avoid; }
+        table.data tr { page-break-inside: avoid; }
 
-        thead th {
-            background: var(--navy);
+        table.data thead th {
+            background: {{ ExportTheme::css('NAVY') }};
             color: #fff;
             font-size: 8px;
-            font-weight: 600;
+            font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.05em;
             text-align: left;
@@ -164,8 +179,8 @@
             vertical-align: middle;
             /* Kolom sempit pada tabel lebar: label panjang harus patah, bukan
                melimpah ke kolom sebelahnya. */
-            overflow-wrap: anywhere;
-            word-break: break-word;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         /* Tabel berkolom banyak: semuanya dirapatkan agar tetap muat sehalaman. */
@@ -180,102 +195,106 @@
             padding: 5px 4px;
         }
 
-        thead th:first-child { border-top-left-radius: 5px; }
-        thead th:last-child { border-top-right-radius: 5px; }
-
-        tbody td {
+        table.data tbody td {
             padding: 6px 8px;
-            border-bottom: 1px solid var(--hairline);
+            border-bottom: 1px solid {{ ExportTheme::css('HAIRLINE') }};
             vertical-align: top;
-            word-break: break-word;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
-        tbody tr:nth-child(even) td { background: var(--zebra); }
+        /* Baris selang-seling ditandai kelas, bukan :nth-child — mPDF tidak
+           mengenal pseudo-class itu. */
+        table.data tbody tr.zebra td { background: {{ ExportTheme::css('ZEBRA') }}; }
 
-        /* Pita pembatas antar kelompok baris, mis. bulan pencairan. Latarnya
-           ditegaskan agar tidak tertimpa selang-seling, dan pita tidak boleh
-           tertinggal sendirian di kaki halaman tanpa baris yang dipayunginya. */
+        /* Pita pembatas antar kelompok baris, mis. bulan pencairan. */
         .group-band { page-break-after: avoid; }
 
-        .group-band td {
-            background: var(--surface) !important;
-            border-top: 2px solid var(--navy);
-            border-bottom: 1px solid var(--navy);
+        table.data tbody tr.group-band td {
+            background: {{ ExportTheme::css('SURFACE') }};
+            border-top: 2px solid {{ ExportTheme::css('NAVY') }};
+            border-bottom: 1px solid {{ ExportTheme::css('NAVY') }};
             padding: 5px 8px;
             font-size: 8px;
             font-weight: 700;
-            color: var(--navy);
+            color: {{ ExportTheme::css('NAVY') }};
             letter-spacing: 0.06em;
             text-transform: uppercase;
         }
 
         .col-index {
-            width: 26px;
-            color: var(--muted);
-            font-variant-numeric: tabular-nums;
+            color: {{ ExportTheme::css('MUTED') }};
         }
 
-        .align-right { text-align: right; font-variant-numeric: tabular-nums; }
+        .align-right { text-align: right; }
         .align-center { text-align: center; }
         .align-left { text-align: left; }
 
         /* Angka, tanggal, dan penanda dijaga utuh dalam satu baris. */
-        .nowrap { white-space: nowrap; word-break: normal; }
+        .nowrap { white-space: nowrap; }
 
-        .muted { color: var(--muted); }
+        .muted { color: {{ ExportTheme::css('MUTED') }}; }
 
         /* Sel tautan: dibuka pembaca PDF, jadi tetap ditandai selayaknya pranala. */
-        .tautan { color: #1d4ed8; text-decoration: underline; font-weight: 600; }
+        .tautan { color: {{ ExportTheme::css('LINK') }}; text-decoration: underline; font-weight: 700; }
 
         .badge {
-            display: inline-block;
             /* Lencana tidak pernah patah di tengah kata, sesempit apa pun kolomnya. */
             white-space: nowrap;
-            padding: 1px 7px;
-            border-radius: 999px;
+            padding: 1px 5px;
             font-size: 7.5px;
-            font-weight: 600;
+            font-weight: 700;
             letter-spacing: 0.02em;
-            border: 1px solid var(--hairline);
+            border: 1px solid {{ ExportTheme::css('HAIRLINE') }};
             background: #fff;
-            color: var(--muted);
+            color: {{ ExportTheme::css('MUTED') }};
         }
 
         .badge-on {
-            border-color: #bbf7d0;
-            background: #ecfdf3;
+            border-color: #BBF7D0;
+            background: #ECFDF3;
             color: #166534;
         }
 
         .empty-state {
             padding: 26px 8px;
             text-align: center;
-            color: var(--muted);
+            color: {{ ExportTheme::css('MUTED') }};
             font-style: italic;
         }
 
         .row-count {
             margin-top: 8px;
             font-size: 8px;
-            color: var(--muted);
+            color: {{ ExportTheme::css('MUTED') }};
         }
+
+        @stack('styles')
     </style>
 </head>
 <body>
-    <div class="letterhead">
-        @if (filled($logo ?? null))
-            <img src="data:image/png;base64,{{ base64_encode(file_get_contents($logo)) }}" alt="">
-        @endif
-        <div class="institution">
-            <div class="name">{{ $instansi }}</div>
-            <div class="app">{{ $aplikasi }}</div>
-        </div>
-        <div class="printed">
-            Dicetak<br>
-            {{ $generatedAt->locale(ExportTheme::LOCALE)->translatedFormat('d F Y, H:i') }}
-        </div>
-    </div>
-    <div class="rule"></div>
+    <table class="letterhead">
+        <tr>
+            @if (filled($logo ?? null))
+                <td class="kop-logo"><img src="{{ $logo }}" alt=""></td>
+            @endif
+            <td>
+                <div class="kop-nama">{{ $instansi }}</div>
+                <div class="kop-app">{{ $aplikasi }}</div>
+            </td>
+            <td class="kop-cetak">
+                Dicetak<br>
+                {{ $generatedAt->locale(ExportTheme::LOCALE)->translatedFormat('d F Y, H:i') }}
+            </td>
+        </tr>
+    </table>
+
+    <table class="rule">
+        <tr>
+            <td class="accent">&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+    </table>
 
     <div class="report-title">
         <h1>{{ $title }}</h1>
@@ -284,15 +303,17 @@
         @endif
     </div>
 
-    @if (filled($summary ?? []))
-        <div class="summary">
-            @foreach ($summary as $label => $value)
-                <div class="card">
-                    <div class="label">{{ $label }}</div>
-                    <div class="value">{{ $value }}</div>
-                </div>
-            @endforeach
-        </div>
+    @if (filled($ringkasan))
+        <table class="summary" cellspacing="6">
+            <tr>
+                @foreach ($ringkasan as $label => $value)
+                    <td style="width: {{ round(100 / count($ringkasan), 2) }}%;">
+                        <div class="kartu-label">{{ $label }}</div>
+                        <div class="kartu-nilai">{{ $value }}</div>
+                    </td>
+                @endforeach
+            </tr>
+        </table>
     @endif
 
     @yield('content')
