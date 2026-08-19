@@ -226,9 +226,13 @@
             color: {{ ExportTheme::css('MUTED') }};
         }
 
-        .align-right { text-align: right; }
-        .align-center { text-align: center; }
-        .align-left { text-align: left; }
+        /* Perataan ditulis lengkap dengan tag-nya. `table.data thead th` di atas
+           sudah menyetel text-align, dan selektor sependek `.align-right` kalah
+           spesifisitas — judul kolom angka diam-diam rata kiri sementara isinya
+           rata kanan. */
+        table.data th.align-right, table.data td.align-right { text-align: right; }
+        table.data th.align-center, table.data td.align-center { text-align: center; }
+        table.data th.align-left, table.data td.align-left { text-align: left; }
 
         /* Angka, tanggal, dan penanda dijaga utuh dalam satu baris. */
         .nowrap { white-space: nowrap; }
