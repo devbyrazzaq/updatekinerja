@@ -6,6 +6,7 @@ use App\Exports\PerbandinganMonitoringExport;
 use App\Filament\Actions\ExcelExportAction;
 use App\Filament\Actions\PdfReportAction;
 use App\Filament\Pages\Concerns\HasPageAuthorization;
+use App\Filament\Pages\Concerns\MemilihCakupanLaporan;
 use App\Filament\Pages\Widgets\PerbandinganNominalChart;
 use App\Filament\Pages\Widgets\PerbandinganPersentaseChart;
 use App\Models\TahunKerja;
@@ -45,6 +46,7 @@ use UnitEnum;
 class PerbandinganMonitoring extends Page
 {
     use HasPageAuthorization;
+    use MemilihCakupanLaporan;
 
     /**
      * Mode membandingkan beberapa unit kerja pada satu tahun kerja.
@@ -181,6 +183,11 @@ class PerbandinganMonitoring extends Page
      * dan pilihan pengguna, jadi kelas ekspornya dibentuk langsung dari keadaan
      * halaman alih-alih diresolve dari container.
      *
+     * Laporan PDF menanyakan cakupan unit kerja lebih dahulu, tetapi hanya pada mode
+     * Antar Tahun Kerja: pada mode Antar Unit Kerja unit-unit itulah yang menjadi
+     * kolom matriksnya, sehingga cakupannya sudah ditentukan penyaring halaman dan
+     * modalnya dimatikan.
+     *
      * @return array<int, Action>
      */
     protected function getHeaderActions(): array
@@ -189,23 +196,44 @@ class PerbandinganMonitoring extends Page
             ExcelExportAction::make()
                 ->permission(static::getPagePermission())
                 ->visible(fn (): bool => $this->kolom() !== [])
-                ->action(fn () => $this->export()->download()),
+                ->action(fn () => $this->export($this->unitKerjaId)->download()),
             PdfReportAction::make()
                 ->permission(static::getPagePermission())
                 ->visible(fn (): bool => $this->kolom() !== [])
-                ->action(fn () => (new TabularReport($this->export()))->download()),
+                ->cakupan($this->skemaCakupanLaporan(fn (): ?int => $this->unitKerjaId))
+                ->modal(fn (): bool => $this->mode === self::MODE_TAHUN)
+                ->action(fn (array $data) => (new TabularReport($this->export(
+                    $this->mode === self::MODE_TAHUN ? $this->cakupanUnitKerja($data) : $this->unitKerjaId,
+                )))->download()),
         ];
     }
 
-    protected function export(): PerbandinganMonitoringExport
+    /**
+     * @param  int|null  $unitKerjaId  Cakupan mode Antar Tahun Kerja; null berarti seluruh unit kerja.
+     */
+    protected function export(?int $unitKerjaId): PerbandinganMonitoringExport
     {
         return new PerbandinganMonitoringExport(
-            kolom: $this->kolom(),
+            kolom: $this->mode === self::MODE_TAHUN
+                ? $this->kolomTahunKerja($unitKerjaId)
+                : $this->kolomUnitKerja(),
             metrik: $this->metrik(),
             cakupan: $this->mode === self::MODE_UNIT
                 ? 'Antar unit kerja pada satu tahun kerja yang sama.'
-                : 'Antar tahun kerja pada satu cakupan unit kerja yang sama.',
+                : 'Antar tahun kerja pada '.$this->namaCakupan($unitKerjaId).'.',
         );
+    }
+
+    /**
+     * Sebutan cakupan unit kerja untuk keterangan laporan.
+     */
+    protected function namaCakupan(?int $unitKerjaId): string
+    {
+        if ($unitKerjaId === null) {
+            return 'seluruh unit kerja';
+        }
+
+        return $this->unitKerjaOptions()[$unitKerjaId] ?? 'unit kerja terpilih';
     }
 
     public function form(Schema $schema): Schema
@@ -304,7 +332,7 @@ class PerbandinganMonitoring extends Page
     public function kolom(): array
     {
         return $this->kolom ??= $this->mode === self::MODE_TAHUN
-            ? $this->kolomTahunKerja()
+            ? $this->kolomTahunKerja($this->unitKerjaId)
             : $this->kolomUnitKerja();
     }
 
@@ -352,12 +380,13 @@ class PerbandinganMonitoring extends Page
     /**
      * Satu kolom per tahun kerja terpilih pada cakupan unit kerja yang sama.
      *
+     * @param  int|null  $unitKerjaId  Cakupannya; null berarti seluruh unit kerja yang boleh diakses.
      * @return array<int, array<string, mixed>>
      */
-    protected function kolomTahunKerja(): array
+    protected function kolomTahunKerja(?int $unitKerjaId): array
     {
-        $unitKerjaIds = $this->unitKerjaId !== null
-            ? [$this->unitKerjaId]
+        $unitKerjaIds = $unitKerjaId !== null
+            ? [$unitKerjaId]
             : array_keys($this->unitKerjaOptions());
 
         $tahunKerja = TahunKerja::query()

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Exports\BukuAnggaranExport;
 use App\Exports\Export;
 use App\Exports\MonitoringProgramKerjasExport;
 use App\Exports\MonitoringRealisasisExport;
@@ -20,6 +21,7 @@ use App\Models\UnitKerja;
 use App\Models\User;
 use App\Reports\TabularReport;
 use App\Services\Excel\SpreadsheetExporter;
+use Filament\Actions\Action;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\View;
 use Livewire\Livewire;
@@ -131,6 +133,100 @@ class EksporMonitoringTest extends TestCase
         $html = View::make($report->view(), $report->data())->render();
 
         $this->assertStringContainsString($export->title(), $html);
+    }
+
+    /**
+     * @return array<string, array{0: class-string}>
+     */
+    public static function halamanBercakupan(): array
+    {
+        return [
+            'Monitoring Program Kerja' => [MonitoringProgramKerja::class],
+            'Monitoring Realisasi' => [MonitoringRealisasi::class],
+            'Buku Anggaran Keseluruhan' => [BukuAnggaranKeseluruhan::class],
+            'Buku Anggaran Unit' => [BukuAnggaran::class],
+        ];
+    }
+
+    /**
+     * @param  class-string  $halaman
+     */
+    #[DataProvider('halamanBercakupan')]
+    public function test_laporan_pdf_menanyakan_cakupan_unit_kerja(string $halaman): void
+    {
+        Livewire::test($halaman)
+            ->assertActionExists('report', fn (Action $action): bool => $action->shouldOpenModal())
+            // Ekspor spreadsheet tetap sekali klik: berkasnya salinan tabel di layar.
+            ->assertActionExists('export', fn (Action $action): bool => ! $action->shouldOpenModal());
+    }
+
+    /**
+     * Ringkasan Unit Kerja justru menyandingkan seluruh unit, jadi laporannya tidak
+     * pernah dipersempit ke satu unit kerja.
+     */
+    public function test_laporan_ringkasan_unit_kerja_selalu_memuat_seluruh_unit(): void
+    {
+        Livewire::test(RingkasanUnitKerja::class)
+            ->assertActionExists('report', fn (Action $action): bool => ! $action->shouldOpenModal());
+
+        $export = new RingkasanUnitKerjasExport([$this->unitKerja->id], $this->tahunKerja->id);
+
+        $this->assertNull($export->groupLabel([]));
+    }
+
+    /**
+     * Pada mode Antar Unit Kerja, unit yang dibandingkan justru menjadi kolom
+     * matriksnya — cakupan baru bisa ditanyakan pada mode Antar Tahun Kerja.
+     */
+    public function test_perbandingan_menanyakan_cakupan_hanya_pada_mode_antar_tahun(): void
+    {
+        Livewire::test(PerbandinganMonitoring::class)
+            ->assertActionExists('report', fn (Action $action): bool => ! $action->shouldOpenModal())
+            ->set('mode', PerbandinganMonitoring::MODE_TAHUN)
+            ->assertActionExists('report', fn (Action $action): bool => $action->shouldOpenModal());
+    }
+
+    public function test_cakupan_laporan_menentukan_unit_kerja_yang_diekspor(): void
+    {
+        // Cakupan tidak pernah melampaui unit kerja yang boleh dibaca pengguna.
+        $this->actingAs(User::factory()->create(['unit_kerja_id' => $this->unitKerja->id]));
+
+        $halaman = new MonitoringRealisasi;
+        $export = new \ReflectionMethod($halaman, 'export');
+
+        $this->assertSame($this->unitKerja->name, $export->invoke($halaman, $this->unitKerja->id)->subtitle());
+        $this->assertSame('Seluruh Unit Kerja', $export->invoke($halaman, null)->subtitle());
+    }
+
+    public function test_buku_anggaran_dikelompokkan_per_bulan_mutasi(): void
+    {
+        $export = new BukuAnggaranExport(unitKerjaId: $this->unitKerja->id, tahunKerjaId: $this->tahunKerja->id);
+        $headings = $export->headings();
+
+        $baris = fn (?string $tanggal): array => array_replace(
+            array_fill(0, count($headings), null),
+            [(int) array_search('tanggal', $headings, true) => $tanggal],
+        );
+
+        $this->assertSame('Mutasi Maret 2026', $export->groupLabel($baris('2026-03-11')));
+        $this->assertSame('Mutasi April 2026', $export->groupLabel($baris('2026-04-02')));
+        $this->assertNull($export->groupLabel($baris(null)));
+    }
+
+    public function test_ekspor_realisasi_dikelompokkan_per_bulan_pencairan(): void
+    {
+        $export = new MonitoringRealisasisExport;
+        $headings = $export->headings();
+
+        $baris = fn (?string $dicairkan): array => array_replace(
+            array_fill(0, count($headings), null),
+            [(int) array_search('dicairkan_at', $headings, true) => $dicairkan],
+        );
+
+        $this->assertSame('Dicairkan Maret 2026', $export->groupLabel($baris('2026-03-11')));
+        $this->assertSame('Dicairkan Maret 2026', $export->groupLabel($baris('2026-03-28')));
+        $this->assertSame('Dicairkan April 2026', $export->groupLabel($baris('2026-04-01')));
+        $this->assertSame('Belum Dicairkan', $export->groupLabel($baris(null)));
     }
 
     public function test_perbandingan_merakit_kolom_dari_pilihan_pengguna(): void

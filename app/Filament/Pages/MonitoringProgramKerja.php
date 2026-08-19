@@ -2,17 +2,22 @@
 
 namespace App\Filament\Pages;
 
+use App\Enums\EnumStatusRealisasi;
 use App\Exports\MonitoringProgramKerjasExport;
+use App\Filament\Actions\CatatCapaianProgramKerjaAction;
 use App\Filament\Actions\ExcelExportAction;
+use App\Filament\Actions\MediaAction;
 use App\Filament\Actions\PdfReportAction;
 use App\Filament\Pages\Concerns\HasFilterAboveWidgets;
 use App\Filament\Pages\Concerns\HasPageAuthorization;
+use App\Filament\Pages\Concerns\MemilihCakupanLaporan;
 use App\Filament\Pages\Widgets\CapaianProgramKerjaChart;
 use App\Filament\Pages\Widgets\DistribusiAnggaranChart;
 use App\Filament\Pages\Widgets\MonitoringOverview;
 use App\Filament\Pages\Widgets\PenyerapanAnggaranChart;
 use App\Models\Bidang;
 use App\Models\Program;
+use App\Models\RealisasiProgramKerja;
 use App\Models\TahunKerja;
 use App\Models\UnitKerja;
 use App\Reports\TabularReport;
@@ -35,6 +40,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use UnitEnum;
 
@@ -60,6 +66,7 @@ class MonitoringProgramKerja extends Page implements HasTable
     use HasFilterAboveWidgets;
     use HasPageAuthorization;
     use InteractsWithTable;
+    use MemilihCakupanLaporan;
 
     protected string $view = 'filament.pages.monitoring-program-kerja';
 
@@ -74,6 +81,12 @@ class MonitoringProgramKerja extends Page implements HasTable
     protected static ?int $navigationSort = 1;
 
     /**
+     * Hak akses mencatat capaian langsung dari halaman ini. Dipisahkan dari hak akses
+     * halaman karena memantau tidak dengan sendirinya berarti boleh mengubah capaian.
+     */
+    public const PERMISSION_CATAT_CAPAIAN = 'update_capaian_monitoring_program_kerja';
+
+    /**
      * Metadata untuk form Role & Hak Akses (dibaca PermissionRegistrar).
      *
      * @var array<string, mixed>
@@ -83,8 +96,20 @@ class MonitoringProgramKerja extends Page implements HasTable
         'description' => 'Hak akses untuk memantau penyerapan anggaran, distribusinya, dan capaian program kerja per unit kerja.',
         'permission_descriptions' => [
             'view_page_monitoring_program_kerja' => 'Membuka monitoring penyerapan anggaran dan capaian program kerja.',
+            self::PERMISSION_CATAT_CAPAIAN => 'Mencatat capaian program kerja beserta laporannya langsung dari halaman monitoring, tanpa anggaran.',
         ],
     ];
+
+    /**
+     * @return array<string, string>
+     */
+    public static function getPermissionDefinitions(): array
+    {
+        return [
+            static::getPagePermission() => 'Akses Halaman',
+            self::PERMISSION_CATAT_CAPAIAN => 'Catat Capaian',
+        ];
+    }
 
     /**
      * Penyaring tampilan halaman.
@@ -104,6 +129,11 @@ class MonitoringProgramKerja extends Page implements HasTable
     public ?int $unitKerjaId = null;
 
     private ?MonitoringAnggaran $monitoring = null;
+
+    /**
+     * @var array<int, array<int, string>>|null penawaran id => path berkas laporan
+     */
+    private ?array $laporanPerProgram = null;
 
     private ?TahunKerja $tahunKerja = null;
 
@@ -187,8 +217,7 @@ class MonitoringProgramKerja extends Page implements HasTable
                                 ->afterStateUpdated(function (mixed $state): void {
                                     $this->tahunKerjaId = filled($state) ? (int) $state : null;
                                     $this->tahunKerja = null;
-                                    $this->monitoring = null;
-                                    $this->resetTable();
+                                    $this->segarkanMonitoring();
                                 })
                                 ->helperText('Bawaannya tahun kerja berjalan; pilih tahun lain untuk memantau tahun sebelumnya.')
                                 ->columnSpan(1),
@@ -201,8 +230,7 @@ class MonitoringProgramKerja extends Page implements HasTable
                                 ->live()
                                 ->afterStateUpdated(function (mixed $state): void {
                                     $this->unitKerjaId = filled($state) ? (int) $state : null;
-                                    $this->monitoring = null;
-                                    $this->resetTable();
+                                    $this->segarkanMonitoring();
                                 })
                                 ->helperText('Kosongkan untuk merangkum seluruh unit kerja sekaligus.')
                                 ->columnSpan(1),
@@ -213,10 +241,11 @@ class MonitoringProgramKerja extends Page implements HasTable
     }
 
     /**
-     * Ekspor mengikuti cakupan unit kerja dan tahun kerja yang sedang dibaca, sehingga
-     * berkasnya sama persis dengan tabel di layar. Aksinya dibentuk langsung — bukan
-     * lewat exporter() yang meresolve dari container — karena kelas ekspornya perlu
-     * tahu cakupan itu.
+     * Ekspor spreadsheet mengikuti cakupan unit kerja dan tahun kerja yang sedang
+     * dibaca, sehingga berkasnya sama persis dengan tabel di layar; laporan PDF
+     * menanyakan cakupannya lebih dahulu ({@see MemilihCakupanLaporan}). Aksinya
+     * dibentuk langsung — bukan lewat exporter() yang meresolve dari container —
+     * karena kelas ekspornya perlu tahu cakupan itu.
      *
      * @return array<int, Action>
      */
@@ -225,19 +254,25 @@ class MonitoringProgramKerja extends Page implements HasTable
         return [
             ExcelExportAction::make()
                 ->permission(static::getPagePermission())
-                ->action(fn () => $this->export()->download()),
+                ->action(fn () => $this->export($this->unitKerjaId)->download()),
             PdfReportAction::make()
                 ->permission(static::getPagePermission())
-                ->action(fn () => (new TabularReport($this->export()))->download()),
+                ->cakupan($this->skemaCakupanLaporan(fn (): ?int => $this->unitKerjaId))
+                ->action(fn (array $data) => (new TabularReport(
+                    $this->export($this->cakupanUnitKerja($data)),
+                ))->download()),
         ];
     }
 
-    protected function export(): MonitoringProgramKerjasExport
+    /**
+     * @param  int|null  $unitKerjaId  Unit kerja tunggal; null berarti seluruh unit yang boleh diakses.
+     */
+    protected function export(?int $unitKerjaId): MonitoringProgramKerjasExport
     {
         return new MonitoringProgramKerjasExport(
-            unitKerjaIds: $this->unitKerjaId !== null ? [$this->unitKerjaId] : array_keys($this->unitKerjaOptions()),
+            unitKerjaIds: $unitKerjaId !== null ? [$unitKerjaId] : array_keys($this->unitKerjaOptions()),
             tahunKerjaId: $this->tahunKerjaTerpilih()?->getKey(),
-            namaUnitKerja: $this->unitKerjaId !== null ? ($this->unitKerjaOptions()[$this->unitKerjaId] ?? null) : null,
+            namaUnitKerja: $unitKerjaId !== null ? ($this->unitKerjaOptions()[$unitKerjaId] ?? null) : null,
         );
     }
 
@@ -295,6 +330,25 @@ class MonitoringProgramKerja extends Page implements HasTable
                         default => 'danger',
                     }),
             ])
+            ->headerActions([
+                CatatCapaianProgramKerjaAction::make()
+                    ->permission(self::PERMISSION_CATAT_CAPAIAN)
+                    ->tahunKerja(fn (): ?TahunKerja => $this->tahunKerjaTerpilih())
+                    ->unitKerjaOptions(fn (): array => $this->unitKerjaOptions())
+                    ->defaultUnitKerja(fn (): ?int => $this->unitKerjaId)
+                    ->after(function (): void {
+                        $this->segarkanMonitoring();
+                        // Widget ringkasan & grafik adalah komponen Livewire tersendiri,
+                        // jadi keduanya diminta menggambar ulang lewat peristiwa.
+                        $this->dispatch('monitoring-diperbarui');
+                    }),
+            ])
+            ->recordActions([
+                MediaAction::make('lihatLaporanCapaian')
+                    ->label('Lihat Laporan')
+                    // Record dievaluasi null saat aksi dirakit di luar konteks baris.
+                    ->path(fn (?array $record): array => $record === null ? [] : $this->laporanCapaian((int) $record['id'])),
+            ])
             ->filters([
                 SelectFilter::make('unit_kerja_id')
                     ->label('Unit Kerja')
@@ -325,6 +379,69 @@ class MonitoringProgramKerja extends Page implements HasTable
     public function ringkasan(): RingkasanMonitoring
     {
         return $this->monitoring()->ringkasan();
+    }
+
+    /**
+     * Membuang angka monitoring yang sudah ditahan lalu menggambar ulang tabelnya,
+     * dipakai setelah capaian baru dicatat agar barisnya langsung ikut berubah.
+     */
+    public function segarkanMonitoring(): void
+    {
+        $this->monitoring = null;
+        $this->laporanPerProgram = null;
+        $this->resetTable();
+    }
+
+    /**
+     * Berkas laporan seluruh realisasi tuntas sebuah program kerja, terbaru lebih
+     * dahulu. Menjadi bahan pratinjau dokumen pada baris tabel.
+     *
+     * @return array<int, string>
+     */
+    protected function laporanCapaian(int $penawaranId): array
+    {
+        return $this->laporanPerProgram()[$penawaranId] ?? [];
+    }
+
+    /**
+     * Berkas laporan tiap program kerja pada cakupan terpilih, dibaca sekali lalu
+     * ditahan karena aksi pratinjau memanggilnya untuk setiap baris tabel.
+     *
+     * @return array<int, array<int, string>> penawaran id => path berkas
+     */
+    protected function laporanPerProgram(): array
+    {
+        if ($this->laporanPerProgram !== null) {
+            return $this->laporanPerProgram;
+        }
+
+        $tahunKerjaId = $this->tahunKerjaTerpilih()?->getKey();
+        $unitKerjaIds = $this->unitKerjaId !== null ? [$this->unitKerjaId] : array_keys($this->unitKerjaOptions());
+
+        if ($tahunKerjaId === null || $unitKerjaIds === []) {
+            return $this->laporanPerProgram = [];
+        }
+
+        return $this->laporanPerProgram = RealisasiProgramKerja::query()
+            ->join('pengajuan_program_kerjas', 'pengajuan_program_kerjas.id', '=', 'realisasi_program_kerjas.pengajuan_program_kerja_id')
+            ->join('penawaran_program_kerjas', 'penawaran_program_kerjas.id', '=', 'pengajuan_program_kerjas.penawaran_program_kerja_id')
+            ->where('penawaran_program_kerjas.tahun_kerja_id', $tahunKerjaId)
+            ->whereIn('pengajuan_program_kerjas.unit_kerja_id', $unitKerjaIds)
+            ->where('realisasi_program_kerjas.status', EnumStatusRealisasi::Selesai->value)
+            ->whereNotNull('realisasi_program_kerjas.laporan_path')
+            ->orderByDesc('realisasi_program_kerjas.laporan_diserahkan_at')
+            ->get([
+                'realisasi_program_kerjas.laporan_path',
+                'pengajuan_program_kerjas.penawaran_program_kerja_id as penawaran_id',
+            ])
+            ->groupBy('penawaran_id')
+            ->map(fn (Collection $realisasis): array => $realisasis
+                ->flatMap(fn (RealisasiProgramKerja $realisasi): array => (array) $realisasi->laporan_path)
+                ->filter(fn (mixed $path): bool => is_string($path) && filled($path))
+                ->unique()
+                ->values()
+                ->all())
+            ->all();
     }
 
     /**

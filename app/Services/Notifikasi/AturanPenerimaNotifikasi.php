@@ -31,7 +31,7 @@ class AturanPenerimaNotifikasi
 
     public const PERAN_VERIFIKATOR_AWAL_REALISASI = EnumRole::Rektor;
 
-    public const PERAN_VERIFIKATOR_AWAL_PEMASUKAN = EnumRole::Rektor;
+    public const PERAN_VERIFIKATOR_AWAL_PEMASUKAN = EnumRole::WakilRektor;
 
     /**
      * Verifikator kelompok Verifikasi Pengajuan.

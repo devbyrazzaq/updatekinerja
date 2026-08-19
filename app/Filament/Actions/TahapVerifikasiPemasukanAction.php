@@ -4,7 +4,6 @@ namespace App\Filament\Actions;
 
 use App\Enums\EnumStatusPemasukan;
 use App\Filament\Resources\VerifikasiKeuanganPemasukans\VerifikasiKeuanganPemasukanResource;
-use App\Filament\Resources\VerifikasiRektorPemasukans\VerifikasiRektorPemasukanResource;
 use App\Filament\Resources\VerifikasiWakilPemasukans\VerifikasiWakilPemasukanResource;
 use App\Models\Pemasukan;
 use Filament\Actions\Action;
@@ -27,13 +26,7 @@ abstract class TahapVerifikasiPemasukanAction extends Action
     protected static function tahap(Pemasukan $record): ?array
     {
         return match ($record->status) {
-            EnumStatusPemasukan::Diajukan, EnumStatusPemasukan::VerifikasiRektor => [
-                'actor' => 'rektor_id',
-                'timestamp' => 'disetujui_rektor_at',
-                'nextStatus' => EnumStatusPemasukan::VerifikasiWakil,
-                'resource' => VerifikasiRektorPemasukanResource::class,
-            ],
-            EnumStatusPemasukan::VerifikasiWakil => [
+            EnumStatusPemasukan::Diajukan, EnumStatusPemasukan::VerifikasiWakil => [
                 'actor' => 'wakil_id',
                 'timestamp' => 'disetujui_wakil_at',
                 'nextStatus' => EnumStatusPemasukan::VerifikasiKeuangan,

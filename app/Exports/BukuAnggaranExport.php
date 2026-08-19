@@ -8,6 +8,7 @@ use App\Services\BukuAnggaran;
 use App\Services\BukuAnggaranGabungan;
 use App\Services\KonteksProgramKerja;
 use App\Services\MutasiAnggaran;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 
 /**
@@ -81,6 +82,24 @@ class BukuAnggaranExport extends Export
             'saldo' => 'Saldo',
             'pemasukan' => 'Pemasukan',
         ];
+    }
+
+    /**
+     * Mutasi dipisah per bulan kejadiannya, sehingga buku terbaca sebagai rekap
+     * bulanan tanpa kolom bulan tersendiri. Barisnya memang sudah urut waktu — saldo
+     * berjalannya menuntut itu — jadi tiap bulan pasti berdampingan.
+     */
+    public function groupLabel(array $row): ?string
+    {
+        $tanggal = $this->columnValue($row, 'tanggal');
+
+        if (blank($tanggal)) {
+            return null;
+        }
+
+        return 'Mutasi '.Carbon::parse((string) $tanggal)
+            ->locale(ExportTheme::LOCALE)
+            ->translatedFormat('F Y');
     }
 
     public function rows(): iterable

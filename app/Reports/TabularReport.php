@@ -4,8 +4,8 @@ namespace App\Reports;
 
 use App\Enums\EnumFormatKolom;
 use App\Exports\Export;
+use App\Exports\Tautan;
 use App\Models\Setting;
-use Illuminate\Support\Facades\Storage;
 
 /**
  * Laporan PDF yang dirakit dari sebuah {@see Export}. Ekspor sudah menyimpan
@@ -58,6 +58,10 @@ class TabularReport extends Report
     {
         $columns = $this->export->columns();
 
+        // Satu kali jalan: barisnya bisa berupa aliran malas dari basis data, jadi
+        // pita pembatas dikumpulkan bersamaan, bukan lewat penelusuran kedua.
+        ['rows' => $rows, 'groups' => $groups] = $this->renderedRows($columns);
+
         return [
             'title' => $this->export->title(),
             'subtitle' => $this->export->subtitle(),
@@ -67,7 +71,8 @@ class TabularReport extends Report
             'generatedAt' => now(),
             'columns' => $columns,
             'summary' => $this->export->summary(),
-            'rows' => $this->renderedRows($columns),
+            'rows' => $rows,
+            'groups' => $groups,
         ];
     }
 
@@ -76,16 +81,29 @@ class TabularReport extends Report
      * cukup mencetaknya. Sengaja dikumpulkan ke dalam array: laporan PDF dirender
      * sekali jalan oleh Chromium sehingga tidak bisa memakai aliran malas.
      *
+     * `groups` menandai baris yang harus didahului pita pembatas — dikunci nomor
+     * baris, bukan disisipkan ke dalam `rows`, supaya penomoran dan hitungan baris
+     * pada view tetap menghitung data saja ({@see Export::groupLabel()}).
+     *
      * @param  list<array{key: string, label: string, format: EnumFormatKolom}>  $columns
-     * @return list<list<array{text: string, align: string, nowrap: bool, badge: bool, aktif: bool, kosong: bool}>>
+     * @return array{rows: list<list<array{text: string, url: ?string, align: string, nowrap: bool, badge: bool, aktif: bool, kosong: bool}>>, groups: array<int, string>}
      */
     protected function renderedRows(array $columns): array
     {
         $rendered = [];
+        $groups = [];
+        $currentGroup = null;
 
         foreach ($this->export->rows() as $row) {
             $values = array_values(is_array($row) ? $row : iterator_to_array($row));
             $cells = [];
+
+            $group = $this->export->groupLabel($values);
+
+            if ($group !== null && $group !== $currentGroup) {
+                $groups[count($rendered)] = $group;
+                $currentGroup = $group;
+            }
 
             foreach ($columns as $index => $column) {
                 $value = $values[$index] ?? null;
@@ -95,6 +113,9 @@ class TabularReport extends Report
 
                 $cells[] = [
                     'text' => $format->tampilkan($value),
+                    // Laporan PDF ikut membawa tautannya: pembaca PDF modern
+                    // mengklik anchor-nya sama seperti sel .xlsx.
+                    'url' => $value instanceof Tautan ? $value->url : null,
                     'align' => $format->perataan(),
                     'nowrap' => $format->isNowrap(),
                     'badge' => $format->isBadge() && ! $kosong,
@@ -106,23 +127,6 @@ class TabularReport extends Report
             $rendered[] = $cells;
         }
 
-        return $rendered;
-    }
-
-    /**
-     * Path absolut logo brand di disk, siap disematkan sebagai data URI. Logo yang
-     * tidak dipasang atau hilang dari disk membuat kop tampil tanpa gambar.
-     */
-    protected function logoPath(): ?string
-    {
-        $path = Setting::brandLogoPath();
-
-        if (blank($path)) {
-            return null;
-        }
-
-        $absolute = Storage::disk(Setting::BRAND_LOGO_DISK)->path($path);
-
-        return is_file($absolute) ? $absolute : null;
+        return ['rows' => $rendered, 'groups' => $groups];
     }
 }

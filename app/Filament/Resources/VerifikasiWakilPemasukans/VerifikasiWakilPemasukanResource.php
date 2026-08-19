@@ -31,7 +31,7 @@ class VerifikasiWakilPemasukanResource extends Resource
 
     protected static ?string $navigationLabel = 'Verifikasi Wakil Rektor';
 
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 1;
 
     protected static ?string $pluralLabel = 'Verifikasi Wakil Rektor';
 
@@ -53,11 +53,14 @@ class VerifikasiWakilPemasukanResource extends Resource
     }
 
     /**
+     * Tahap pertama alur pemasukan, sehingga pemasukan yang baru diajukan unit kerja
+     * langsung masuk antrean ini.
+     *
      * @return array<int, string>
      */
     public static function pendingStatuses(): array
     {
-        return [EnumStatusPemasukan::VerifikasiWakil->value];
+        return [EnumStatusPemasukan::Diajukan->value, EnumStatusPemasukan::VerifikasiWakil->value];
     }
 
     public static function stageActorColumn(): string
@@ -121,7 +124,6 @@ class VerifikasiWakilPemasukanResource extends Resource
                 'pengajuanProgramKerja.penawaranProgramKerja',
                 'realisasiProgramKerja',
                 'pengaju',
-                'rektor',
                 'wakil',
                 'keuangan',
             ])

@@ -60,15 +60,13 @@ class PemasukanFactory extends Factory
     {
         $alur = [
             EnumStatusPemasukan::Diajukan,
-            EnumStatusPemasukan::VerifikasiWakil,
             EnumStatusPemasukan::VerifikasiKeuangan,
             EnumStatusPemasukan::MenungguBukti,
             EnumStatusPemasukan::Valid,
         ];
 
         $batas = match ($status) {
-            EnumStatusPemasukan::Diajukan, EnumStatusPemasukan::VerifikasiRektor => EnumStatusPemasukan::Diajukan,
-            EnumStatusPemasukan::VerifikasiWakil,
+            EnumStatusPemasukan::Diajukan, EnumStatusPemasukan::VerifikasiWakil => EnumStatusPemasukan::Diajukan,
             EnumStatusPemasukan::VerifikasiKeuangan,
             EnumStatusPemasukan::MenungguBukti,
             EnumStatusPemasukan::Valid => $status,
@@ -96,9 +94,8 @@ class PemasukanFactory extends Factory
         })->state(function () use ($status, $aktor): array {
             $aktorId = $aktor?->getKey();
             $tahapDilewati = match ($status) {
-                EnumStatusPemasukan::VerifikasiWakil => ['rektor'],
-                EnumStatusPemasukan::VerifikasiKeuangan => ['rektor', 'wakil'],
-                EnumStatusPemasukan::MenungguBukti, EnumStatusPemasukan::Valid => ['rektor', 'wakil', 'keuangan'],
+                EnumStatusPemasukan::VerifikasiKeuangan => ['wakil'],
+                EnumStatusPemasukan::MenungguBukti, EnumStatusPemasukan::Valid => ['wakil', 'keuangan'],
                 default => [],
             };
 

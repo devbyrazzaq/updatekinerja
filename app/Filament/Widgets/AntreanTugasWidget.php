@@ -16,7 +16,6 @@ use App\Filament\Resources\VerifikasiBiroKeuangans\VerifikasiBiroKeuanganResourc
 use App\Filament\Resources\VerifikasiKeuanganPemasukans\VerifikasiKeuanganPemasukanResource;
 use App\Filament\Resources\VerifikasiLaporans\VerifikasiLaporanResource;
 use App\Filament\Resources\VerifikasiPengajuans\VerifikasiPengajuanResource;
-use App\Filament\Resources\VerifikasiRektorPemasukans\VerifikasiRektorPemasukanResource;
 use App\Filament\Resources\VerifikasiRektors\VerifikasiRektorResource;
 use App\Filament\Resources\VerifikasiWakilPemasukans\VerifikasiWakilPemasukanResource;
 use App\Filament\Resources\VerifikasiWakilRektors\VerifikasiWakilRektorResource;
@@ -60,7 +59,6 @@ class AntreanTugasWidget extends Widget
         VerifikasiWakilRektorResource::class => 'Realisasi program kerja menunggu verifikasi Wakil Rektor.',
         VerifikasiBiroKeuanganResource::class => 'Realisasi program kerja menunggu verifikasi Biro Keuangan.',
         VerifikasiLaporanResource::class => 'Laporan realisasi menunggu diverifikasi.',
-        VerifikasiRektorPemasukanResource::class => 'Pemasukan unit kerja menunggu verifikasi Rektor.',
         VerifikasiWakilPemasukanResource::class => 'Pemasukan unit kerja menunggu verifikasi Wakil Rektor.',
         VerifikasiKeuanganPemasukanResource::class => 'Pemasukan unit kerja menunggu verifikasi Biro Keuangan.',
     ];

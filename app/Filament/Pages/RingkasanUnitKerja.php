@@ -164,6 +164,12 @@ class RingkasanUnitKerja extends Page implements HasTable
      * dengan tabel di layar. Aksinya dibentuk langsung — bukan lewat exporter() yang
      * meresolve dari container — karena kelas ekspornya perlu tahu cakupan itu.
      *
+     * Berbeda dengan halaman monitoring lain, laporan PDF di sini sengaja tidak
+     * menanyakan cakupan unit kerja. Isi halaman ini adalah perbandingan seluruh unit
+     * berdampingan — menyaringnya ke satu unit hanya menyisakan satu baris dan
+     * menghapus maknanya — sehingga laporannya selalu memuat semua unit yang boleh
+     * diakses.
+     *
      * @return array<int, Action>
      */
     protected function getHeaderActions(): array

@@ -4,6 +4,7 @@ namespace App\Filament\Widgets\Concerns;
 
 use App\Models\TahunKerja;
 use App\Services\MonitoringAnggaran;
+use Livewire\Attributes\On;
 
 /**
  * Sumber angka bersama widget monitoring: satu {@see MonitoringAnggaran} yang dibentuk
@@ -17,6 +18,18 @@ trait MembacaMonitoring
     private ?MonitoringAnggaran $monitoring = null;
 
     private ?TahunKerja $tahunKerja = null;
+
+    /**
+     * Angka monitoring berubah di halaman induk — mis. capaian program kerja baru saja
+     * dicatat — sehingga widget menggambar ulang isinya. Menerima peristiwanya sudah
+     * cukup: setiap permintaan Livewire membangun ulang angka yang ditahan trait ini.
+     */
+    #[On('monitoring-diperbarui')]
+    public function segarkanMonitoring(): void
+    {
+        $this->monitoring = null;
+        $this->tahunKerja = null;
+    }
 
     protected function monitoring(): MonitoringAnggaran
     {

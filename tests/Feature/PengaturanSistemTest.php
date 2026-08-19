@@ -89,6 +89,31 @@ class PengaturanSistemTest extends TestCase
         $this->assertSame(1, Setting::maksRealisasiBerjalan());
     }
 
+    /**
+     * Identitas penanda tangan laporan PDF diketikkan di halaman ini, lalu dibaca
+     * kembali lewat helper bertipe yang dipakai laporan.
+     */
+    public function test_identitas_penanda_tangan_laporan_tersimpan(): void
+    {
+        Livewire::test(PengaturanSistem::class)
+            ->fillForm([
+                Setting::PENANDATANGAN_JABATAN => 'Kepala Biro Keuangan',
+                Setting::PENANDATANGAN_NAMA => 'Dr. Hj. Siti Aminah, S.E., M.M.',
+                Setting::PENANDATANGAN_NOMOR => 'NIK 198701012015041002',
+                Setting::PENANDATANGAN_KOTA => 'Lamongan',
+            ])
+            ->call('save')
+            ->assertHasNoFormErrors()
+            ->assertNotified();
+
+        $this->assertDatabaseHas(Setting::class, ['key' => Setting::PENANDATANGAN_JABATAN, 'value' => 'Kepala Biro Keuangan']);
+        $this->assertSame('Kepala Biro Keuangan', Setting::penandatanganJabatan());
+        // Gelar depan dan belakang ikut tersimpan apa adanya.
+        $this->assertSame('Dr. Hj. Siti Aminah, S.E., M.M.', Setting::penandatanganNama());
+        $this->assertSame('NIK 198701012015041002', Setting::penandatanganNomor());
+        $this->assertSame('Lamongan', Setting::penandatanganKota());
+    }
+
     public function test_pengaturan_wajib_diisi_angka_positif(): void
     {
         Livewire::test(PengaturanSistem::class)

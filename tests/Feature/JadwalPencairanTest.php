@@ -7,6 +7,8 @@ use App\Enums\EnumStatusPencairan;
 use App\Enums\EnumStatusPengajuan;
 use App\Enums\EnumStatusRealisasi;
 use App\Enums\EnumStatusTahunKerja;
+use App\Exports\JadwalPencairanExport;
+use App\Filament\Resources\JadwalPencairans\JadwalPencairanResource;
 use App\Filament\Resources\JadwalPencairans\Pages\CreateJadwalPencairan;
 use App\Filament\Resources\JadwalPencairans\Pages\ListJadwalPencairans;
 use App\Filament\Resources\JadwalPencairans\Pages\ViewJadwalPencairan;
@@ -24,11 +26,16 @@ use App\Models\Program;
 use App\Models\RealisasiDokumen;
 use App\Models\RealisasiProgramKerja;
 use App\Models\RekeningBank;
+use App\Models\Setting;
 use App\Models\TahunKerja;
 use App\Models\UnitKerja;
 use App\Models\User;
+use App\Reports\LaporanPencairanReport;
 use Filament\Actions\Testing\TestAction;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\View;
 use Livewire\Livewire;
 use Tests\TestCase;
 
@@ -160,6 +167,103 @@ class JadwalPencairanTest extends TestCase
         ])
             ->assertOk()
             ->assertCanSeeTableRecords([$realisasi]);
+    }
+
+    /**
+     * Jadwal dialamatkan lewat uuid: id yang berurutan tidak lagi menjadi kunci rute,
+     * dan uuid-nya terbentuk sendiri saat jadwal dibuat.
+     */
+    public function test_jadwal_dialamatkan_lewat_uuid(): void
+    {
+        $jadwal = $this->jadwal();
+
+        $this->assertSame('uuid', $jadwal->getRouteKeyName());
+        $this->assertNotEmpty($jadwal->uuid);
+        $this->assertSame($jadwal->uuid, $jadwal->getRouteKey());
+        $this->assertNotSame((string) $jadwal->id, $jadwal->getRouteKey());
+
+        $this->assertTrue($jadwal->is(JadwalPencairanResource::resolveRecordRouteBinding($jadwal->uuid)));
+
+        // Tautan lama yang memakai id tidak lagi menemukan jadwalnya.
+        $this->expectException(ModelNotFoundException::class);
+        JadwalPencairanResource::resolveRecordRouteBinding((string) $jadwal->id);
+    }
+
+    /**
+     * Ekspor .xlsx satu jadwal memuat rincian tiap realisasi beserta rekening
+     * tujuannya, dan ringkasannya menyebut total yang dicairkan.
+     */
+    public function test_ekspor_jadwal_memuat_rincian_realisasi_dan_rekening(): void
+    {
+        $jadwal = $this->jadwal();
+        $realisasi = $this->realisasiAtKeuangan('Pelatihan Dosen');
+        $rekening = $this->rekeningBank($realisasi->pengajuanProgramKerja->unit_kerja_id, utama: true);
+        $realisasi->jadwalkanPencairan($jadwal, null, null, EnumMetodePembayaran::Transfer, $rekening->id);
+
+        $export = new JadwalPencairanExport($jadwal->refresh());
+        $rows = $export->rows();
+
+        $this->assertCount(1, $rows);
+        $this->assertSame('Pelatihan Dosen', $rows[0][1]);
+        $this->assertSame(15000000.0, $rows[0][2]);
+        $this->assertSame('Transfer ke Rekening', $rows[0][3]);
+        $this->assertSame($rekening->nomor_rekening, $rows[0][5]);
+        $this->assertSame('Rp 15.000.000', $export->summary()['Total Pencairan']);
+    }
+
+    /**
+     * Laporan PDF pencairan mencetak tabel rincian, tanggal yang dipilih saat
+     * mengunduh, serta blok tanda tangan sesuai Pengaturan Sistem.
+     */
+    public function test_laporan_pencairan_mencetak_rincian_dan_blok_tanda_tangan(): void
+    {
+        Setting::set(Setting::PENANDATANGAN_JABATAN, 'Kepala Biro Keuangan');
+        Setting::set(Setting::PENANDATANGAN_NAMA, 'Dr. Hj. Siti Aminah, S.E., M.M.');
+        Setting::set(Setting::PENANDATANGAN_NOMOR, 'NIK 198701012015041002');
+        Setting::set(Setting::PENANDATANGAN_KOTA, 'Lamongan');
+        Setting::forgetCache();
+
+        $jadwal = $this->jadwal();
+        $realisasi = $this->realisasiAtKeuangan('Pelatihan Dosen');
+        $rekening = $this->rekeningBank($realisasi->pengajuanProgramKerja->unit_kerja_id, utama: true);
+        $realisasi->jadwalkanPencairan($jadwal, null, null, EnumMetodePembayaran::Transfer, $rekening->id);
+
+        $report = new LaporanPencairanReport($jadwal->refresh(), Carbon::parse('2026-08-17'));
+        $html = View::make($report->view(), $report->data())->render();
+
+        $this->assertStringContainsString('Laporan Pencairan Anggaran', $html);
+        $this->assertStringContainsString('Pelatihan Dosen', $html);
+        $this->assertStringContainsString($rekening->nomor_rekening, $html);
+        $this->assertStringContainsString('Rp 15.000.000', $html);
+        // Blok tanda tangan: kota + tanggal pilihan, jabatan, nama pimpinan lengkap
+        // dengan gelarnya, lalu nomor karyawannya.
+        $this->assertStringContainsString('Lamongan, 17 Agustus 2026', $html);
+        $this->assertStringContainsString('Kepala Biro Keuangan', $html);
+        $this->assertStringContainsString('Dr. Hj. Siti Aminah, S.E., M.M.', $html);
+        $this->assertStringContainsString('NIK 198701012015041002', $html);
+    }
+
+    /**
+     * Tombol laporan pada halaman detail meneruskan tanggal dari modal ke berkas
+     * yang diunduh.
+     */
+    public function test_aksi_laporan_pdf_mengunduh_berkas_dengan_tanggal_pilihan(): void
+    {
+        $jadwal = $this->jadwal();
+        $realisasi = $this->realisasiAtKeuangan();
+        $realisasi->jadwalkanPencairan($jadwal, null, null, EnumMetodePembayaran::Tunai);
+
+        $report = new LaporanPencairanReport($jadwal, Carbon::parse('2026-08-17'));
+
+        $this->assertSame(
+            'laporan-pencairan-pencairan-awal-bulan-januari-'.$jadwal->tanggal_pencairan->format('Y-m-d'),
+            $report->filename(),
+        );
+        $this->assertSame('17 Agustus 2026', $report->data()['tanggal']->locale('id')->translatedFormat('d F Y'));
+
+        Livewire::test(ViewJadwalPencairan::class, ['record' => $jadwal->getRouteKey()])
+            ->assertActionExists('export')
+            ->assertActionExists('report');
     }
 
     public function test_jadwal_pencairan_dibuat_dengan_nama_dan_tanggal(): void

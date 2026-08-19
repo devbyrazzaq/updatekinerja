@@ -24,6 +24,7 @@ enum EnumFormatKolom: string
     case Tanggal = 'tanggal';
     case Waktu = 'waktu';
     case Boolean = 'boolean';
+    case Tautan = 'tautan';
 
     /**
      * Tebak tipe dari nama kolom mesin, mis. `nominal_disetujui` → Uang.
@@ -51,7 +52,7 @@ enum EnumFormatKolom: string
         return match ($this) {
             self::Angka, self::Uang, self::Persen => 'right',
             self::Tanggal, self::Waktu, self::Boolean => 'center',
-            self::Teks => 'left',
+            self::Teks, self::Tautan => 'left',
         };
     }
 
@@ -77,6 +78,7 @@ enum EnumFormatKolom: string
             self::Uang => 16,
             self::Waktu => 18,
             self::Tanggal, self::Persen => 14,
+            self::Tautan => 18,
             self::Boolean => 12,
             default => 10,
         };
@@ -92,6 +94,7 @@ enum EnumFormatKolom: string
     {
         return match ($this) {
             self::Teks => 22,
+            self::Tautan => 17,
             self::Waktu => 17,
             self::Uang => 14,
             self::Tanggal => 12,
@@ -128,7 +131,9 @@ enum EnumFormatKolom: string
             self::Boolean => $this->tampilkanBoolean($value),
             self::Tanggal => $this->tampilkanTanggal($value, 'd M Y'),
             self::Waktu => $this->tampilkanTanggal($value, 'd M Y, H:i'),
-            self::Teks => Str::of((string) $value)->stripTags()->squish()->toString(),
+            // Tautan hanya menyumbang teksnya; alamatnya dipasang oleh keluaran
+            // masing-masing (rumus HYPERLINK pada .xlsx, anchor pada PDF).
+            self::Teks, self::Tautan => Str::of((string) $value)->stripTags()->squish()->toString(),
         };
     }
 

@@ -192,6 +192,23 @@
 
         tbody tr:nth-child(even) td { background: var(--zebra); }
 
+        /* Pita pembatas antar kelompok baris, mis. bulan pencairan. Latarnya
+           ditegaskan agar tidak tertimpa selang-seling, dan pita tidak boleh
+           tertinggal sendirian di kaki halaman tanpa baris yang dipayunginya. */
+        .group-band { page-break-after: avoid; }
+
+        .group-band td {
+            background: var(--surface) !important;
+            border-top: 2px solid var(--navy);
+            border-bottom: 1px solid var(--navy);
+            padding: 5px 8px;
+            font-size: 8px;
+            font-weight: 700;
+            color: var(--navy);
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
         .col-index {
             width: 26px;
             color: var(--muted);
@@ -206,6 +223,9 @@
         .nowrap { white-space: nowrap; word-break: normal; }
 
         .muted { color: var(--muted); }
+
+        /* Sel tautan: dibuka pembaca PDF, jadi tetap ditandai selayaknya pranala. */
+        .tautan { color: #1d4ed8; text-decoration: underline; font-weight: 600; }
 
         .badge {
             display: inline-block;

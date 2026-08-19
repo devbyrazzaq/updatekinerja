@@ -32,8 +32,6 @@ class Pemasukan extends Model
         'keterangan',
         'status',
         'catatan_verifikasi',
-        'disetujui_rektor_at',
-        'rektor_id',
         'disetujui_wakil_at',
         'wakil_id',
         'disetujui_keuangan_at',
@@ -55,7 +53,6 @@ class Pemasukan extends Model
             'nominal_pendapatan' => 'decimal:2',
             'bukti_path' => 'array',
             'bukti_original_names' => 'array',
-            'disetujui_rektor_at' => 'datetime',
             'disetujui_wakil_at' => 'datetime',
             'disetujui_keuangan_at' => 'datetime',
             'bukti_diserahkan_at' => 'datetime',
@@ -84,11 +81,6 @@ class Pemasukan extends Model
     public function pengaju(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
-    }
-
-    public function rektor(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'rektor_id');
     }
 
     public function wakil(): BelongsTo
@@ -165,8 +157,8 @@ class Pemasukan extends Model
     }
 
     /**
-     * Status tujuan saat pemasukan diajukan. Draf memulai alur dari verifikasi Rektor;
-     * revisi kembali ke tahap tempat revisi diminta agar verifikasi yang sudah
+     * Status tujuan saat pemasukan diajukan. Draf memulai alur dari verifikasi Wakil
+     * Rektor; revisi kembali ke tahap tempat revisi diminta agar verifikasi yang sudah
      * disetujui tidak diulang dari awal.
      */
     public function statusTujuanPengajuan(): EnumStatusPemasukan
@@ -180,7 +172,7 @@ class Pemasukan extends Model
 
     /**
      * Label status untuk tampilan. Status Revisi diperjelas dengan tahap tempat revisi
-     * diminta (mis. "Revisi Rektor") agar terlihat pada tahap mana pemasukan
+     * diminta (mis. "Revisi Wakil Rektor") agar terlihat pada tahap mana pemasukan
      * dikembalikan.
      */
     public function labelStatus(): string
@@ -190,7 +182,6 @@ class Pemasukan extends Model
         }
 
         return match ($this->tahapanStepper()) {
-            EnumTahapanPemasukan::VerifikasiRektor => 'Revisi Rektor',
             EnumTahapanPemasukan::VerifikasiWakil => 'Revisi Wakil Rektor',
             EnumTahapanPemasukan::VerifikasiKeuangan => 'Revisi Biro Keuangan',
             default => 'Revisi',
@@ -228,7 +219,6 @@ class Pemasukan extends Model
             $diajukanKembali => "{$aktor} mengajukan kembali pemasukan \"{$kegiatan}\" untuk verifikasi pada {$waktuTeks}.",
             $status === EnumStatusPemasukan::Draft => "{$aktor} menyimpan pemasukan \"{$kegiatan}\" sebagai draf pada {$waktuTeks}.",
             $status === EnumStatusPemasukan::Diajukan => "{$aktor} mengajukan pemasukan \"{$kegiatan}\" untuk verifikasi pada {$waktuTeks}.",
-            $status === EnumStatusPemasukan::VerifikasiWakil => "{$aktor} menyetujui pemasukan pada verifikasi Rektor dan meneruskannya ke Wakil Rektor pada {$waktuTeks}.",
             $status === EnumStatusPemasukan::VerifikasiKeuangan => "{$aktor} menyetujui pemasukan pada verifikasi Wakil Rektor dan meneruskannya ke Biro Keuangan pada {$waktuTeks}.",
             $status === EnumStatusPemasukan::MenungguBukti => "{$aktor} menyetujui pemasukan pada verifikasi Biro Keuangan pada {$waktuTeks}, unit kerja diminta mengunggah bukti tanda terima.",
             $status === EnumStatusPemasukan::Valid => "{$aktor} mengunggah bukti tanda terima pada {$waktuTeks} dan pemasukan dinyatakan valid.",

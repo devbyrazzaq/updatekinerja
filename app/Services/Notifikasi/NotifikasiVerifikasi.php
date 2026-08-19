@@ -6,8 +6,8 @@ use App\Filament\Resources\Pemasukans\PemasukanResource;
 use App\Filament\Resources\PengajuanProgramKerjas\PengajuanProgramKerjaResource;
 use App\Filament\Resources\RealisasiProgramKerjas\RealisasiProgramKerjaResource;
 use App\Filament\Resources\VerifikasiPengajuans\VerifikasiPengajuanResource;
-use App\Filament\Resources\VerifikasiRektorPemasukans\VerifikasiRektorPemasukanResource;
 use App\Filament\Resources\VerifikasiRektors\VerifikasiRektorResource;
+use App\Filament\Resources\VerifikasiWakilPemasukans\VerifikasiWakilPemasukanResource;
 use App\Models\Pemasukan;
 use App\Models\PengajuanProgramKerja;
 use App\Models\RealisasiProgramKerja;
@@ -169,7 +169,7 @@ class NotifikasiVerifikasi
             ->actions([
                 Action::make('lihat')
                     ->label('Lihat')
-                    ->url(VerifikasiRektorPemasukanResource::getUrl('view', ['record' => $record]))
+                    ->url(VerifikasiWakilPemasukanResource::getUrl('view', ['record' => $record]))
                     ->markAsRead(),
             ]);
 

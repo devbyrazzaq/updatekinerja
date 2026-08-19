@@ -12,6 +12,10 @@
 
     // Di atas sepuluh kolom, huruf dan jarak dirapatkan supaya tabel tetap sehalaman.
     $rapat = count($columns) > 10;
+
+    // Nomor baris tempat pita pembatas kelompok disisipkan; kosong berarti tabelnya
+    // mengalir tanpa pembatas.
+    $groups ??= [];
 @endphp
 
 @section('content')
@@ -32,6 +36,11 @@
         </thead>
         <tbody>
             @forelse ($rows as $index => $cells)
+                @if (filled($groups[$index] ?? null))
+                    <tr class="group-band">
+                        <td colspan="{{ count($columns) + 1 }}">{{ $groups[$index] }}</td>
+                    </tr>
+                @endif
                 <tr>
                     <td class="col-index">{{ $index + 1 }}</td>
                     @foreach ($cells as $cell)
@@ -40,6 +49,8 @@
                         <td class="align-{{ $cell['align'] }} {{ $cell['nowrap'] && ! $rapat ? 'nowrap' : '' }}">
                             @if ($cell['badge'])
                                 <span class="badge {{ $cell['aktif'] ? 'badge-on' : '' }}">{{ $cell['text'] }}</span>
+                            @elseif (filled($cell['url'] ?? null))
+                                <a class="tautan" href="{{ $cell['url'] }}">{{ $cell['text'] }}</a>
                             @elseif ($cell['kosong'])
                                 <span class="muted">{{ $cell['text'] }}</span>
                             @else

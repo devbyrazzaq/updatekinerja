@@ -34,10 +34,19 @@ final class ExportTheme
     /** Teks sekunder: label, keterangan, catatan kaki. */
     public const MUTED = '64748B';
 
+    /** Teks sel tautan, warna biru yang lazim dikenali sebagai pranala. */
+    public const LINK = '1D4ED8';
+
     public const WHITE = 'FFFFFF';
 
-    /** Nama font yang dipakai pada berkas .xlsx maupun PDF. */
-    public const FONT = 'Plus Jakarta Sans';
+    /**
+     * Nama font berkas .xlsx. Sengaja memakai font bawaan Excel: berkas spreadsheet
+     * dibuka di komputer orang lain tanpa membawa fontnya, jadi font yang tidak
+     * terpasang akan diam-diam diganti dan merusak lebar kolom yang sudah dihitung.
+     * Laporan PDF tetap memakai Plus Jakarta Sans karena fontnya ikut tertanam
+     * ({@see self::fontFaceCss()}).
+     */
+    public const FONT = 'Calibri';
 
     /**
      * Bahasa penulisan tanggal pada dokumen ekspor. Ditetapkan tegas, tidak ikut

@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Enums\EnumFormatKolom;
+use App\Exports\Export;
 use App\Exports\KategorisExport;
 use App\Exports\ProgramsExport;
 use App\Exports\TemplateExport;
@@ -116,6 +117,63 @@ class EksporSpreadsheetDesainTest extends TestCase
 
         $this->assertFalse($result->failed(), implode(' | ', $result->errors));
         $this->assertSame(count($import->sampleRows()), $result->imported);
+    }
+
+    public function test_baris_dipisah_pita_pembatas_saat_ekspor_mengelompokkan(): void
+    {
+        $export = new class extends Export
+        {
+            public function filename(): string
+            {
+                return 'uji-pengelompokan';
+            }
+
+            public function title(): string
+            {
+                return 'Uji Pengelompokan';
+            }
+
+            public function headings(): array
+            {
+                return ['nama', 'dicairkan_at'];
+            }
+
+            public function rows(): iterable
+            {
+                return [
+                    ['Kegiatan A', '2026-03-04'],
+                    ['Kegiatan B', '2026-03-20'],
+                    ['Kegiatan C', '2026-02-11'],
+                    ['Kegiatan D', null],
+                ];
+            }
+
+            public function groupLabel(array $row): ?string
+            {
+                $dicairkan = $this->columnValue($row, 'dicairkan_at');
+
+                return blank($dicairkan)
+                    ? 'Belum Dicairkan'
+                    : 'Dicairkan '.mb_substr((string) $dicairkan, 0, 7);
+            }
+        };
+
+        app(SpreadsheetExporter::class)->write($export, $this->path);
+        $rows = $this->bacaBaris($this->path);
+
+        // Tanpa anak judul: baris 5 label, baris 6 key mesin, lalu pita kelompok.
+        $this->assertSame(['nama', 'dicairkan_at'], $rows[5]);
+
+        $this->assertSame('Dicairkan 2026-03', $rows[6][0]);
+        $this->assertSame('Kegiatan A', $rows[7][0]);
+        $this->assertSame('Kegiatan B', $rows[8][0]);
+        $this->assertSame('Dicairkan 2026-02', $rows[9][0]);
+        $this->assertSame('Kegiatan C', $rows[10][0]);
+        $this->assertSame('Belum Dicairkan', $rows[11][0]);
+        $this->assertSame('Kegiatan D', $rows[12][0]);
+
+        // Pembatas tidak menambah kolom: barisnya tetap selebar kepala tabel.
+        $this->assertCount(2, $rows[7]);
     }
 
     public function test_ekspor_tanpa_data_tetap_menghasilkan_berkas_dengan_keterangan(): void

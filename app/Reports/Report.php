@@ -2,7 +2,9 @@
 
 namespace App\Reports;
 
+use App\Models\Setting;
 use App\Services\Pdf\PdfReporter;
+use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
@@ -49,5 +51,22 @@ abstract class Report
     public function download(): BinaryFileResponse
     {
         return app(PdfReporter::class)->download($this);
+    }
+
+    /**
+     * Path absolut logo brand di disk, siap disematkan sebagai data URI. Logo yang
+     * tidak dipasang atau hilang dari disk membuat kop tampil tanpa gambar.
+     */
+    protected function logoPath(): ?string
+    {
+        $path = Setting::brandLogoPath();
+
+        if (blank($path)) {
+            return null;
+        }
+
+        $absolute = Storage::disk(Setting::BRAND_LOGO_DISK)->path($path);
+
+        return is_file($absolute) ? $absolute : null;
     }
 }

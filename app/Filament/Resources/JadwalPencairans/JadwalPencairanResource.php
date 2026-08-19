@@ -65,6 +65,8 @@ class JadwalPencairanResource extends Resource
 
         return [
             "cairkan_{$prefix}" => 'Tandai Anggaran Dicairkan',
+            "export_{$prefix}" => 'Ekspor Data',
+            "report_{$prefix}" => 'Unduh Laporan PDF',
         ];
     }
 

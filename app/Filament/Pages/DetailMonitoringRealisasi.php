@@ -2,10 +2,10 @@
 
 namespace App\Filament\Pages;
 
-use App\Enums\EnumStatusRealisasi;
+use App\Enums\EnumJenisDokumenRealisasi;
+use App\Filament\Pages\Concerns\MembacaRealisasiTerpantau;
 use App\Filament\Resources\RealisasiProgramKerjas\Schemas\RealisasiProgramKerjaInfolist;
 use App\Models\RealisasiProgramKerja;
-use App\Services\PermissionRegistrar;
 use Filament\Actions\Action;
 use Filament\Pages\Page;
 use Filament\Panel;
@@ -31,6 +31,8 @@ use Livewire\Attributes\Locked;
  */
 class DetailMonitoringRealisasi extends Page
 {
+    use MembacaRealisasiTerpantau;
+
     protected string $view = 'filament.pages.detail-monitoring-realisasi';
 
     protected static bool $shouldRegisterNavigation = false;
@@ -114,7 +116,21 @@ class DetailMonitoringRealisasi extends Page
      */
     protected function getHeaderActions(): array
     {
+        $dokumen = array_map(
+            fn (EnumJenisDokumenRealisasi $jenis): Action => Action::make('lihat'.$jenis->value)
+                ->label('Lihat '.$jenis->getLabel())
+                ->icon($jenis->getIcon())
+                ->color($jenis->getColor())
+                ->visible(fn (): bool => $this->getRecord()->punyaDokumen($jenis))
+                ->url(PratinjauDokumenRealisasi::getUrl([
+                    'record' => $this->getRecord()->getRouteKey(),
+                    'jenis' => $jenis->value,
+                ])),
+            EnumJenisDokumenRealisasi::cases(),
+        );
+
         return [
+            ...$dokumen,
             Action::make('kembali')
                 ->label('Kembali ke Monitoring')
                 ->icon(Heroicon::OutlinedArrowLeft)
@@ -126,41 +142,5 @@ class DetailMonitoringRealisasi extends Page
     public function infolist(Schema $schema): Schema
     {
         return RealisasiProgramKerjaInfolist::configure($schema->record($this->getRecord()));
-    }
-
-    /**
-     * Realisasi yang diminta, dengan dua penjagaan: hanya realisasi yang benar-benar
-     * berjalan (draf tidak pernah dipantau di sini) dan hanya unit kerja yang menjadi
-     * cakupan data pengguna — aturan yang sama dengan tabel di halaman induknya.
-     */
-    protected function resolveRecord(string $key): RealisasiProgramKerja
-    {
-        $realisasi = RealisasiProgramKerja::query()
-            ->with(['pengajuanProgramKerja.unitKerja', 'pengajuanProgramKerja.penawaranProgramKerja.tahunKerja'])
-            ->where('uuid', $key)
-            ->where('status', '!=', EnumStatusRealisasi::Draft->value)
-            ->firstOrFail();
-
-        abort_unless($this->dapatDibaca($realisasi), 403);
-
-        return $realisasi;
-    }
-
-    protected function dapatDibaca(RealisasiProgramKerja $realisasi): bool
-    {
-        $user = auth()->user();
-
-        if ($user === null) {
-            return false;
-        }
-
-        if ($user->isPrivileged()) {
-            return true;
-        }
-
-        $unitKerjaId = $realisasi->unitKerjaId();
-
-        return $unitKerjaId !== null
-            && PermissionRegistrar::permittedUnitIds($user)->contains($unitKerjaId);
     }
 }

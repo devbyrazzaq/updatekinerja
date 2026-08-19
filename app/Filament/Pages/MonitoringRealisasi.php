@@ -10,6 +10,7 @@ use App\Filament\Actions\MediaAction;
 use App\Filament\Actions\PdfReportAction;
 use App\Filament\Pages\Concerns\HasFilterAboveWidgets;
 use App\Filament\Pages\Concerns\HasPageAuthorization;
+use App\Filament\Pages\Concerns\MemilihCakupanLaporan;
 use App\Filament\Pages\Widgets\AnggaranRealisasiChart;
 use App\Filament\Pages\Widgets\MonitoringRealisasiOverview;
 use App\Filament\Pages\Widgets\RealisasiUnitKerjaChart;
@@ -64,6 +65,7 @@ class MonitoringRealisasi extends Page implements HasTable
     use HasFilterAboveWidgets;
     use HasPageAuthorization;
     use InteractsWithTable;
+    use MemilihCakupanLaporan;
 
     protected string $view = 'filament.pages.monitoring-realisasi';
 
@@ -213,10 +215,11 @@ class MonitoringRealisasi extends Page implements HasTable
     }
 
     /**
-     * Ekspor mengikuti cakupan unit kerja dan tahun kerja yang sedang dibaca, sehingga
-     * berkasnya sama persis dengan tabel di layar. Aksinya dibentuk langsung — bukan
-     * lewat exporter() yang meresolve dari container — karena kelas ekspornya perlu
-     * tahu cakupan itu.
+     * Ekspor spreadsheet mengikuti cakupan unit kerja dan tahun kerja yang sedang
+     * dibaca, sehingga berkasnya sama persis dengan tabel di layar; laporan PDF
+     * menanyakan cakupannya lebih dahulu ({@see MemilihCakupanLaporan}). Aksinya
+     * dibentuk langsung — bukan lewat exporter() yang meresolve dari container —
+     * karena kelas ekspornya perlu tahu cakupan itu.
      *
      * @return array<int, Action>
      */
@@ -225,19 +228,25 @@ class MonitoringRealisasi extends Page implements HasTable
         return [
             ExcelExportAction::make()
                 ->permission(static::getPagePermission())
-                ->action(fn () => $this->export()->download()),
+                ->action(fn () => $this->export($this->unitKerjaId)->download()),
             PdfReportAction::make()
                 ->permission(static::getPagePermission())
-                ->action(fn () => (new TabularReport($this->export()))->download()),
+                ->cakupan($this->skemaCakupanLaporan(fn (): ?int => $this->unitKerjaId))
+                ->action(fn (array $data) => (new TabularReport(
+                    $this->export($this->cakupanUnitKerja($data)),
+                ))->download()),
         ];
     }
 
-    protected function export(): MonitoringRealisasisExport
+    /**
+     * @param  int|null  $unitKerjaId  Unit kerja tunggal; null berarti seluruh unit yang boleh diakses.
+     */
+    protected function export(?int $unitKerjaId): MonitoringRealisasisExport
     {
         return new MonitoringRealisasisExport(
-            unitKerjaIds: $this->unitKerjaId !== null ? [$this->unitKerjaId] : array_keys($this->unitKerjaOptions()),
+            unitKerjaIds: $unitKerjaId !== null ? [$unitKerjaId] : array_keys($this->unitKerjaOptions()),
             tahunKerjaId: $this->tahunKerjaId,
-            namaUnitKerja: $this->unitKerjaId !== null ? ($this->unitKerjaOptions()[$this->unitKerjaId] ?? null) : null,
+            namaUnitKerja: $unitKerjaId !== null ? ($this->unitKerjaOptions()[$unitKerjaId] ?? null) : null,
         );
     }
 

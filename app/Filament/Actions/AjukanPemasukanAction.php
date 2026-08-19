@@ -16,7 +16,7 @@ use Filament\Support\Enums\Width;
  *
  * Pemasukan berstatus draf diajukan untuk pertama kali, sedangkan pemasukan yang
  * diminta revisi diperbaiki lewat aksi yang sama ("Perbaiki") lalu diteruskan
- * kembali ke tahap tempat revisi diminta — bukan mengulang dari Rektor.
+ * kembali ke tahap tempat revisi diminta — bukan mengulang dari tahap pertama.
  */
 class AjukanPemasukanAction extends Action
 {
@@ -37,7 +37,7 @@ class AjukanPemasukanAction extends Action
             ->modalHeading(fn (Pemasukan $record): string => static::adalahPerbaikan($record) ? 'Ajukan Ulang Pemasukan' : 'Ajukan Pemasukan')
             ->modalDescription(fn (Pemasukan $record): string => static::adalahPerbaikan($record)
                 ? 'Pastikan data pemasukan sudah diperbaiki sesuai catatan revisi. Pemasukan akan dikirim kembali ke tahap yang meminta revisi.'
-                : 'Pemasukan akan dikirim untuk verifikasi Rektor, dilanjutkan Wakil Rektor dan Biro Keuangan.')
+                : 'Pemasukan akan dikirim untuk verifikasi Wakil Rektor, dilanjutkan Biro Keuangan.')
             ->modalSubmitActionLabel(fn (Pemasukan $record): string => static::adalahPerbaikan($record) ? 'Kirim Ulang' : 'Ajukan')
             ->modalIcon('heroicon-o-paper-airplane')
             ->modalIconColor('info')

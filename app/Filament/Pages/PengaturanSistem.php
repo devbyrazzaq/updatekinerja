@@ -60,7 +60,7 @@ class PengaturanSistem extends Page
 
     public function getSubheading(): string|Htmlable|null
     {
-        return 'Pengaturan di halaman ini mengubah aturan main yang dipakai menu lain: identitas aplikasi pada brand panel, batas rentang tahun kelompok acuan, kuota realisasi yang boleh berjalan bersamaan, serta batas berkas dokumen realisasi dan bukti tanda terima pemasukan.';
+        return 'Pengaturan di halaman ini mengubah aturan main yang dipakai menu lain: identitas aplikasi pada brand panel, batas rentang tahun kelompok acuan, kuota realisasi yang boleh berjalan bersamaan, batas berkas dokumen realisasi dan bukti tanda terima pemasukan, serta identitas penanda tangan pada laporan PDF.';
     }
 
     public function mount(): void
@@ -77,6 +77,10 @@ class PengaturanSistem extends Page
             Setting::MAKS_UKURAN_LAPORAN_MB => (int) Setting::get(Setting::MAKS_UKURAN_LAPORAN_MB),
             Setting::MAKS_BUKTI_PEMASUKAN => Setting::maksBuktiPemasukan(),
             Setting::MAKS_UKURAN_BUKTI_PEMASUKAN_MB => (int) Setting::get(Setting::MAKS_UKURAN_BUKTI_PEMASUKAN_MB),
+            Setting::PENANDATANGAN_JABATAN => Setting::penandatanganJabatan(),
+            Setting::PENANDATANGAN_NAMA => Setting::penandatanganNama(),
+            Setting::PENANDATANGAN_NOMOR => Setting::penandatanganNomor(),
+            Setting::PENANDATANGAN_KOTA => Setting::penandatanganKota(),
         ]);
     }
 
@@ -115,6 +119,36 @@ class PengaturanSistem extends Page
                                 ->helperText(new HtmlString(<<<'HTML'
                                     Baris kedua brand untuk pengguna berakses penuh yang melihat <strong>seluruh unit kerja</strong> sekaligus.
                                     <br>Pengguna yang datanya dibatasi melihat <strong>nama unit kerja aktif</strong> miliknya di baris ini, bukan nama instansi.
+                                    HTML)),
+                        ]),
+                    Section::make('Penanda Tangan Laporan')
+                        ->description('Identitas pimpinan yang tercetak pada blok tanda tangan laporan PDF, mis. Laporan Pencairan.')
+                        ->icon(Heroicon::OutlinedPencilSquare)
+                        ->columnSpanFull()
+                        ->columns(2)
+                        ->schema([
+                            TextInput::make(Setting::PENANDATANGAN_JABATAN)
+                                ->label('Jabatan Pimpinan')
+                                ->maxLength(100)
+                                ->placeholder('Kepala Biro Keuangan')
+                                ->helperText('Tercetak di baris paling atas blok tanda tangan, di atas nama.'),
+                            TextInput::make(Setting::PENANDATANGAN_NAMA)
+                                ->label('Nama Pimpinan')
+                                ->maxLength(150)
+                                ->placeholder('Dr. Hj. Siti Aminah, S.E., M.M.')
+                                ->helperText('Tulis lengkap dengan gelar depan dan belakang. Tercetak bergaris bawah di bawah jabatan.'),
+                            TextInput::make(Setting::PENANDATANGAN_NOMOR)
+                                ->label('Nomor Karyawan Pimpinan')
+                                ->maxLength(50)
+                                ->placeholder('NIK 198701012015041002')
+                                ->helperText('Tercetak di bawah nama yang bergaris bawah.'),
+                            TextInput::make(Setting::PENANDATANGAN_KOTA)
+                                ->label('Kota pada Baris Tanggal')
+                                ->maxLength(50)
+                                ->placeholder('Lamongan')
+                                ->helperText(new HtmlString(<<<'HTML'
+                                    Mendahului tanggal, mis. <strong>Lamongan, 17 Agustus 2026</strong>. Kosongkan bila cukup tanggalnya saja.
+                                    <br><strong>Tanggalnya sendiri dipilih saat mengunduh laporan</strong>, bukan di sini.
                                     HTML)),
                         ]),
                     Section::make('Periode Jabatan & Acuan Program Kerja')
@@ -252,6 +286,10 @@ class PengaturanSistem extends Page
         Setting::set(Setting::MAKS_UKURAN_LAPORAN_MB, (int) $data[Setting::MAKS_UKURAN_LAPORAN_MB]);
         Setting::set(Setting::MAKS_BUKTI_PEMASUKAN, (int) $data[Setting::MAKS_BUKTI_PEMASUKAN]);
         Setting::set(Setting::MAKS_UKURAN_BUKTI_PEMASUKAN_MB, (int) $data[Setting::MAKS_UKURAN_BUKTI_PEMASUKAN_MB]);
+        Setting::set(Setting::PENANDATANGAN_JABATAN, trim((string) ($data[Setting::PENANDATANGAN_JABATAN] ?? '')));
+        Setting::set(Setting::PENANDATANGAN_NAMA, trim((string) ($data[Setting::PENANDATANGAN_NAMA] ?? '')));
+        Setting::set(Setting::PENANDATANGAN_NOMOR, trim((string) ($data[Setting::PENANDATANGAN_NOMOR] ?? '')));
+        Setting::set(Setting::PENANDATANGAN_KOTA, trim((string) ($data[Setting::PENANDATANGAN_KOTA] ?? '')));
 
         Notification::make()
             ->title('Pengaturan sistem berhasil disimpan')

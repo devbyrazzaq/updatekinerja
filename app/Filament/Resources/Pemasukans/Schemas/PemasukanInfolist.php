@@ -14,7 +14,7 @@ use Filament\Support\Icons\Heroicon;
 class PemasukanInfolist
 {
     /**
-     * Dipakai bersama oleh halaman detail milik unit kerja dan ketiga Resource
+     * Dipakai bersama oleh halaman detail milik unit kerja dan kedua Resource
      * verifikasi. Parameter `$verifikasiResource` mengikuti pola infolist realisasi
      * sebagai penanda dari mana infolist ini dibuka.
      */
@@ -66,8 +66,6 @@ class PemasukanInfolist
                     ->columnSpanFull()
                     ->columns(2)
                     ->schema([
-                        TextEntry::make('rektor.name')->label('Rektor')->placeholder('Belum diverifikasi'),
-                        TextEntry::make('disetujui_rektor_at')->label('Waktu')->dateTime('d F Y H:i')->placeholder('-'),
                         TextEntry::make('wakil.name')->label('Wakil Rektor')->placeholder('Belum diverifikasi'),
                         TextEntry::make('disetujui_wakil_at')->label('Waktu')->dateTime('d F Y H:i')->placeholder('-'),
                         TextEntry::make('keuangan.name')->label('Biro Keuangan')->placeholder('Belum diverifikasi'),

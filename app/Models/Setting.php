@@ -76,6 +76,28 @@ class Setting extends Model
     public const BRAND_LOGO_DISK = 'public';
 
     /**
+     * Jabatan penanda tangan yang tercetak di atas nama pada blok tanda tangan
+     * laporan pencairan.
+     */
+    public const PENANDATANGAN_JABATAN = 'penandatangan_jabatan';
+
+    /**
+     * Nama pimpinan yang menandatangani laporan, ditulis lengkap beserta gelarnya.
+     */
+    public const PENANDATANGAN_NAMA = 'penandatangan_nama';
+
+    /**
+     * Nomor karyawan penanda tangan, tercetak di bawah namanya.
+     */
+    public const PENANDATANGAN_NOMOR = 'penandatangan_nomor';
+
+    /**
+     * Kota yang mendahului tanggal pada blok tanda tangan, mis. "Lamongan, 17
+     * Agustus 2026".
+     */
+    public const PENANDATANGAN_KOTA = 'penandatangan_kota';
+
+    /**
      * Nilai bawaan yang dipakai selama pengaturan belum pernah disimpan.
      *
      * @var array<string, int|string>
@@ -92,6 +114,10 @@ class Setting extends Model
         self::BRAND_NAMA => 'SIM KINERJA',
         self::BRAND_INSTANSI => 'Universitas Muhammadiyah Lamongan',
         self::BRAND_LOGO => '',
+        self::PENANDATANGAN_JABATAN => '',
+        self::PENANDATANGAN_NAMA => '',
+        self::PENANDATANGAN_NOMOR => '',
+        self::PENANDATANGAN_KOTA => '',
     ];
 
     protected const CACHE_KEY = 'settings.all';
@@ -205,6 +231,40 @@ class Setting extends Model
         $instansi = trim((string) static::get(self::BRAND_INSTANSI));
 
         return $instansi !== '' ? $instansi : (string) self::DEFAULTS[self::BRAND_INSTANSI];
+    }
+
+    /**
+     * Jabatan penanda tangan laporan; kosong berarti barisnya tidak dicetak.
+     */
+    public static function penandatanganJabatan(): string
+    {
+        return trim((string) static::get(self::PENANDATANGAN_JABATAN));
+    }
+
+    /**
+     * Nama pimpinan penanda tangan laporan lengkap dengan gelarnya; kosong berarti
+     * laporan memakai nama pengguna yang mengunduhnya.
+     */
+    public static function penandatanganNama(): string
+    {
+        return trim((string) static::get(self::PENANDATANGAN_NAMA));
+    }
+
+    /**
+     * Nomor karyawan penanda tangan laporan; kosong berarti barisnya tidak dicetak.
+     */
+    public static function penandatanganNomor(): string
+    {
+        return trim((string) static::get(self::PENANDATANGAN_NOMOR));
+    }
+
+    /**
+     * Kota pada baris tanggal blok tanda tangan; kosong berarti hanya tanggalnya
+     * yang dicetak.
+     */
+    public static function penandatanganKota(): string
+    {
+        return trim((string) static::get(self::PENANDATANGAN_KOTA));
     }
 
     /**

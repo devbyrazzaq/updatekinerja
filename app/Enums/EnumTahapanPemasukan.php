@@ -10,7 +10,6 @@ namespace App\Enums;
 enum EnumTahapanPemasukan: string
 {
     case Draf = 'draf';
-    case VerifikasiRektor = 'verifikasi_rektor';
     case VerifikasiWakil = 'verifikasi_wakil';
     case VerifikasiKeuangan = 'verifikasi_keuangan';
     case BuktiTerima = 'bukti_terima';
@@ -20,7 +19,6 @@ enum EnumTahapanPemasukan: string
     {
         return match ($this) {
             self::Draf => 'Pencatatan Pemasukan',
-            self::VerifikasiRektor => 'Verifikasi Rektor',
             self::VerifikasiWakil => 'Verifikasi Wakil Rektor',
             self::VerifikasiKeuangan => 'Verifikasi Biro Keuangan',
             self::BuktiTerima => 'Bukti Tanda Terima',
@@ -32,7 +30,6 @@ enum EnumTahapanPemasukan: string
     {
         return match ($this) {
             self::Draf => 'Pencatatan dan pengajuan pemasukan oleh unit kerja.',
-            self::VerifikasiRektor => 'Pemasukan ditinjau dan menunggu persetujuan Rektor.',
             self::VerifikasiWakil => 'Pemasukan menunggu persetujuan Wakil Rektor.',
             self::VerifikasiKeuangan => 'Pemasukan menunggu verifikasi Biro Keuangan.',
             self::BuktiTerima => 'Unit kerja mengunggah bukti tanda terima pemasukan.',

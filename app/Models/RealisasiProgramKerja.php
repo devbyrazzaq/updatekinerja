@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 
 class RealisasiProgramKerja extends Model
@@ -768,9 +769,20 @@ class RealisasiProgramKerja extends Model
             return 0;
         }
 
+        return static::persentaseKetercapaianTertinggi($this->pengajuan_program_kerja_id, $this->getKey());
+    }
+
+    /**
+     * Ketercapaian target tertinggi yang sudah tercatat atas sebuah pengajuan;
+     * realisasi yang ditolak/dibatalkan diabaikan karena capaiannya tidak pernah
+     * diakui. Sebuah realisasi dapat dikecualikan agar tidak menghitung dirinya
+     * sendiri saat laporannya sedang disunting.
+     */
+    public static function persentaseKetercapaianTertinggi(int $pengajuanProgramKerjaId, ?int $kecualiRealisasiId = null): int
+    {
         return (int) (static::query()
-            ->where('pengajuan_program_kerja_id', $this->pengajuan_program_kerja_id)
-            ->whereKeyNot($this->getKey())
+            ->where('pengajuan_program_kerja_id', $pengajuanProgramKerjaId)
+            ->when($kecualiRealisasiId !== null, fn (Builder $query): Builder => $query->whereKeyNot($kecualiRealisasiId))
             ->whereNotIn('status', [EnumStatusRealisasi::Ditolak->value, EnumStatusRealisasi::Dibatalkan->value])
             ->max('persentase_ketercapaian') ?? 0);
     }
@@ -798,6 +810,53 @@ class RealisasiProgramKerja extends Model
     public function sudahAdaLaporan(): bool
     {
         return $this->laporan_diserahkan_at !== null;
+    }
+
+    /**
+     * Apakah realisasi ini menyimpan berkas untuk satu jenis dokumen. Sengaja
+     * membaca kolom path saja — tanpa menyentuh tabel dokumen — supaya aman dipanggil
+     * per baris saat mengekspor ribuan realisasi.
+     */
+    public function punyaDokumen(EnumJenisDokumenRealisasi $jenis): bool
+    {
+        return collect((array) $this->getAttribute($jenis->value.'_path'))
+            ->contains(fn ($path): bool => is_string($path) && filled($path));
+    }
+
+    /**
+     * Berkas satu jenis dokumen, unggahan terbaru lebih dahulu. Sumber utamanya tabel
+     * dokumen karena di sanalah nama asli, ukuran, dan waktu unggahnya tercatat;
+     * kolom path dipakai sebagai jaring pengaman untuk berkas yang belum sempat
+     * tersalin ke sana (mis. hasil impor data lama).
+     *
+     * @return Collection<int, array{path: string, nama: string, ukuran: ?string, diunggah: ?Carbon}>
+     */
+    public function berkasDokumen(EnumJenisDokumenRealisasi $jenis): Collection
+    {
+        $tercatat = $this->dokumens()
+            ->where('type', $jenis)
+            ->latest('uploaded_at')
+            ->get()
+            ->map(fn (RealisasiDokumen $dokumen): array => [
+                'path' => (string) $dokumen->path,
+                'nama' => $dokumen->nama_tampilan,
+                'ukuran' => $dokumen->ukuran_terbaca,
+                'diunggah' => $dokumen->uploaded_at,
+            ]);
+
+        $namaAsli = (array) $this->getAttribute($jenis->value.'_original_names');
+
+        $belumTercatat = collect((array) $this->getAttribute($jenis->value.'_path'))
+            ->filter(fn ($path): bool => is_string($path) && filled($path))
+            ->reject(fn (string $path): bool => $tercatat->contains('path', $path))
+            ->map(fn (string $path): array => [
+                'path' => $path,
+                'nama' => is_string($namaAsli[$path] ?? null) ? $namaAsli[$path] : basename($path),
+                'ukuran' => null,
+                'diunggah' => null,
+            ]);
+
+        return $tercatat->concat($belumTercatat)->values();
     }
 
     /**

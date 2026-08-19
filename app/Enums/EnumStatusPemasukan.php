@@ -7,16 +7,14 @@ use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasLabel;
 
 /**
- * Status pemasukan unit sepanjang alur verifikasi Rektor → Wakil Rektor → Biro
- * Keuangan, ditutup dengan unggahan bukti tanda terima oleh unit kerja. Hanya
- * status {@see self::Valid} yang dihitung sebagai pemasukan sungguhan pada Buku
- * Anggaran.
+ * Status pemasukan unit sepanjang alur verifikasi Wakil Rektor → Biro Keuangan,
+ * ditutup dengan unggahan bukti tanda terima oleh unit kerja. Hanya status
+ * {@see self::Valid} yang dihitung sebagai pemasukan sungguhan pada Buku Anggaran.
  */
 enum EnumStatusPemasukan: string implements HasColor, HasLabel
 {
     case Draft = 'draft';
     case Diajukan = 'diajukan';
-    case VerifikasiRektor = 'verifikasi_rektor';
     case VerifikasiWakil = 'verifikasi_wakil';
     case VerifikasiKeuangan = 'verifikasi_keuangan';
     case MenungguBukti = 'menunggu_bukti';
@@ -29,7 +27,6 @@ enum EnumStatusPemasukan: string implements HasColor, HasLabel
         return match ($this) {
             self::Draft => 'Draf',
             self::Diajukan => 'Diajukan',
-            self::VerifikasiRektor => 'Verifikasi Rektor',
             self::VerifikasiWakil => 'Verifikasi Wakil Rektor',
             self::VerifikasiKeuangan => 'Verifikasi Biro Keuangan',
             self::MenungguBukti => 'Menunggu Bukti Tanda Terima',
@@ -43,7 +40,7 @@ enum EnumStatusPemasukan: string implements HasColor, HasLabel
     {
         return match ($this) {
             self::Draft => 'gray',
-            self::Diajukan, self::VerifikasiRektor, self::VerifikasiWakil, self::VerifikasiKeuangan => 'info',
+            self::Diajukan, self::VerifikasiWakil, self::VerifikasiKeuangan => 'info',
             self::MenungguBukti, self::Revisi => 'warning',
             self::Valid => 'success',
             self::Ditolak => 'danger',
@@ -53,16 +50,15 @@ enum EnumStatusPemasukan: string implements HasColor, HasLabel
     /**
      * Tahapan stepper tempat status ini berada. Revisi dikembalikan ke tahap
      * pencatatan karena unit kerja perlu memperbaiki; Ditolak diatribusikan ke tahap
-     * Verifikasi Rektor sebagai titik masuk verifikasi — keduanya status bercabang
-     * yang posisi sebenarnya dibaca dari riwayat lewat
+     * Verifikasi Wakil Rektor sebagai titik masuk verifikasi — keduanya status
+     * bercabang yang posisi sebenarnya dibaca dari riwayat lewat
      * {@see Pemasukan::tahapanStepper()}.
      */
     public function tahapan(): EnumTahapanPemasukan
     {
         return match ($this) {
             self::Draft, self::Revisi => EnumTahapanPemasukan::Draf,
-            self::Diajukan, self::VerifikasiRektor, self::Ditolak => EnumTahapanPemasukan::VerifikasiRektor,
-            self::VerifikasiWakil => EnumTahapanPemasukan::VerifikasiWakil,
+            self::Diajukan, self::VerifikasiWakil, self::Ditolak => EnumTahapanPemasukan::VerifikasiWakil,
             self::VerifikasiKeuangan => EnumTahapanPemasukan::VerifikasiKeuangan,
             self::MenungguBukti => EnumTahapanPemasukan::BuktiTerima,
             self::Valid => EnumTahapanPemasukan::Valid,
@@ -89,7 +85,6 @@ enum EnumStatusPemasukan: string implements HasColor, HasLabel
     {
         return [
             self::Diajukan,
-            self::VerifikasiRektor,
             self::VerifikasiWakil,
             self::VerifikasiKeuangan,
             self::MenungguBukti,

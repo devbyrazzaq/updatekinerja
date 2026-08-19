@@ -5,6 +5,7 @@ namespace App\Exports;
 use App\Enums\EnumFormatKolom;
 use App\Reports\TabularReport;
 use App\Services\Excel\SpreadsheetExporter;
+use App\Services\Excel\SpreadsheetImporter;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
@@ -95,6 +96,38 @@ abstract class Export
     public function summary(): array
     {
         return [];
+    }
+
+    /**
+     * Label pembatas kelompok sebuah baris, mis. "Dicairkan Januari 2026"; null
+     * berarti tabel ditulis mengalir tanpa pembatas.
+     *
+     * Berkas .xlsx menyisipkan pita berlabel ini setiap kali labelnya berganti dari
+     * baris sebelumnya, jadi {@see rows()} harus sudah terurut menurut
+     * pengelompokannya — penulis berkas hanya membandingkan baris dengan
+     * pendahulunya, tidak mengurutkan ulang.
+     *
+     * Ekspor yang berkasnya dipakai untuk impor balik sebaiknya tidak memakai ini:
+     * pita pembatas terbaca sebagai baris data oleh {@see SpreadsheetImporter}.
+     *
+     * @param  array<int, mixed>  $row  Nilai satu baris, urut sesuai {@see headings()}.
+     */
+    public function groupLabel(array $row): ?string
+    {
+        return null;
+    }
+
+    /**
+     * Nilai satu kolom pada sebuah baris, dicari lewat key mesinnya supaya turunan
+     * tidak perlu menghitung posisi kolomnya sendiri.
+     *
+     * @param  array<int, mixed>  $row
+     */
+    protected function columnValue(array $row, string $key): mixed
+    {
+        $index = array_search($key, $this->headings(), true);
+
+        return $index === false ? null : ($row[$index] ?? null);
     }
 
     /**

@@ -7,6 +7,7 @@ use App\Exports\BukuAnggaranExport;
 use App\Filament\Actions\ExcelExportAction;
 use App\Filament\Actions\PdfReportAction;
 use App\Filament\Pages\Concerns\HasPageAuthorization;
+use App\Filament\Pages\Concerns\MemilihCakupanLaporan;
 use App\Filament\Pages\Widgets\BukuAnggaranOverview;
 use App\Filament\Pages\Widgets\MutasiAnggaranChart;
 use App\Models\TahunKerja;
@@ -50,6 +51,7 @@ class BukuAnggaran extends Page implements HasTable
 {
     use HasPageAuthorization;
     use InteractsWithTable;
+    use MemilihCakupanLaporan;
 
     protected string $view = 'filament.pages.buku-anggaran';
 
@@ -158,18 +160,31 @@ class BukuAnggaran extends Page implements HasTable
             ExcelExportAction::make()
                 ->permission(static::getPagePermission())
                 ->visible(fn (): bool => $this->unitKerjaId !== null)
-                ->action(fn () => (new BukuAnggaranExport(
-                    unitKerjaId: $this->unitKerjaId,
-                    tahunKerjaId: $this->tahunKerjaId,
-                ))->download()),
+                ->action(fn () => $this->export($this->unitKerjaId)->download()),
             PdfReportAction::make()
                 ->permission(static::getPagePermission())
                 ->visible(fn (): bool => $this->unitKerjaId !== null)
-                ->action(fn () => (new TabularReport(new BukuAnggaranExport(
-                    unitKerjaId: $this->unitKerjaId,
-                    tahunKerjaId: $this->tahunKerjaId,
-                )))->download()),
+                ->cakupan($this->skemaCakupanLaporan(fn (): ?int => $this->unitKerjaId))
+                ->action(fn (array $data) => (new TabularReport(
+                    $this->export($this->cakupanUnitKerja($data)),
+                ))->download()),
         ];
+    }
+
+    /**
+     * Buku satu unit kerja, atau buku gabungan seluruh unit yang boleh diakses bila
+     * cakupannya dilepas — persis isi {@see BukuAnggaranKeseluruhan}, sehingga laporan
+     * lintas unit bisa diunduh tanpa berpindah halaman.
+     *
+     * @param  int|null  $unitKerjaId  Unit kerja tunggal; null berarti buku gabungan.
+     */
+    protected function export(?int $unitKerjaId): BukuAnggaranExport
+    {
+        return new BukuAnggaranExport(
+            unitKerjaId: $unitKerjaId,
+            unitKerja: $unitKerjaId === null ? $this->unitKerjaOptions() : [],
+            tahunKerjaId: $this->tahunKerjaId,
+        );
     }
 
     public function form(Schema $schema): Schema

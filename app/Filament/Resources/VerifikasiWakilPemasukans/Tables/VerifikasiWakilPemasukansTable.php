@@ -21,7 +21,7 @@ class VerifikasiWakilPemasukansTable
     {
         return $table
             ->emptyStateHeading('Tidak ada pemasukan yang menunggu verifikasi Wakil Rektor')
-            ->emptyStateDescription('Pemasukan yang disetujui Rektor akan tampil di sini.')
+            ->emptyStateDescription('Pemasukan yang diajukan unit kerja akan tampil di sini.')
             ->emptyStateIcon('heroicon-o-banknotes')
             ->columns([
                 TextColumn::make('rincian_kegiatan')->label('Rincian Kegiatan')->searchable()->wrap(),

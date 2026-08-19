@@ -5,6 +5,7 @@ namespace App\Services\Excel;
 use App\Enums\EnumFormatKolom;
 use App\Exports\Export;
 use App\Exports\ExportTheme;
+use App\Exports\Tautan;
 use App\Models\Setting;
 use OpenSpout\Common\Entity\Row;
 use OpenSpout\Common\Entity\Style\Border;
@@ -80,10 +81,10 @@ class SpreadsheetExporter
         $this->writeTableHeader($writer, $columns);
 
         $widths = $this->initialWidths($columns);
-        $dataRowCount = $this->writeDataRows($writer, $columns, $export, $widths);
+        $rowCount = $this->writeDataRows($writer, $columns, $export, $widths);
 
         $this->applyColumnWidths($sheet, $widths);
-        $this->applySheetView($sheet, $columnCount, $dataRowCount);
+        $this->applySheetView($sheet, $columnCount, $rowCount);
 
         $writer->close();
     }
@@ -146,15 +147,31 @@ class SpreadsheetExporter
     /**
      * @param  list<array{key: string, label: string, format: EnumFormatKolom}>  $columns
      * @param  array<int, float>  $widths
-     * @return int Jumlah baris data yang tertulis.
+     * @return int Jumlah baris yang tertulis di bawah kepala tabel, termasuk pita pembatas.
      */
     protected function writeDataRows(Writer $writer, array $columns, Export $export, array &$widths): int
     {
         $written = 0;
+        $rowsWritten = 0;
+        $currentGroup = null;
+        $rowsInGroup = 0;
 
         foreach ($export->rows() as $row) {
             $values = array_values(is_array($row) ? $row : iterator_to_array($row));
-            $striped = $written % 2 === 1;
+
+            $group = $export->groupLabel($values);
+
+            if ($group !== null && $group !== $currentGroup) {
+                $writer->addRow($this->groupBandRow($group, count($columns)));
+
+                $currentGroup = $group;
+                $rowsInGroup = 0;
+                $rowsWritten++;
+            }
+
+            // Selang-seling dihitung ulang tiap kelompok supaya baris pertama di
+            // bawah pita selalu polos, bukan kebetulan ikut berlatar.
+            $striped = $rowsInGroup % 2 === 1;
 
             $cellValues = [];
             $cellStyles = [];
@@ -171,15 +188,49 @@ class SpreadsheetExporter
 
             $writer->addRow(Row::fromValuesWithStyles($cellValues, null, $cellStyles));
             $written++;
+            $rowsInGroup++;
+            $rowsWritten++;
         }
 
         if ($written === 0) {
             $writer->addRow(
                 $this->mergedRow('Belum ada data untuk diekspor.', $this->emptyStateStyle(), count($columns))
             );
+
+            return 0;
         }
 
-        return $written;
+        return $rowsWritten;
+    }
+
+    /**
+     * Pita pembatas antar kelompok baris. Labelnya ditulis pada sel pertama dan sel
+     * lainnya dibiarkan kosong supaya teksnya meluber melintasi baris — tampil
+     * sebagai satu pita utuh tanpa perlu menggabung sel, yang akan membuat filter
+     * kolom dan penyalinan blok data jadi bermasalah.
+     */
+    protected function groupBandRow(string $label, int $columnCount): Row
+    {
+        $values = array_fill(0, max($columnCount, 1), null);
+        $values[0] = $label;
+
+        return Row::fromValues($values, $this->groupBandStyle())->setHeight(22);
+    }
+
+    protected function groupBandStyle(): Style
+    {
+        return (new Style)
+            ->setFontName(ExportTheme::FONT)
+            ->setFontSize(10)
+            ->setFontBold()
+            ->setFontColor(ExportTheme::NAVY)
+            ->setBackgroundColor(ExportTheme::SURFACE)
+            ->setCellAlignment(CellAlignment::LEFT)
+            ->setCellVerticalAlignment(CellVerticalAlignment::CENTER)
+            ->setBorder(new Border(
+                new BorderPart(Border::TOP, ExportTheme::NAVY, Border::WIDTH_MEDIUM, Border::STYLE_SOLID),
+                new BorderPart(Border::BOTTOM, ExportTheme::NAVY, Border::WIDTH_THIN, Border::STYLE_SOLID),
+            ));
     }
 
     /**
@@ -190,6 +241,10 @@ class SpreadsheetExporter
     {
         if ($value === null || $value === '') {
             return null;
+        }
+
+        if ($value instanceof Tautan) {
+            return $this->rumusTautan($value);
         }
 
         $isNumericColumn = in_array($format, [
@@ -203,6 +258,18 @@ class SpreadsheetExporter
         }
 
         return $value;
+    }
+
+    /**
+     * Sel tautan ditulis sebagai rumus `HYPERLINK` — cara paling portabel membuat
+     * sel .xlsx bisa diklik, dan satu-satunya yang tetap membawa teks tampilannya
+     * sendiri ("Lihat Proposal") alih-alih memamerkan alamat panjangnya.
+     */
+    protected function rumusTautan(Tautan $tautan): string
+    {
+        $kutipGanda = fn (string $teks): string => str_replace('"', '""', $teks);
+
+        return '=HYPERLINK("'.$kutipGanda($tautan->url).'","'.$kutipGanda($tautan->label).'")';
     }
 
     /**
@@ -238,7 +305,7 @@ class SpreadsheetExporter
      * Bekukan blok kepala + kepala tabel, pasang filter kolom pada baris key, dan
      * ulangi kedua baris kepala tabel di tiap halaman cetak.
      */
-    protected function applySheetView(Sheet $sheet, int $columnCount, int $dataRowCount): void
+    protected function applySheetView(Sheet $sheet, int $columnCount, int $rowCount): void
     {
         $keyRowNumber = $this->labelRowNumber + 1;
 
@@ -248,12 +315,12 @@ class SpreadsheetExporter
 
         $sheet->setPrintTitleRows("{$this->labelRowNumber}:{$keyRowNumber}");
 
-        if ($dataRowCount > 0) {
+        if ($rowCount > 0) {
             $sheet->setAutoFilter(new AutoFilter(
                 0,
                 $keyRowNumber,
                 $columnCount - 1,
-                $keyRowNumber + $dataRowCount,
+                $keyRowNumber + $rowCount,
             ));
         }
     }
@@ -381,6 +448,10 @@ class SpreadsheetExporter
             ->setCellAlignment($this->alignment($format))
             ->setCellVerticalAlignment(CellVerticalAlignment::CENTER)
             ->setBorder($this->hairline());
+
+        if ($format === EnumFormatKolom::Tautan) {
+            $style->setFontColor(ExportTheme::LINK)->setFontUnderline();
+        }
 
         if ($striped) {
             $style->setBackgroundColor(ExportTheme::ZEBRA);

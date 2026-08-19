@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\EnumMetodePembayaran;
 use App\Enums\EnumStatusPencairan;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -18,6 +19,24 @@ use Illuminate\Support\Collection;
  */
 class JadwalPencairan extends Model
 {
+    use HasUuids;
+
+    /**
+     * Hanya kolom uuid yang menerima nilai UUID otomatis; primary key id tetap
+     * auto-increment.
+     *
+     * @return array<int, string>
+     */
+    public function uniqueIds(): array
+    {
+        return ['uuid'];
+    }
+
+    public function getRouteKeyName(): string
+    {
+        return 'uuid';
+    }
+
     protected $fillable = [
         'tahun_kerja_id',
         'name',

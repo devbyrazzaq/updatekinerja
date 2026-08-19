@@ -7,6 +7,7 @@ use App\Exports\BukuAnggaranExport;
 use App\Filament\Actions\ExcelExportAction;
 use App\Filament\Actions\PdfReportAction;
 use App\Filament\Pages\Concerns\HasPageAuthorization;
+use App\Filament\Pages\Concerns\MemilihCakupanLaporan;
 use App\Filament\Pages\Widgets\BukuAnggaranOverview;
 use App\Filament\Pages\Widgets\MutasiAnggaranChart;
 use App\Models\TahunKerja;
@@ -50,6 +51,7 @@ class BukuAnggaranKeseluruhan extends Page implements HasTable
 {
     use HasPageAuthorization;
     use InteractsWithTable;
+    use MemilihCakupanLaporan;
 
     protected string $view = 'filament.pages.buku-anggaran-keseluruhan';
 
@@ -155,17 +157,29 @@ class BukuAnggaranKeseluruhan extends Page implements HasTable
             // dibentuk langsung alih-alih lewat exporter() yang meresolve dari container.
             ExcelExportAction::make()
                 ->permission(static::getPagePermission())
-                ->action(fn () => (new BukuAnggaranExport(
-                    unitKerja: $this->unitKerjaOptions(),
-                    tahunKerjaId: $this->tahunKerjaId,
-                ))->download()),
+                ->action(fn () => $this->export(null)->download()),
             PdfReportAction::make()
                 ->permission(static::getPagePermission())
-                ->action(fn () => (new TabularReport(new BukuAnggaranExport(
-                    unitKerja: $this->unitKerjaOptions(),
-                    tahunKerjaId: $this->tahunKerjaId,
-                )))->download()),
+                ->cakupan($this->skemaCakupanLaporan())
+                ->action(fn (array $data) => (new TabularReport(
+                    $this->export($this->cakupanUnitKerja($data)),
+                ))->download()),
         ];
+    }
+
+    /**
+     * Buku gabungan seluruh unit kerja — isi halaman ini — atau buku satu unit kerja
+     * bila laporannya dipersempit lewat modal cakupan.
+     *
+     * @param  int|null  $unitKerjaId  Unit kerja tunggal; null berarti buku gabungan.
+     */
+    protected function export(?int $unitKerjaId): BukuAnggaranExport
+    {
+        return new BukuAnggaranExport(
+            unitKerjaId: $unitKerjaId,
+            unitKerja: $unitKerjaId === null ? $this->unitKerjaOptions() : [],
+            tahunKerjaId: $this->tahunKerjaId,
+        );
     }
 
     public function form(Schema $schema): Schema

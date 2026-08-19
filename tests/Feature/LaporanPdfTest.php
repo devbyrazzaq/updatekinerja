@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Exports\Export;
 use App\Exports\ProgramsExport;
 use App\Exports\RealisasiProgramKerjasExport;
 use App\Filament\Actions\PdfReportAction;
@@ -68,6 +69,64 @@ class LaporanPdfTest extends TestCase
         // Font Plus Jakarta Sans tertanam, bukan ditautkan ke jaringan.
         $this->assertStringContainsString('data:font/woff2', $html);
         $this->assertStringNotContainsString('fonts.googleapis.com', $html);
+    }
+
+    public function test_laporan_menyisipkan_pita_pembatas_saat_ekspor_mengelompokkan(): void
+    {
+        $report = new TabularReport(new class extends Export
+        {
+            public function filename(): string
+            {
+                return 'uji-pengelompokan';
+            }
+
+            public function title(): string
+            {
+                return 'Uji Pengelompokan';
+            }
+
+            public function headings(): array
+            {
+                return ['nama', 'dicairkan_at'];
+            }
+
+            public function rows(): iterable
+            {
+                return [
+                    ['Kegiatan A', '2026-03-04'],
+                    ['Kegiatan B', '2026-03-20'],
+                    ['Kegiatan C', '2026-02-11'],
+                    ['Kegiatan D', null],
+                ];
+            }
+
+            public function groupLabel(array $row): ?string
+            {
+                $dicairkan = $this->columnValue($row, 'dicairkan_at');
+
+                return blank($dicairkan)
+                    ? 'Belum Dicairkan'
+                    : 'Dicairkan '.mb_substr((string) $dicairkan, 0, 7);
+            }
+        });
+
+        $data = $report->data();
+
+        // Pita dikunci nomor baris data, jadi barisnya sendiri tetap empat.
+        $this->assertSame([
+            0 => 'Dicairkan 2026-03',
+            2 => 'Dicairkan 2026-02',
+            3 => 'Belum Dicairkan',
+        ], $data['groups']);
+        $this->assertCount(4, $data['rows']);
+
+        $html = View::make($report->view(), $data)->render();
+
+        $this->assertSame(3, substr_count($html, 'class="group-band"'));
+        $this->assertStringContainsString('Dicairkan 2026-02', $html);
+        $this->assertStringContainsString('Belum Dicairkan', $html);
+        // Penomoran dan hitungan baris tetap menghitung data saja.
+        $this->assertStringContainsString('Total 4 baris data.', $html);
     }
 
     public function test_laporan_tanpa_data_menampilkan_keadaan_kosong(): void

@@ -73,7 +73,6 @@ class SetujuiPemasukanAction extends TahapVerifikasiPemasukanAction
     protected static function keteranganTahap(Pemasukan $record): string
     {
         return match (static::tahap($record)['nextStatus'] ?? null) {
-            EnumStatusPemasukan::VerifikasiWakil => 'Pemasukan diteruskan ke Wakil Rektor untuk diverifikasi.',
             EnumStatusPemasukan::VerifikasiKeuangan => 'Pemasukan diteruskan ke Biro Keuangan untuk diverifikasi.',
             EnumStatusPemasukan::MenungguBukti => 'Pemasukan disetujui. Unit kerja akan diminta mengunggah bukti tanda terima sebelum pemasukan dinyatakan valid.',
             default => 'Pemasukan diteruskan ke tahap berikutnya.',

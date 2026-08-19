@@ -2,7 +2,9 @@
 
 namespace App\Providers\Filament;
 
+use App\Http\Controllers\DokumenRealisasiController;
 use App\Models\Setting;
+use App\Services\KodeDokumenRealisasi;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -20,6 +22,7 @@ use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Route;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class AppPanelProvider extends PanelProvider
@@ -76,6 +79,13 @@ class AppPanelProvider extends PanelProvider
                 PanelsRenderHook::SIDEBAR_NAV_START,
                 fn (): string => Blade::render('<livewire:unit-kerja-switcher />'),
             )
+            // Penukar kode dokumen realisasi yang tertanam pada berkas ekspor.
+            // Didaftarkan sebagai rute terautentikasi supaya tautan yang dibuka orang
+            // yang belum masuk singgah dulu di halaman login.
+            ->authenticatedRoutes(function (): void {
+                Route::get(KodeDokumenRealisasi::NAMA_RUTE.'/{kode}', DokumenRealisasiController::class)
+                    ->name(KodeDokumenRealisasi::NAMA_RUTE);
+            })
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

@@ -85,7 +85,7 @@ class PemasukanResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        $query = parent::getEloquentQuery()->with(['unitKerja', 'pengajuanProgramKerja.penawaranProgramKerja', 'realisasiProgramKerja', 'pengaju', 'rektor', 'wakil', 'keuangan']);
+        $query = parent::getEloquentQuery()->with(['unitKerja', 'pengajuanProgramKerja.penawaranProgramKerja', 'realisasiProgramKerja', 'pengaju', 'wakil', 'keuangan']);
 
         $user = auth()->user();
 

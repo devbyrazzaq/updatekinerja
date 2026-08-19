@@ -121,7 +121,6 @@ class VerifikasiKeuanganPemasukanResource extends Resource
                 'pengajuanProgramKerja.penawaranProgramKerja',
                 'realisasiProgramKerja',
                 'pengaju',
-                'rektor',
                 'wakil',
                 'keuangan',
             ])

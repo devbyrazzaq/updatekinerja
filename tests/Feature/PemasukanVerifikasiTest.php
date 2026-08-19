@@ -10,9 +10,7 @@ use App\Filament\Resources\Pemasukans\Pages\ViewPemasukan;
 use App\Filament\Resources\Pemasukans\PemasukanResource;
 use App\Filament\Resources\VerifikasiKeuanganPemasukans\Pages\ViewVerifikasiKeuanganPemasukan;
 use App\Filament\Resources\VerifikasiKeuanganPemasukans\VerifikasiKeuanganPemasukanResource;
-use App\Filament\Resources\VerifikasiRektorPemasukans\Pages\ListVerifikasiRektorPemasukans;
-use App\Filament\Resources\VerifikasiRektorPemasukans\Pages\ViewVerifikasiRektorPemasukan;
-use App\Filament\Resources\VerifikasiRektorPemasukans\VerifikasiRektorPemasukanResource;
+use App\Filament\Resources\VerifikasiWakilPemasukans\Pages\ListVerifikasiWakilPemasukans;
 use App\Filament\Resources\VerifikasiWakilPemasukans\Pages\ViewVerifikasiWakilPemasukan;
 use App\Filament\Resources\VerifikasiWakilPemasukans\VerifikasiWakilPemasukanResource;
 use App\Models\Pemasukan;
@@ -99,18 +97,9 @@ class PemasukanVerifikasiTest extends TestCase
         $this->assertSame(EnumStatusPemasukan::Diajukan, $pemasukan->logs()->first()->status);
     }
 
-    public function test_alur_tiga_tahap_verifikasi_berjalan(): void
+    public function test_alur_dua_tahap_verifikasi_berjalan(): void
     {
         $pemasukan = $this->pemasukan(EnumStatusPemasukan::Diajukan);
-
-        Livewire::test(ViewVerifikasiRektorPemasukan::class, ['record' => $pemasukan->getRouteKey()])
-            ->callAction('setujuiPemasukan')
-            ->assertHasNoActionErrors();
-
-        $pemasukan->refresh();
-        $this->assertSame(EnumStatusPemasukan::VerifikasiWakil, $pemasukan->status);
-        $this->assertSame($this->pengguna->id, $pemasukan->rektor_id);
-        $this->assertNotNull($pemasukan->disetujui_rektor_at);
 
         Livewire::test(ViewVerifikasiWakilPemasukan::class, ['record' => $pemasukan->getRouteKey()])
             ->callAction('setujuiPemasukan')
@@ -150,24 +139,24 @@ class PemasukanVerifikasiTest extends TestCase
 
     public function test_revisi_kembali_ke_tahap_peminta_revisi(): void
     {
-        $pemasukan = $this->pemasukan(EnumStatusPemasukan::VerifikasiWakil);
+        $pemasukan = $this->pemasukan(EnumStatusPemasukan::VerifikasiKeuangan);
 
-        Livewire::test(ViewVerifikasiWakilPemasukan::class, ['record' => $pemasukan->getRouteKey()])
+        Livewire::test(ViewVerifikasiKeuanganPemasukan::class, ['record' => $pemasukan->getRouteKey()])
             ->callAction('revisiPemasukan', ['catatan' => '<p>Nominal tidak sesuai kuitansi.</p>'])
             ->assertHasNoActionErrors();
 
         $pemasukan->refresh();
         $this->assertSame(EnumStatusPemasukan::Revisi, $pemasukan->status);
         $this->assertStringContainsString('kuitansi', (string) $pemasukan->catatan_verifikasi);
-        $this->assertSame('Revisi Wakil Rektor', $pemasukan->labelStatus());
+        $this->assertSame('Revisi Biro Keuangan', $pemasukan->labelStatus());
 
         Livewire::test(ListPemasukans::class)
             ->callAction(TestAction::make('ajukanPemasukan')->table($pemasukan))
             ->assertNotified('Pemasukan berhasil diajukan');
 
         $pemasukan->refresh();
-        // Verifikasi yang sudah lewat tidak diulang: langsung kembali ke Wakil Rektor.
-        $this->assertSame(EnumStatusPemasukan::VerifikasiWakil, $pemasukan->status);
+        // Verifikasi yang sudah lewat tidak diulang: langsung kembali ke Biro Keuangan.
+        $this->assertSame(EnumStatusPemasukan::VerifikasiKeuangan, $pemasukan->status);
         $this->assertNull($pemasukan->catatan_verifikasi);
     }
 
@@ -175,7 +164,7 @@ class PemasukanVerifikasiTest extends TestCase
     {
         $pemasukan = $this->pemasukan(EnumStatusPemasukan::Diajukan);
 
-        Livewire::test(ViewVerifikasiRektorPemasukan::class, ['record' => $pemasukan->getRouteKey()])
+        Livewire::test(ViewVerifikasiWakilPemasukan::class, ['record' => $pemasukan->getRouteKey()])
             ->callAction('tolakPemasukan', ['catatan' => '<p>Bukan pemasukan unit.</p>'])
             ->assertHasNoActionErrors();
 
@@ -201,7 +190,7 @@ class PemasukanVerifikasiTest extends TestCase
         $tanggal = now()->toDateString();
 
         $this->pemasukan(EnumStatusPemasukan::Valid)->update(['tanggal_pelaksanaan' => $tanggal]);
-        $this->pemasukan(EnumStatusPemasukan::VerifikasiWakil)->update(['tanggal_pelaksanaan' => $tanggal]);
+        $this->pemasukan(EnumStatusPemasukan::VerifikasiKeuangan)->update(['tanggal_pelaksanaan' => $tanggal]);
         $this->pemasukan(EnumStatusPemasukan::Ditolak)->update(['tanggal_pelaksanaan' => $tanggal]);
 
         $pemasukanTercatat = BukuAnggaran::untukUnit($this->unit->id)->ringkasan()['pemasukan'] ?? null;
@@ -246,15 +235,10 @@ class PemasukanVerifikasiTest extends TestCase
 
     public function test_setiap_tab_menampilkan_antrean_yang_benar(): void
     {
-        $diRektor = $this->pemasukan(EnumStatusPemasukan::Diajukan);
-        $diWakil = $this->pemasukan(EnumStatusPemasukan::VerifikasiWakil);
+        $diWakil = $this->pemasukan(EnumStatusPemasukan::Diajukan);
         $diKeuangan = $this->pemasukan(EnumStatusPemasukan::VerifikasiKeuangan);
 
         // Antrean tiap tahap hanya berisi pemasukan pada tahap itu.
-        $this->assertEqualsCanonicalizing(
-            [$diRektor->id],
-            VerifikasiRektorPemasukanResource::pendingStageQuery()->pluck('id')->all(),
-        );
         $this->assertEqualsCanonicalizing(
             [$diWakil->id],
             VerifikasiWakilPemasukanResource::pendingStageQuery()->pluck('id')->all(),
@@ -264,23 +248,23 @@ class PemasukanVerifikasiTest extends TestCase
             VerifikasiKeuanganPemasukanResource::pendingStageQuery()->pluck('id')->all(),
         );
 
-        // Tahap Rektor sudah merespon dua pemasukan yang kini berada di tahap lanjutan.
+        // Tahap Wakil Rektor sudah merespon pemasukan yang kini berada di tahap lanjutan.
         $this->assertEqualsCanonicalizing(
-            [$diWakil->id, $diKeuangan->id],
-            VerifikasiRektorPemasukanResource::respondedStageQuery()->pluck('id')->all(),
+            [$diKeuangan->id],
+            VerifikasiWakilPemasukanResource::respondedStageQuery()->pluck('id')->all(),
         );
 
         $ditolak = $this->pemasukan(EnumStatusPemasukan::Diajukan);
-        $ditolak->update(['status' => EnumStatusPemasukan::Ditolak, 'rektor_id' => $this->pengguna->id]);
+        $ditolak->update(['status' => EnumStatusPemasukan::Ditolak, 'wakil_id' => $this->pengguna->id]);
 
         $this->assertEqualsCanonicalizing(
             [$ditolak->id],
-            VerifikasiRektorPemasukanResource::rejectedStageQuery()->pluck('id')->all(),
+            VerifikasiWakilPemasukanResource::rejectedStageQuery()->pluck('id')->all(),
         );
 
-        Livewire::test(ListVerifikasiRektorPemasukans::class)
+        Livewire::test(ListVerifikasiWakilPemasukans::class)
             ->assertOk()
-            ->assertCanSeeTableRecords([$diRektor]);
+            ->assertCanSeeTableRecords([$diWakil]);
     }
 
     public function test_antrean_dapat_disaring_waktu_pencatatan_dan_periode_pelaksanaan(): void
@@ -293,7 +277,7 @@ class PemasukanVerifikasiTest extends TestCase
         $baru->forceFill(['tanggal_pelaksanaan' => '2026-05-20', 'created_at' => '2026-05-21 08:00:00'])->save();
 
         // Kedua penyaring rentang waktu harus berdiri sendiri — bukan saling menimpa.
-        Livewire::test(ListVerifikasiRektorPemasukans::class)
+        Livewire::test(ListVerifikasiWakilPemasukans::class)
             ->assertCanSeeTableRecords([$lama, $baru])
             ->filterTable('waktu_pengajuan', ['dari' => '2026-05-01', 'sampai' => '2026-05-31'])
             ->assertCanSeeTableRecords([$baru])
