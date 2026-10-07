@@ -45,7 +45,7 @@ class AcuanProgramKerjaInfolist
                             ->schema([
                                 TextEntry::make('tahun'),
                                 TextEntry::make('nilai')
-                                    ->state(fn (AcuanTarget $record): string => trim("{$record->nilai} {$record->satuan}"))
+                                    ->state(fn (AcuanTarget $record): string => $record->labelTampil())
                                     ->placeholder('-'),
                             ]),
                     ]),

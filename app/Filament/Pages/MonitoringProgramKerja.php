@@ -6,6 +6,7 @@ use App\Enums\EnumStatusRealisasi;
 use App\Exports\MonitoringProgramKerjasExport;
 use App\Filament\Actions\CatatCapaianProgramKerjaAction;
 use App\Filament\Actions\ExcelExportAction;
+use App\Filament\Actions\ImporCapaianProgramKerjaAction;
 use App\Filament\Actions\MediaAction;
 use App\Filament\Actions\PdfReportAction;
 use App\Filament\Pages\Concerns\HasFilterAboveWidgets;
@@ -27,6 +28,7 @@ use App\Services\PermissionRegistrar;
 use App\Services\RingkasanMonitoring;
 use BackedEnum;
 use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Forms\Components\Select;
 use Filament\Pages\Page;
 use Filament\Schemas\Components\Grid;
@@ -241,17 +243,44 @@ class MonitoringProgramKerja extends Page implements HasTable
     }
 
     /**
+     * Aksi kepala halaman: mencatat capaian — satu per satu maupun massal lewat
+     * berkas — lalu mengeluarkan angka yang sedang dibaca sebagai spreadsheet atau
+     * laporan PDF.
+     *
+     * Kedua aksi pencatatan capaian dikumpulkan dalam satu grup karena keduanya
+     * mengerjakan hal yang sama dengan cara berbeda, dan supaya kepala halaman tidak
+     * berjejer tombol.
+     *
      * Ekspor spreadsheet mengikuti cakupan unit kerja dan tahun kerja yang sedang
      * dibaca, sehingga berkasnya sama persis dengan tabel di layar; laporan PDF
      * menanyakan cakupannya lebih dahulu ({@see MemilihCakupanLaporan}). Aksinya
      * dibentuk langsung — bukan lewat exporter() yang meresolve dari container —
      * karena kelas ekspornya perlu tahu cakupan itu.
      *
-     * @return array<int, Action>
+     * @return array<int, Action|ActionGroup>
      */
     protected function getHeaderActions(): array
     {
         return [
+            ActionGroup::make([
+                CatatCapaianProgramKerjaAction::make()
+                    ->permission(self::PERMISSION_CATAT_CAPAIAN)
+                    ->tahunKerja(fn (): ?TahunKerja => $this->tahunKerjaTerpilih())
+                    ->unitKerjaOptions(fn (): array => $this->unitKerjaOptions())
+                    ->defaultUnitKerja(fn (): ?int => $this->unitKerjaId)
+                    ->after(fn () => $this->segarkanTampilanCapaian()),
+                ImporCapaianProgramKerjaAction::make()
+                    ->permission(self::PERMISSION_CATAT_CAPAIAN)
+                    ->importerContext(fn (): array => $this->cakupanCapaian())
+                    // Tanpa tahun kerja tidak ada program kerja yang bisa dirujuk berkas,
+                    // sehingga templatenya pun akan lahir tanpa referensi.
+                    ->hidden(fn (): bool => $this->tahunKerjaTerpilih() === null)
+                    ->after(fn () => $this->segarkanTampilanCapaian()),
+            ])
+                ->label('Capaian')
+                ->icon(Heroicon::OutlinedClipboardDocumentCheck)
+                ->color('primary')
+                ->button(),
             ExcelExportAction::make()
                 ->permission(static::getPagePermission())
                 ->action(fn () => $this->export($this->unitKerjaId)->download()),
@@ -262,6 +291,36 @@ class MonitoringProgramKerja extends Page implements HasTable
                     $this->export($this->cakupanUnitKerja($data)),
                 ))->download()),
         ];
+    }
+
+    /**
+     * Cakupan yang boleh dicatat capaiannya lewat berkas: tahun kerja yang sedang
+     * dipantau dan seluruh unit kerja yang boleh diakses pengguna — bukan sekadar unit
+     * yang sedang disaring, supaya satu berkas bisa memuat beberapa unit sekaligus.
+     * Nama tahun kerjanya ikut dikirim sebagai keterangan pada lembar referensi.
+     *
+     * @return array<string, mixed>
+     */
+    protected function cakupanCapaian(): array
+    {
+        return [
+            'tahun_kerja_id' => $this->tahunKerjaTerpilih()?->getKey(),
+            'nama_tahun_kerja' => $this->tahunKerjaTerpilih()?->name,
+            'unit_kerja_ids' => $this->unitKerjaId !== null
+                ? [$this->unitKerjaId]
+                : array_keys($this->unitKerjaOptions()),
+        ];
+    }
+
+    /**
+     * Menyegarkan seluruh tampilan setelah capaian bertambah. Widget ringkasan &
+     * grafik adalah komponen Livewire tersendiri, jadi keduanya diminta menggambar
+     * ulang lewat peristiwa.
+     */
+    protected function segarkanTampilanCapaian(): void
+    {
+        $this->segarkanMonitoring();
+        $this->dispatch('monitoring-diperbarui');
     }
 
     /**
@@ -328,19 +387,6 @@ class MonitoringProgramKerja extends Page implements HasTable
                         $state >= 80 => 'success',
                         $state >= 50 => 'warning',
                         default => 'danger',
-                    }),
-            ])
-            ->headerActions([
-                CatatCapaianProgramKerjaAction::make()
-                    ->permission(self::PERMISSION_CATAT_CAPAIAN)
-                    ->tahunKerja(fn (): ?TahunKerja => $this->tahunKerjaTerpilih())
-                    ->unitKerjaOptions(fn (): array => $this->unitKerjaOptions())
-                    ->defaultUnitKerja(fn (): ?int => $this->unitKerjaId)
-                    ->after(function (): void {
-                        $this->segarkanMonitoring();
-                        // Widget ringkasan & grafik adalah komponen Livewire tersendiri,
-                        // jadi keduanya diminta menggambar ulang lewat peristiwa.
-                        $this->dispatch('monitoring-diperbarui');
                     }),
             ])
             ->recordActions([

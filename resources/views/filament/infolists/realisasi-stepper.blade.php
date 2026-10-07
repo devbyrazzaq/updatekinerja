@@ -1,13 +1,13 @@
 @php
     use App\Enums\EnumStatusRealisasi;
-    use App\Enums\EnumTahapanRealisasi;
 
     /** @var \App\Models\RealisasiProgramKerja $record */
     $status = $record->status;
     $current = $record->tahapanStepper();
-    $stages = EnumTahapanRealisasi::flowCases();
+    $stages = $record->tahapanAlur();
+    $tanpaAnggaran = $record->adalahTanpaAnggaran();
 
-    $stageLabel = $current->getLabel();
+    $stageLabel = $record->labelTahapan($current);
     $catatan = trim(strip_tags((string) $record->catatan_verifikasi));
 
     $callout = match ($status) {
@@ -31,6 +31,17 @@
         ],
         default => null,
     };
+
+    // Capaian tanpa anggaran tidak melewati verifikasi maupun pencairan, jadi
+    // ketiadaan tahap-tahap itu perlu dijelaskan agar tidak terbaca sebagai terlewat.
+    if ($callout === null && $tanpaAnggaran) {
+        $callout = [
+            'color' => 'blue',
+            'icon' => 'heroicon-o-information-circle',
+            'title' => 'Capaian Tanpa Anggaran',
+            'body' => 'Capaian ini dicatat langsung dari halaman Monitoring Program Kerja, sehingga tidak melewati verifikasi berjenjang maupun pencairan anggaran. Yang diperbarui hanya ketercapaian target.',
+        ];
+    }
 @endphp
 
 @if ($callout !== null)
@@ -39,6 +50,7 @@
         'border-orange-200 bg-orange-50 dark:border-orange-500/30 dark:bg-orange-500/10' => $callout['color'] === 'orange',
         'border-red-200 bg-red-50 dark:border-red-500/30 dark:bg-red-500/10' => $callout['color'] === 'red',
         'border-gray-200 bg-gray-50 dark:border-gray-500/30 dark:bg-gray-500/10' => $callout['color'] === 'gray',
+        'border-blue-200 bg-blue-50 dark:border-blue-500/30 dark:bg-blue-500/10' => $callout['color'] === 'blue',
     ])>
         <x-filament::icon
             :icon="$callout['icon']"
@@ -47,6 +59,7 @@
                 'text-orange-500' => $callout['color'] === 'orange',
                 'text-red-500' => $callout['color'] === 'red',
                 'text-gray-500' => $callout['color'] === 'gray',
+                'text-blue-500' => $callout['color'] === 'blue',
             ])
         />
         <div class="space-y-1">
@@ -55,6 +68,7 @@
                 'text-orange-800 dark:text-orange-200' => $callout['color'] === 'orange',
                 'text-red-800 dark:text-red-200' => $callout['color'] === 'red',
                 'text-gray-800 dark:text-gray-200' => $callout['color'] === 'gray',
+                'text-blue-800 dark:text-blue-200' => $callout['color'] === 'blue',
             ])>{{ $callout['title'] }}</p>
             <p class="text-sm text-gray-600 dark:text-gray-300">{{ $callout['body'] }}</p>
             @if ($catatan !== '')
@@ -67,11 +81,15 @@
 @endif
 
 <x-filament::section>
-    <x-slot name="heading">Tahapan Realisasi</x-slot>
-    <x-slot name="description">Progres realisasi program kerja, dari draf hingga selesai.</x-slot>
+    <x-slot name="heading">{{ $tanpaAnggaran ? 'Tahapan Capaian' : 'Tahapan Realisasi' }}</x-slot>
+    <x-slot name="description">
+        {{ $tanpaAnggaran
+            ? 'Progres pencatatan capaian program kerja, tanpa verifikasi dan pencairan anggaran.'
+            : 'Progres realisasi program kerja, dari draf hingga selesai.' }}
+    </x-slot>
 
     <div class="overflow-x-auto pb-2">
-        <ol class="flex w-full min-w-[720px]">
+        <ol @class(['flex w-full', 'min-w-[720px]' => ! $tanpaAnggaran])>
         @foreach ($stages as $index => $stage)
             @php
                 $isDone = $stage->isBefore($current);
@@ -132,7 +150,7 @@
                     'text-gray-500 dark:text-gray-400' => $isDibatalkan,
                     'text-gray-950 dark:text-white' => $isComplete || $isActive,
                     'text-gray-500 dark:text-gray-400' => ! $isComplete && ! $isCurrent,
-                ])>{{ $stage->getLabel() }}</span>
+                ])>{{ $record->labelTahapan($stage) }}</span>
 
                 <span class="mt-1 text-[11px] leading-tight text-gray-400 dark:text-gray-500">
                     @if ($isRejected)

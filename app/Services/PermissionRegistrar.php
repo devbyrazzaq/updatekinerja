@@ -243,6 +243,7 @@ class PermissionRegistrar
         $groups = [
             ...static::collectFromFiles(app_path('Filament/Resources/*/*Resource.php'), Resource::class, 'Resource', 'resource'),
             ...static::collectFromFiles(app_path('Filament/Pages/*.php'), Page::class, 'Page', 'page'),
+            ...static::collectFromFiles(app_path('Filament/Clusters/*/Pages/*.php'), Page::class, 'Page', 'page'),
             ...static::collectFromFiles(app_path('Filament/Widgets/*.php'), Widget::class, 'Widget', 'widget'),
         ];
 

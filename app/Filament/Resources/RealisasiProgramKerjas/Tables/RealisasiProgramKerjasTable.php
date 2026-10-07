@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\RealisasiProgramKerjas\Tables;
 
+use App\Enums\EnumJenisRealisasi;
 use App\Enums\EnumStatusAnggaran;
 use App\Enums\EnumStatusRealisasi;
 use App\Filament\Actions\AjukanRealisasiAction;
@@ -44,17 +45,23 @@ class RealisasiProgramKerjasTable
                     ->label('Kegiatan')
                     ->searchable()
                     ->wrap(),
+                TextColumn::make('jenis_realisasi')
+                    ->label('Tipe Pengajuan')
+                    ->badge()
+                    ->placeholder('-')
+                    ->toggleable(),
                 TextColumn::make('pengajuanProgramKerja.unitKerja.name')
                     ->label('Unit Kerja')
                     ->toggleable(),
                 TextColumn::make('nominal_diajukan')
                     ->label('Diajukan')
                     ->money('IDR')
+                    ->placeholder(fn (RealisasiProgramKerja $record): string => static::placeholderAnggaran($record, '-'))
                     ->sortable(),
                 TextColumn::make('nominal_disetujui')
                     ->label('Disetujui')
                     ->money('IDR')
-                    ->placeholder('Belum disetujui')
+                    ->placeholder(fn (RealisasiProgramKerja $record): string => static::placeholderAnggaran($record, 'Belum disetujui'))
                     ->sortable(),
                 TextColumn::make('persentase_persetujuan')
                     ->label('Persetujuan')
@@ -68,16 +75,20 @@ class RealisasiProgramKerjasTable
                         default => 'danger',
                     })
                     ->formatStateUsing(fn (?int $state): ?string => $state === null ? null : "{$state}%")
-                    ->placeholder('-'),
+                    ->placeholder(fn (RealisasiProgramKerja $record): string => static::placeholderAnggaran($record, '-')),
                 TextColumn::make('anggaran_digunakan')
                     ->label('Realisasi Akhir')
                     ->money('IDR')
+                    // Capaian tanpa anggaran tidak menyerap apa pun, jadi Rp 0 diganti
+                    // keterangan agar tidak terbaca sebagai realisasi yang gagal terserap.
+                    ->state(fn (RealisasiProgramKerja $record): ?string => $record->adalahTanpaAnggaran() ? null : (string) $record->anggaran_digunakan)
+                    ->placeholder(fn (RealisasiProgramKerja $record): string => static::placeholderAnggaran($record, '-'))
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('status_anggaran')
                     ->label('Status Anggaran')
                     ->badge()
-                    ->placeholder('-')
+                    ->placeholder(fn (RealisasiProgramKerja $record): string => static::placeholderAnggaran($record, '-'))
                     ->toggleable(),
                 TextColumn::make('nominal_selisih_anggaran')
                     ->label('Selisih Anggaran')
@@ -130,6 +141,9 @@ class RealisasiProgramKerjasTable
                             fn (Builder $penawaran): Builder => $penawaran->where('tahun_kerja_id', $tahunKerjaId),
                         ),
                     )),
+                SelectFilter::make('jenis_realisasi')
+                    ->label('Tipe Pengajuan')
+                    ->options(EnumJenisRealisasi::class),
                 SelectFilter::make('status')
                     ->label('Status')
                     ->options(EnumStatusRealisasi::class),
@@ -148,9 +162,22 @@ class RealisasiProgramKerjasTable
                         ->label('Lihat Laporan')
                         ->path('laporan_path'),
                     AuthorizedViewAction::make()->label('Lihat'),
-                    AuthorizedEditAction::make()->label('Ubah'),
+                    // Form realisasi bertumpu pada nominal dan dokumen proposal, keduanya
+                    // tidak berlaku bagi capaian tanpa anggaran.
+                    AuthorizedEditAction::make()
+                        ->label('Ubah')
+                        ->hidden(fn (RealisasiProgramKerja $record): bool => $record->adalahTanpaAnggaran()),
                     CaptchaDeleteAction::make(),
                 ]),
             ]);
+    }
+
+    /**
+     * Teks pengganti kolom bernuansa anggaran: capaian tanpa anggaran menyebutkannya
+     * secara eksplisit, sisanya memakai teks bawaan kolom.
+     */
+    protected static function placeholderAnggaran(RealisasiProgramKerja $record, string $bawaan): string
+    {
+        return $record->adalahTanpaAnggaran() ? 'Tanpa anggaran' : $bawaan;
     }
 }

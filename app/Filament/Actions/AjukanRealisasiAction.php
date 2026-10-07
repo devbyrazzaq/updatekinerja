@@ -139,7 +139,7 @@ class AjukanRealisasiAction extends Action
 
         $unitKerjaId = $record->unitKerjaId();
 
-        if ($unitKerjaId !== null) {
+        if ($unitKerjaId !== null && Setting::blokirTunggakanTahunLalu()) {
             $tunggakan = RealisasiProgramKerja::tunggakanTahunLampau($unitKerjaId)
                 ->whereKeyNot($record->getKey())
                 ->with('pengajuanProgramKerja.penawaranProgramKerja')
@@ -186,7 +186,9 @@ class AjukanRealisasiAction extends Action
         $tunggakan = RealisasiProgramKerja::tunggakanTahunLampau($unitKerjaId)->whereKeyNot($record->getKey())->count();
 
         if ($tunggakan > 0) {
-            $keterangan .= " Termasuk {$tunggakan} realisasi tahun kerja sebelumnya yang belum tuntas dan harus diselesaikan lebih dulu.";
+            $keterangan .= Setting::blokirTunggakanTahunLalu()
+                ? " Termasuk {$tunggakan} realisasi tahun kerja sebelumnya yang belum tuntas dan harus diselesaikan lebih dulu."
+                : " Termasuk {$tunggakan} realisasi tahun kerja sebelumnya yang belum tuntas — segera selesaikan lewat menu Penyelesaian Tahun Lalu.";
         }
 
         return $keterangan;

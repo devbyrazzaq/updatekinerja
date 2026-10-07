@@ -21,7 +21,7 @@ class PenyerapanBulananWidget extends ChartWidget
     use HasWidgetAuthorization;
     use MembacaTahunBerjalan;
 
-    protected static ?int $sort = 4;
+    protected static ?int $sort = 7;
 
     protected ?string $pollingInterval = null;
 

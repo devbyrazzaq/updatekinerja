@@ -44,7 +44,7 @@ class TerimaLaporanRealisasiAction extends Action
             ->modalDescription(fn (RealisasiProgramKerja $record): string => static::deskripsiKonfirmasi($record))
             ->modalSubmitActionLabel('Terima Laporan')
             ->modalWidth(fn (RealisasiProgramKerja $record): Width => static::selisih($record) === null ? Width::Medium : Width::Large)
-            ->visible(fn (RealisasiProgramKerja $record): bool => VerifikasiLaporanResource::currentUserCanVerify()
+            ->visible(fn (RealisasiProgramKerja $record): bool => VerifikasiLaporanResource::currentUserCanVerifyRecord($record)
                 && VerifikasiLaporanResource::isPendingAtStage($record))
             ->fillForm(fn (RealisasiProgramKerja $record): array => [
                 'cara_penyelesaian_anggaran' => $record->cara_penyelesaian_anggaran?->value,

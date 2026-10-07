@@ -4,6 +4,7 @@ namespace App\Services\Excel;
 
 use App\Imports\Import;
 use App\Imports\ImportResult;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use OpenSpout\Common\Entity\Row;
@@ -25,15 +26,26 @@ class SpreadsheetImporter
     {
         [$errors, $rows] = $this->readAndValidate($import, $path);
 
+        // Pemeriksaan lintas baris baru berguna bila tiap barisnya sendiri sudah sah;
+        // berkas yang sudah gagal tidak perlu ditimpali pesan tambahan.
+        if ($errors === []) {
+            $errors = $import->validateBatch($rows);
+        }
+
         if ($errors !== []) {
             return new ImportResult(imported: 0, errors: $errors);
         }
 
-        foreach ($rows as $row) {
-            $import->storeRow($row);
-        }
+        // Satu transaksi untuk seluruh berkas: kegagalan di tengah penyimpanan tidak
+        // boleh meninggalkan sebagian baris, sesuai janji "bila ada satu saja yang
+        // keliru, tidak ada yang tersimpan".
+        DB::transaction(function () use ($import, $rows): void {
+            foreach ($rows as $row) {
+                $import->storeRow($row);
+            }
+        });
 
-        return new ImportResult(imported: count($rows));
+        return new ImportResult(imported: count($rows), warnings: $import->warnings());
     }
 
     /**

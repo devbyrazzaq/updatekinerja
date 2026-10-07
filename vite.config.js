@@ -5,7 +5,7 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
     plugins: [
         laravel({
-            input: ['resources/css/app.css', 'resources/js/app.js', 'resources/css/filament/app/theme.css'],
+            input: ['resources/css/app.css', 'resources/js/app.js', 'resources/js/login.js', 'resources/css/filament/app/theme.css'],
             refresh: true,
         }),
         tailwindcss(),
@@ -20,7 +20,7 @@ export default defineConfig({
             port: 5195,
         },
         watch: {
-            usePolling: true,
+            ignored: ['**/node_modules/**', '**/vendor/**', '**/storage/**', '**/public/build/**'],
         },
     },
 });

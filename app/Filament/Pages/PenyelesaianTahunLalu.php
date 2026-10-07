@@ -7,15 +7,15 @@ use App\Filament\Actions\AjukanRealisasiAction;
 use App\Filament\Actions\KirimLaporanRealisasiAction;
 use App\Filament\Actions\MediaAction;
 use App\Filament\Actions\ProsesPencairanAction;
-use App\Filament\Actions\RevisiLaporanRealisasiAction;
 use App\Filament\Actions\RevisiRealisasiAction;
 use App\Filament\Actions\SetujuiRealisasiAction;
 use App\Filament\Actions\TandaiDicairkanAction;
-use App\Filament\Actions\TerimaLaporanRealisasiAction;
 use App\Filament\Actions\TolakRealisasiAction;
 use App\Filament\Actions\TuntaskanSelisihAnggaranAction;
 use App\Filament\Pages\Concerns\HasPageAuthorization;
 use App\Filament\Resources\Concerns\HasVerificationTableFilters;
+use App\Filament\Resources\RealisasiProgramKerjas\Schemas\RealisasiProgramKerjaInfolist;
+use App\Filament\Resources\VerifikasiLaporanLampaus\VerifikasiLaporanLampauResource;
 use App\Models\RealisasiProgramKerja;
 use App\Models\TahunKerja;
 use App\Services\KonteksProgramKerja;
@@ -23,7 +23,10 @@ use App\Services\PermissionRegistrar;
 use App\Services\TransisiTahunKerja;
 use BackedEnum;
 use Filament\Actions\ActionGroup;
+use Filament\Actions\ViewAction;
 use Filament\Pages\Page;
+use Filament\Schemas\Schema;
+use Filament\Support\Enums\Width;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
@@ -40,11 +43,12 @@ use UnitEnum;
  * ({@see KonteksProgramKerja}), sehingga angka anggaran tahun baru tidak tercampur
  * data tahun lalu.
  *
- * Realisasi tahun lalu yang belum tuntas tidak ikut hilang — ia dikerjakan di sini,
- * dan hanya di sini. Karena itu halaman ini memuat seluruh aksi penyelesaiannya
- * sekaligus: unit kerja memperbaiki proposal dan mengirim laporan, para verifikator
- * menyetujui/menolak, Biro Keuangan menjadwalkan pencairan dan menuntaskan selisih
- * anggaran. Setiap aksi tetap memeriksa hak aksesnya sendiri, sehingga satu pengguna
+ * Realisasi tahun lalu yang belum tuntas tidak ikut hilang — ia dikerjakan di sini:
+ * unit kerja melihat detailnya, memperbaiki proposal, dan mengunggah laporan; para
+ * verifikator menyetujui/menolak proposal, Biro Keuangan menjadwalkan pencairan dan
+ * menuntaskan selisih anggaran. Laporan yang sudah diunggah diverifikasi lewat menu
+ * {@see VerifikasiLaporanLampauResource}, sejajar dengan Verifikasi Laporan tahun
+ * berjalan. Setiap aksi tetap memeriksa hak aksesnya sendiri, sehingga satu pengguna
  * hanya melihat tombol yang memang menjadi bagiannya.
  *
  * Daftar ini persis pekerjaan yang menahan penguncian tahun kerja
@@ -193,12 +197,18 @@ class PenyelesaianTahunLalu extends Page implements HasTable
                 ProsesPencairanAction::make(),
                 TandaiDicairkanAction::make(),
                 TuntaskanSelisihAnggaranAction::make(),
-                // Tahap verifikasi laporan.
-                TerimaLaporanRealisasiAction::make(),
+                ViewAction::make()
+                    ->label('Detail')
+                    ->icon('heroicon-o-eye')
+                    ->color('gray')
+                    ->modalHeading(fn (RealisasiProgramKerja $record): string => $record->name ?? 'Detail Realisasi Program Kerja')
+                    ->modalWidth(Width::SevenExtraLarge)
+                    ->stickyModalHeader()
+                    ->modalCancelActionLabel('Tutup')
+                    ->schema(fn (Schema $schema): Schema => RealisasiProgramKerjaInfolist::configure($schema)),
                 ActionGroup::make([
                     RevisiRealisasiAction::make(),
                     TolakRealisasiAction::make(),
-                    RevisiLaporanRealisasiAction::make(),
                     MediaAction::make('lihatProposal')
                         ->label('Lihat Proposal')
                         ->path('proposal_path'),

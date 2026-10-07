@@ -2,11 +2,15 @@
 
 namespace Tests\Feature;
 
+use App\Enums\EnumJenisRealisasi;
 use App\Enums\EnumStatusPengajuan;
 use App\Enums\EnumStatusRealisasi;
 use App\Enums\EnumStatusTahunKerja;
+use App\Enums\EnumTahapanRealisasi;
 use App\Filament\Actions\CatatCapaianProgramKerjaAction;
 use App\Filament\Pages\MonitoringProgramKerja;
+use App\Filament\Resources\RealisasiProgramKerjas\Pages\ViewRealisasiProgramKerja;
+use App\Filament\Resources\RealisasiProgramKerjas\RealisasiProgramKerjaResource;
 use App\Models\Bidang;
 use App\Models\Kategori;
 use App\Models\PaguAnggaran;
@@ -42,6 +46,8 @@ class CatatCapaianMonitoringTest extends TestCase
 
     private UnitKerja $unitB;
 
+    private User $superAdmin;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -71,10 +77,10 @@ class CatatCapaianMonitoringTest extends TestCase
             'amount' => 20_000_000,
         ]);
 
-        $user = User::factory()->create(['unit_kerja_id' => $this->unitA->id]);
-        $user->givePermissionTo(Permission::findOrCreate('bypass_data_scope', 'web'));
+        $this->superAdmin = User::factory()->create(['unit_kerja_id' => $this->unitA->id]);
+        $this->superAdmin->givePermissionTo(Permission::findOrCreate('bypass_data_scope', 'web'));
 
-        $this->actingAs($user);
+        $this->actingAs($this->superAdmin);
     }
 
     public function test_capaian_tercatat_sebagai_realisasi_selesai_tanpa_anggaran(): void
@@ -82,7 +88,7 @@ class CatatCapaianMonitoringTest extends TestCase
         $pengajuan = $this->seedPengajuan($this->unitA, 'Workshop Penulisan');
 
         Livewire::test(MonitoringProgramKerja::class)
-            ->callAction(TestAction::make(CatatCapaianProgramKerjaAction::getDefaultName())->table(), [
+            ->callAction(TestAction::make(CatatCapaianProgramKerjaAction::getDefaultName()), [
                 'unit_kerja_id' => $this->unitA->id,
                 'pengajuan_program_kerja_id' => $pengajuan->id,
                 'jenis_pelaksanaan' => 'satu_hari',
@@ -97,6 +103,12 @@ class CatatCapaianMonitoringTest extends TestCase
         $realisasi = RealisasiProgramKerja::query()->firstOrFail();
 
         $this->assertSame(EnumStatusRealisasi::Selesai, $realisasi->status);
+        $this->assertSame(EnumJenisRealisasi::TanpaAnggaran, $realisasi->jenis_realisasi);
+        $this->assertTrue($realisasi->adalahTanpaAnggaran());
+        // Tidak ada anggaran yang diserap, jadi status penyerapannya pun tidak berlaku.
+        $this->assertNull($realisasi->status_anggaran);
+        // Pencatatnya adalah pengguna yang menekan tombol, bukan pengaju program kerja.
+        $this->assertSame($this->superAdmin->id, $realisasi->dicatat_oleh_id);
         $this->assertSame(70, $realisasi->persentase_ketercapaian);
         $this->assertSame(0.0, (float) $realisasi->anggaran_digunakan);
         $this->assertNull($realisasi->dicairkan_at);
@@ -122,7 +134,7 @@ class CatatCapaianMonitoringTest extends TestCase
         $pengajuan = $this->seedPengajuan($this->unitA, 'Pelatihan Berkala');
 
         Livewire::test(MonitoringProgramKerja::class)
-            ->callAction(TestAction::make(CatatCapaianProgramKerjaAction::getDefaultName())->table(), [
+            ->callAction(TestAction::make(CatatCapaianProgramKerjaAction::getDefaultName()), [
                 'unit_kerja_id' => $this->unitA->id,
                 'pengajuan_program_kerja_id' => $pengajuan->id,
                 'jenis_pelaksanaan' => 'rentang',
@@ -153,7 +165,7 @@ class CatatCapaianMonitoringTest extends TestCase
         ]);
 
         Livewire::test(MonitoringProgramKerja::class)
-            ->callAction(TestAction::make(CatatCapaianProgramKerjaAction::getDefaultName())->table(), [
+            ->callAction(TestAction::make(CatatCapaianProgramKerjaAction::getDefaultName()), [
                 'unit_kerja_id' => $this->unitA->id,
                 'pengajuan_program_kerja_id' => $pengajuan->id,
                 'jenis_pelaksanaan' => 'satu_hari',
@@ -178,7 +190,7 @@ class CatatCapaianMonitoringTest extends TestCase
         $this->actingAs($pengguna);
 
         Livewire::test(MonitoringProgramKerja::class)
-            ->callAction(TestAction::make(CatatCapaianProgramKerjaAction::getDefaultName())->table(), [
+            ->callAction(TestAction::make(CatatCapaianProgramKerjaAction::getDefaultName()), [
                 'unit_kerja_id' => $this->unitB->id,
                 'pengajuan_program_kerja_id' => $pengajuanLuar->id,
                 'jenis_pelaksanaan' => 'satu_hari',
@@ -199,7 +211,7 @@ class CatatCapaianMonitoringTest extends TestCase
         Livewire::test(MonitoringProgramKerja::class)
             // Belum ada capaian, jadi tidak ada dokumen yang bisa dipratinjau.
             ->assertActionHidden(TestAction::make('lihatLaporanCapaian')->table($penawaranId))
-            ->callAction(TestAction::make(CatatCapaianProgramKerjaAction::getDefaultName())->table(), [
+            ->callAction(TestAction::make(CatatCapaianProgramKerjaAction::getDefaultName()), [
                 'unit_kerja_id' => $this->unitA->id,
                 'pengajuan_program_kerja_id' => $pengajuan->id,
                 'jenis_pelaksanaan' => 'satu_hari',
@@ -222,12 +234,12 @@ class CatatCapaianMonitoringTest extends TestCase
         $this->actingAs($pemantau);
 
         Livewire::test(MonitoringProgramKerja::class)
-            ->assertActionHidden(TestAction::make(CatatCapaianProgramKerjaAction::getDefaultName())->table());
+            ->assertActionHidden(TestAction::make(CatatCapaianProgramKerjaAction::getDefaultName()));
 
         $pemantau->givePermissionTo(Permission::findOrCreate(MonitoringProgramKerja::PERMISSION_CATAT_CAPAIAN, 'web'));
 
         Livewire::test(MonitoringProgramKerja::class)
-            ->assertActionVisible(TestAction::make(CatatCapaianProgramKerjaAction::getDefaultName())->table());
+            ->assertActionVisible(TestAction::make(CatatCapaianProgramKerjaAction::getDefaultName()));
     }
 
     public function test_hak_akses_catat_capaian_terdaftar_terpisah_dari_akses_halaman(): void
@@ -236,6 +248,86 @@ class CatatCapaianMonitoringTest extends TestCase
 
         $this->assertArrayHasKey('view_page_monitoring_program_kerja', $definisi);
         $this->assertArrayHasKey(MonitoringProgramKerja::PERMISSION_CATAT_CAPAIAN, $definisi);
+    }
+
+    public function test_capaian_tanpa_anggaran_memakai_stepper_ringkas(): void
+    {
+        $capaian = $this->catatCapaian($this->seedPengajuan($this->unitA, 'Workshop Penulisan'), 70);
+
+        // Tahap verifikasi dan pencairan tidak pernah dilalui, jadi tidak ikut dirender.
+        $this->assertSame([
+            EnumTahapanRealisasi::Draf,
+            EnumTahapanRealisasi::Pelaksanaan,
+            EnumTahapanRealisasi::Selesai,
+        ], $capaian->tahapanAlur());
+
+        $this->assertSame('Pencatatan Capaian', $capaian->labelTahapan(EnumTahapanRealisasi::Draf));
+        $this->assertSame('Laporan Diunggah', $capaian->labelTahapan(EnumTahapanRealisasi::Pelaksanaan));
+        $this->assertStringContainsString('tanpa penggunaan anggaran', $capaian->deskripsiTahapan(EnumTahapanRealisasi::Selesai));
+    }
+
+    public function test_halaman_detail_capaian_menyembunyikan_seluruh_tampilan_anggaran(): void
+    {
+        $capaian = $this->catatCapaian($this->seedPengajuan($this->unitA, 'Workshop Penulisan'), 70);
+
+        $this->get(RealisasiProgramKerjaResource::getUrl('view', ['record' => $capaian]))->assertOk();
+
+        Livewire::test(ViewRealisasiProgramKerja::class, ['record' => $capaian->uuid])
+            ->assertSee('Capaian Tanpa Anggaran')
+            // Pengajunya adalah pencatat, bukan pengaju program kerja induknya.
+            ->assertSee('Dicatat Oleh')
+            ->assertSee($this->superAdmin->name)
+            // Stepper diringkas: tahap verifikasi dan pencairan tidak dirender.
+            ->assertSee('Pencatatan Capaian')
+            ->assertDontSee('Verifikasi Rektor')
+            ->assertDontSee('Pencairan Anggaran')
+            // Seluruh section bernuansa anggaran ikut tersembunyi.
+            ->assertDontSee('Besaran Realisasi')
+            ->assertDontSee('Persetujuan Anggaran')
+            ->assertDontSee('Mutasi Anggaran')
+            ->assertDontSee('Dokumen Proposal')
+            ->assertDontSee('Anggaran Tergunakan Semua')
+            // Yang tersisa adalah capaian targetnya.
+            ->assertSee('Laporan Capaian')
+            ->assertSee('Ketercapaian Target');
+    }
+
+    public function test_realisasi_beranggaran_tetap_memakai_alur_penuh(): void
+    {
+        $pengajuan = $this->seedPengajuan($this->unitA, 'Seminar Nasional');
+
+        $realisasi = RealisasiProgramKerja::create([
+            'pengajuan_program_kerja_id' => $pengajuan->id,
+            'name' => 'Seminar Nasional',
+            'anggaran_digunakan' => 5_000_000,
+            'status' => EnumStatusRealisasi::Draft,
+        ]);
+
+        $this->assertSame(EnumJenisRealisasi::Anggaran, $realisasi->jenis_realisasi);
+        $this->assertFalse($realisasi->adalahTanpaAnggaran());
+        $this->assertSame(EnumTahapanRealisasi::flowCases(), $realisasi->tahapanAlur());
+        $this->assertSame('Pengajuan Realisasi', $realisasi->labelTahapan(EnumTahapanRealisasi::Draf));
+    }
+
+    /**
+     * Mencatat satu capaian lewat aksi pada halaman monitoring, lalu mengembalikan
+     * realisasi yang terbentuk.
+     */
+    private function catatCapaian(PengajuanProgramKerja $pengajuan, int $persentase): RealisasiProgramKerja
+    {
+        Livewire::test(MonitoringProgramKerja::class)
+            ->callAction(TestAction::make(CatatCapaianProgramKerjaAction::getDefaultName()), [
+                'unit_kerja_id' => $pengajuan->unit_kerja_id,
+                'pengajuan_program_kerja_id' => $pengajuan->id,
+                'jenis_pelaksanaan' => 'satu_hari',
+                'tanggal_mulai' => '2026-03-10',
+                'deskripsi_kegiatan' => '<p>Workshop terlaksana.</p>',
+                'laporan_path' => [UploadedFile::fake()->create('laporan.pdf', 100, 'application/pdf')],
+                'persentase_ketercapaian' => $persentase,
+            ])
+            ->assertHasNoActionErrors();
+
+        return RealisasiProgramKerja::query()->latest('id')->firstOrFail();
     }
 
     private function seedPengajuan(UnitKerja $unit, string $nama): PengajuanProgramKerja

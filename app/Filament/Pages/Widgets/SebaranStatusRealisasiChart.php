@@ -32,6 +32,13 @@ class SebaranStatusRealisasiChart extends ChartWidget
         'warning' => '245, 158, 11',
         'success' => '16, 185, 129',
         'danger' => '239, 68, 68',
+        'indigo' => '99, 102, 241',
+        'violet' => '139, 92, 246',
+        'cyan' => '6, 182, 212',
+        'teal' => '20, 184, 166',
+        'orange' => '249, 115, 22',
+        'rose' => '244, 63, 94',
+        'slate' => '100, 116, 139',
     ];
 
     /**

@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use App\Enums\EnumRole;
-use App\Filament\Pages\PengaturanSistem;
+use App\Filament\Clusters\PengaturanSistem\Pages\IdentitasAplikasi;
 use App\Models\Setting;
 use App\Models\UnitKerja;
 use App\Models\User;
@@ -82,7 +82,7 @@ class BrandPanelTest extends TestCase
     {
         $this->actingAs(User::factory()->create());
 
-        Livewire::test(PengaturanSistem::class)
+        Livewire::test(IdentitasAplikasi::class)
             ->assertFormSet([
                 Setting::BRAND_NAMA => 'SIM KINERJA',
                 Setting::BRAND_INSTANSI => 'Universitas Muhammadiyah Lamongan',
@@ -110,7 +110,7 @@ class BrandPanelTest extends TestCase
     {
         $this->actingAs(User::factory()->create());
 
-        Livewire::test(PengaturanSistem::class)
+        Livewire::test(IdentitasAplikasi::class)
             ->fillForm([
                 Setting::BRAND_NAMA => '',
                 Setting::BRAND_INSTANSI => '',
@@ -126,7 +126,7 @@ class BrandPanelTest extends TestCase
     {
         $this->actingAs(User::factory()->create());
 
-        Livewire::test(PengaturanSistem::class)
+        Livewire::test(IdentitasAplikasi::class)
             ->fillForm([Setting::BRAND_LOGO => null])
             ->call('save')
             ->assertHasNoFormErrors();

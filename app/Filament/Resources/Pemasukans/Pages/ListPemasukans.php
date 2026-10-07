@@ -8,6 +8,7 @@ use App\Filament\Actions\ExcelExportAction;
 use App\Filament\Actions\PdfReportAction;
 use App\Filament\Resources\Concerns\HasUnitKerjaPageFilter;
 use App\Filament\Resources\Pemasukans\PemasukanResource;
+use App\Filament\Resources\Pemasukans\Widgets\PemasukanHarianChart;
 use App\Filament\Resources\Pemasukans\Widgets\PemasukanOverview;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Schemas\Components\EmbeddedTable;
@@ -85,6 +86,7 @@ class ListPemasukans extends ListRecords
     {
         return [
             PemasukanOverview::class,
+            PemasukanHarianChart::class,
         ];
     }
 }

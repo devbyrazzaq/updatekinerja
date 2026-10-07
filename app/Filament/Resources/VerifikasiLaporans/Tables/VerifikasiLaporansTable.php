@@ -17,7 +17,10 @@ class VerifikasiLaporansTable
 {
     use HasVerificationTableFilters;
 
-    public static function configure(Table $table): Table
+    /**
+     * @param  array<int, int>|null  $tahunKerjaIds  Pilihan filter tahun kerja; bawaannya tahun berjalan.
+     */
+    public static function configure(Table $table, ?array $tahunKerjaIds = null): Table
     {
         return $table
             ->emptyStateHeading('Tidak ada laporan yang menunggu verifikasi')
@@ -41,7 +44,7 @@ class VerifikasiLaporansTable
                     ->color(fn (RealisasiProgramKerja $record): string => $record->status->getColor()),
             ])
             ->filters([
-                static::tahunKerjaFilter('pengajuanProgramKerja.penawaranProgramKerja', KonteksProgramKerja::tahunPelaksanaanIds()),
+                static::tahunKerjaFilter('pengajuanProgramKerja.penawaranProgramKerja', $tahunKerjaIds ?? KonteksProgramKerja::tahunPelaksanaanIds()),
                 static::unitKerjaFilter('pengajuanProgramKerja'),
                 // Yang diajukan pada tahap ini adalah laporannya, bukan realisasinya,
                 // sehingga rentang waktu mengikuti tanggal laporan diserahkan.

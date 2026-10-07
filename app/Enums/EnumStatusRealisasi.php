@@ -2,6 +2,8 @@
 
 namespace App\Enums;
 
+use App\Filament\Widgets\StatusRealisasiWidget;
+use App\Providers\Filament\AppPanelProvider;
 use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasLabel;
 
@@ -82,16 +84,31 @@ enum EnumStatusRealisasi: string implements HasColor, HasLabel
         };
     }
 
+    /**
+     * Warna badge status. Tiap status memakai warnanya sendiri — tidak ada yang kembar —
+     * supaya tahap yang sedang dijalani sebuah realisasi terbaca sekali lihat, baik pada
+     * tabel, stepper, maupun irisan grafik sebaran status.
+     *
+     * Warna di luar palet bawaan Filament (indigo, violet, cyan, teal, orange, rose,
+     * slate) didaftarkan pada {@see AppPanelProvider}, dan
+     * padanan rgb-nya untuk grafik ada pada
+     * {@see StatusRealisasiWidget}.
+     */
     public function getColor(): string
     {
         return match ($this) {
             self::Draft => 'gray',
-            self::Diajukan, self::VerifikasiRektor, self::VerifikasiWakil, self::VerifikasiKeuangan, self::VerifikasiLaporan => 'info',
-            self::Dijadwalkan, self::MenungguLaporan => 'warning',
+            self::Diajukan => 'info',
+            self::VerifikasiRektor => 'indigo',
+            self::VerifikasiWakil => 'violet',
+            self::VerifikasiKeuangan => 'cyan',
+            self::Dijadwalkan => 'orange',
+            self::MenungguLaporan => 'warning',
+            self::VerifikasiLaporan => 'teal',
             self::Selesai => 'success',
             self::Ditolak => 'danger',
-            self::Revisi => 'warning',
-            self::Dibatalkan => 'gray',
+            self::Revisi => 'rose',
+            self::Dibatalkan => 'slate',
         };
     }
 }

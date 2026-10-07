@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use App\Exports\Export;
 use App\Exports\TemplateExport;
 use App\Services\Excel\SpreadsheetExporter;
 use App\Services\Excel\SpreadsheetImporter;
@@ -111,6 +112,61 @@ abstract class Import
     }
 
     /**
+     * Judul dokumen pada lembar template; null memakai judul bawaan
+     * {@see TemplateExport}.
+     */
+    public function templateTitle(): ?string
+    {
+        return null;
+    }
+
+    /**
+     * Kalimat penjelas di bawah judul lembar template; null memakai kalimat bawaan
+     * {@see TemplateExport}.
+     */
+    public function templateSubtitle(): ?string
+    {
+        return null;
+    }
+
+    /**
+     * Lembar keterangan yang ikut disertakan pada berkas template — mis. petunjuk
+     * pengisian kolom atau daftar kode referensi yang harus disalin pengguna.
+     * Lembar-lembar ini ditulis setelah lembar isian, sehingga tidak terbaca sebagai
+     * data saat berkasnya diimpor kembali.
+     *
+     * @return list<Export>
+     */
+    public function templateSheets(): array
+    {
+        return [];
+    }
+
+    /**
+     * Pemeriksaan yang baru bisa dilakukan setelah seluruh baris terbaca — mis. batas
+     * yang dihitung dari gabungan beberapa baris sekaligus. Dijalankan hanya bila tidak
+     * ada baris yang gagal validasi per barisnya.
+     *
+     * @param  list<array<string, mixed>>  $rows
+     * @return list<string> pesan error; kosong berarti lolos
+     */
+    public function validateBatch(array $rows): array
+    {
+        return [];
+    }
+
+    /**
+     * Catatan atas baris yang tetap tersimpan, dikumpulkan selama penyimpanan dan
+     * disampaikan ke pengimpor lewat {@see ImportResult::$warnings}.
+     *
+     * @return list<string>
+     */
+    public function warnings(): array
+    {
+        return [];
+    }
+
+    /**
      * Isi konteks dari data form modal (di luar berkas unggahan).
      *
      * @param  array<string, mixed>  $context
@@ -153,6 +209,9 @@ abstract class Import
                 $this->templateColumns(),
                 $this->sampleRows(),
                 $this->columnLabels(),
+                $this->templateSubtitle(),
+                $this->templateSheets(),
+                $this->templateTitle(),
             ),
         );
     }

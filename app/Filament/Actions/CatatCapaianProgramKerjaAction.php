@@ -2,7 +2,7 @@
 
 namespace App\Filament\Actions;
 
-use App\Enums\EnumStatusAnggaran;
+use App\Enums\EnumJenisRealisasi;
 use App\Enums\EnumStatusPengajuan;
 use App\Enums\EnumStatusRealisasi;
 use App\Models\PengajuanProgramKerja;
@@ -29,11 +29,14 @@ use Illuminate\Support\Carbon;
  * Aksi mencatat ketercapaian sebuah program kerja langsung dari halaman monitoring,
  * tanpa melewati alur pengajuan-pencairan realisasi.
  *
- * Capaiannya disimpan sebagai realisasi program kerja yang langsung berstatus
- * Selesai namun tidak menyentuh anggaran sama sekali (`anggaran_digunakan` nol dan
- * `dicairkan_at` kosong), sehingga yang bertambah hanya capaian target — penyerapan
- * anggaran pada monitoring tetap apa adanya. Laporan pelaksanaannya diunggah ke disk
- * privat dan dipratinjau lewat URL sementara ({@see MediaAction}).
+ * Capaiannya disimpan sebagai realisasi program kerja bertanda
+ * {@see EnumJenisRealisasi::TanpaAnggaran} yang langsung berstatus Selesai namun tidak
+ * menyentuh anggaran sama sekali (`anggaran_digunakan` nol, `dicairkan_at` dan
+ * `status_anggaran` kosong), sehingga yang bertambah hanya capaian target — penyerapan
+ * anggaran pada monitoring tetap apa adanya. Tanda jenis itu pula yang membuat seluruh
+ * tampilan bernuansa anggaran (stepper verifikasi, besaran realisasi, persetujuan
+ * nominal) tidak ikut ditampilkan. Laporan pelaksanaannya diunggah ke disk privat dan
+ * dipratinjau lewat URL sementara ({@see MediaAction}).
  *
  * Ketercapaian tidak boleh mundur: nilai terkecil yang diterima adalah capaian
  * tertinggi yang sudah tercatat pada pengajuan yang sama, mengikuti aturan yang
@@ -261,6 +264,7 @@ class CatatCapaianProgramKerjaAction extends AuthorizedAction
         $realisasi = RealisasiProgramKerja::create([
             'pengajuan_program_kerja_id' => $pengajuan->getKey(),
             'name' => $program,
+            'jenis_realisasi' => EnumJenisRealisasi::TanpaAnggaran,
             // Deskripsi kegiatan sekaligus menjadi evaluasi pengerjaannya: capaian ini
             // dicatat tanpa alur laporan terpisah, sehingga keduanya satu cerita.
             'description' => $data['deskripsi_kegiatan'],
@@ -269,13 +273,15 @@ class CatatCapaianProgramKerjaAction extends AuthorizedAction
             'end_datetime' => $selesai,
             'anggaran_digunakan' => 0,
             'status' => EnumStatusRealisasi::Selesai,
-            'status_anggaran' => EnumStatusAnggaran::Habis,
+            // Status anggaran sengaja dibiarkan kosong: tidak ada anggaran yang diserap,
+            // sehingga "tergunakan semua" maupun "bersisa" sama-sama tidak berlaku.
             'laporan_path' => $data['laporan_path'],
             'laporan_original_names' => $data['laporan_original_names'] ?? null,
             'persentase_ketercapaian' => $persentase,
             'laporan_diserahkan_at' => now(),
             'laporan_disetujui_at' => now(),
             'verifikator_laporan_id' => auth()->id(),
+            'dicatat_oleh_id' => auth()->id(),
         ]);
 
         $realisasi->catatLog(

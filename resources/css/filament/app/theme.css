@@ -158,3 +158,46 @@
 .fi-sidebar-group-btn {
     @apply rounded-full;
 }
+
+/* --- Tabel: kolom lekat (sticky) di sisi kiri ------------------ */
+
+/* Filament belum punya kolom sticky bawaan. Kolom yang perlu tetap terlihat saat
+   tabel digeser ke samping diberi kelas `kolom-lekat` lewat extraHeaderAttributes
+   dan extraCellAttributes. Bila tabel punya kotak centang aksi massal, kotak itu
+   ikut lekat dan kolomnya bergeser selebar kotak tersebut. Hanya mulai layar sm:
+   di bawahnya Filament menumpuk tabel per baris sehingga tidak ada geser samping. */
+@media (width >= 40rem) {
+    .fi-ta-table {
+        --lebar-kolom-centang: 3.25rem;
+    }
+
+    .fi-ta-table .kolom-lekat,
+    .fi-ta-table:has(.kolom-lekat) > * > tr > .fi-ta-selection-cell {
+        @apply sticky z-[1] bg-white dark:bg-gray-900;
+    }
+
+    .fi-ta-table > thead .kolom-lekat,
+    .fi-ta-table:has(.kolom-lekat) > thead > tr > .fi-ta-selection-cell {
+        @apply bg-gray-50 dark:bg-gray-800;
+    }
+
+    .fi-ta-table:has(.kolom-lekat) > * > tr > .fi-ta-selection-cell {
+        left: 0;
+        width: var(--lebar-kolom-centang);
+        min-width: var(--lebar-kolom-centang);
+        max-width: var(--lebar-kolom-centang);
+    }
+
+    .fi-ta-table .kolom-lekat {
+        left: 0;
+        box-shadow: inset -1px 0 0 var(--color-gray-200);
+    }
+
+    .dark .fi-ta-table .kolom-lekat {
+        box-shadow: inset -1px 0 0 rgb(255 255 255 / 0.1);
+    }
+
+    .fi-ta-table:has(.fi-ta-selection-cell) .kolom-lekat {
+        left: var(--lebar-kolom-centang);
+    }
+}

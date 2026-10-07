@@ -92,7 +92,7 @@ class AcuanProgramKerja extends Model
     {
         return $this->targets
             ->firstWhere('tahun', $tahun)
-            ?->label();
+            ?->labelTampil();
     }
 
     /** @return HasMany<PenawaranProgramKerja, $this> */

@@ -118,6 +118,22 @@ abstract class Export
     }
 
     /**
+     * Lembar tambahan yang ditulis ke berkas .xlsx yang sama, setelah lembar utama —
+     * mis. lembar referensi kode dan lembar petunjuk pengisian pada berkas template
+     * impor. Tiap lembar ditulis dengan tata letak yang sama seperti lembar utama.
+     *
+     * Hanya berlaku pada berkas .xlsx: laporan PDF hanya mencetak lembar utama, dan
+     * {@see SpreadsheetImporter} hanya membaca lembar pertama — jadi lembar tambahan
+     * aman dipakai sebagai keterangan tanpa terbaca sebagai data impor.
+     *
+     * @return list<Export>
+     */
+    public function additionalSheets(): array
+    {
+        return [];
+    }
+
+    /**
      * Nilai satu kolom pada sebuah baris, dicari lewat key mesinnya supaya turunan
      * tidak perlu menghitung posisi kolomnya sendiri.
      *

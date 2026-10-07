@@ -6,7 +6,12 @@ use App\Enums\EnumStatusPemasukan;
 use App\Enums\EnumStatusPengajuan;
 use App\Enums\EnumStatusRealisasi;
 use App\Enums\EnumStatusTahunKerja;
-use App\Filament\Pages\PengaturanSistem;
+use App\Filament\Clusters\PengaturanSistem\Pages\AturanRealisasi;
+use App\Filament\Clusters\PengaturanSistem\Pages\BerkasUnggahan;
+use App\Filament\Clusters\PengaturanSistem\Pages\IdentitasAplikasi;
+use App\Filament\Clusters\PengaturanSistem\Pages\PenandaTanganLaporan;
+use App\Filament\Clusters\PengaturanSistem\Pages\PeriodeJabatan;
+use App\Filament\Clusters\PengaturanSistem\PengaturanSistemCluster;
 use App\Filament\Resources\AcuanProgramKerjas\Pages\ListAcuanProgramKerjas;
 use App\Filament\Resources\Pemasukans\Pages\ListPemasukans;
 use App\Filament\Resources\RealisasiProgramKerjas\Pages\ListRealisasiProgramKerjas;
@@ -59,12 +64,27 @@ class PengaturanSistemTest extends TestCase
         Setting::set(Setting::TAHUN_PER_PERIODE, 4);
         Setting::set(Setting::MAKS_REALISASI_BERJALAN, 3);
 
-        Livewire::test(PengaturanSistem::class)
+        Livewire::test(PeriodeJabatan::class)
             ->assertOk()
-            ->assertFormSet([
-                Setting::TAHUN_PER_PERIODE => 4,
-                Setting::MAKS_REALISASI_BERJALAN => 3,
-            ]);
+            ->assertFormSet([Setting::TAHUN_PER_PERIODE => 4]);
+
+        Livewire::test(AturanRealisasi::class)
+            ->assertOk()
+            ->assertFormSet([Setting::MAKS_REALISASI_BERJALAN => 3]);
+    }
+
+    /**
+     * Pengaturan Sistem berupa cluster: tautan menunya membuka halaman pertama, dan
+     * menu samping memuat seluruh halaman pengaturan.
+     */
+    public function test_cluster_pengaturan_memuat_seluruh_halaman_di_menu_samping(): void
+    {
+        $this->get(PengaturanSistemCluster::getUrl())
+            ->assertRedirect(IdentitasAplikasi::getUrl());
+
+        $this->get(IdentitasAplikasi::getUrl())
+            ->assertOk()
+            ->assertSee(['Identitas Aplikasi', 'Halaman Masuk', 'Penanda Tangan Laporan', 'Periode Jabatan', 'Aturan Realisasi', 'Berkas Unggahan']);
     }
 
     public function test_pengaturan_bawaan_dipakai_saat_belum_pernah_disimpan(): void
@@ -75,11 +95,14 @@ class PengaturanSistemTest extends TestCase
 
     public function test_dapat_menyimpan_pengaturan(): void
     {
-        Livewire::test(PengaturanSistem::class)
-            ->fillForm([
-                Setting::TAHUN_PER_PERIODE => 6,
-                Setting::MAKS_REALISASI_BERJALAN => 1,
-            ])
+        Livewire::test(PeriodeJabatan::class)
+            ->fillForm([Setting::TAHUN_PER_PERIODE => 6])
+            ->call('save')
+            ->assertHasNoFormErrors()
+            ->assertNotified();
+
+        Livewire::test(AturanRealisasi::class)
+            ->fillForm([Setting::MAKS_REALISASI_BERJALAN => 1])
             ->call('save')
             ->assertHasNoFormErrors()
             ->assertNotified();
@@ -89,13 +112,28 @@ class PengaturanSistemTest extends TestCase
         $this->assertSame(1, Setting::maksRealisasiBerjalan());
     }
 
+    public function test_aturan_tunggakan_tahun_lalu_aktif_secara_bawaan_dan_dapat_dimatikan(): void
+    {
+        $this->assertTrue(Setting::blokirTunggakanTahunLalu());
+
+        Livewire::test(AturanRealisasi::class)
+            ->assertFormSet([Setting::BLOKIR_TUNGGAKAN_TAHUN_LALU => true])
+            ->fillForm([Setting::BLOKIR_TUNGGAKAN_TAHUN_LALU => false])
+            ->call('save')
+            ->assertHasNoFormErrors()
+            ->assertNotified();
+
+        $this->assertDatabaseHas(Setting::class, ['key' => Setting::BLOKIR_TUNGGAKAN_TAHUN_LALU, 'value' => '0']);
+        $this->assertFalse(Setting::blokirTunggakanTahunLalu());
+    }
+
     /**
      * Identitas penanda tangan laporan PDF diketikkan di halaman ini, lalu dibaca
      * kembali lewat helper bertipe yang dipakai laporan.
      */
     public function test_identitas_penanda_tangan_laporan_tersimpan(): void
     {
-        Livewire::test(PengaturanSistem::class)
+        Livewire::test(PenandaTanganLaporan::class)
             ->fillForm([
                 Setting::PENANDATANGAN_JABATAN => 'Kepala Biro Keuangan',
                 Setting::PENANDATANGAN_NAMA => 'Dr. Hj. Siti Aminah, S.E., M.M.',
@@ -116,21 +154,20 @@ class PengaturanSistemTest extends TestCase
 
     public function test_pengaturan_wajib_diisi_angka_positif(): void
     {
-        Livewire::test(PengaturanSistem::class)
-            ->fillForm([
-                Setting::TAHUN_PER_PERIODE => 0,
-                Setting::MAKS_REALISASI_BERJALAN => null,
-            ])
+        Livewire::test(PeriodeJabatan::class)
+            ->fillForm([Setting::TAHUN_PER_PERIODE => 0])
             ->call('save')
-            ->assertHasFormErrors([
-                Setting::TAHUN_PER_PERIODE => 'min',
-                Setting::MAKS_REALISASI_BERJALAN => 'required',
-            ]);
+            ->assertHasFormErrors([Setting::TAHUN_PER_PERIODE => 'min']);
+
+        Livewire::test(AturanRealisasi::class)
+            ->fillForm([Setting::MAKS_REALISASI_BERJALAN => null])
+            ->call('save')
+            ->assertHasFormErrors([Setting::MAKS_REALISASI_BERJALAN => 'required']);
     }
 
     public function test_batas_berkas_bukti_pemasukan_tersimpan_dan_langsung_berlaku(): void
     {
-        Livewire::test(PengaturanSistem::class)
+        Livewire::test(BerkasUnggahan::class)
             ->assertFormSet([Setting::MAKS_BUKTI_PEMASUKAN => 3])
             ->fillForm([Setting::MAKS_BUKTI_PEMASUKAN => 1])
             ->call('save')

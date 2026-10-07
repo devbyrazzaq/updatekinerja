@@ -23,7 +23,7 @@ class RealisasiProgramKerjasExport extends Export
 
     public function headings(): array
     {
-        return ['name', 'unit_kerja', 'nominal_diajukan', 'nominal_disetujui', 'persentase_persetujuan', 'anggaran_digunakan', 'status', 'status_pencairan', 'jadwal_pencairan', 'tanggal_pencairan', 'metode_pembayaran', 'rekening_tujuan', 'status_anggaran', 'nominal_selisih_anggaran', 'status_penyelesaian_anggaran', 'persentase_ketercapaian', 'evaluasi_pengerjaan'];
+        return ['name', 'unit_kerja', 'jenis_realisasi', 'nominal_diajukan', 'nominal_disetujui', 'persentase_persetujuan', 'anggaran_digunakan', 'status', 'status_pencairan', 'jadwal_pencairan', 'tanggal_pencairan', 'metode_pembayaran', 'rekening_tujuan', 'status_anggaran', 'nominal_selisih_anggaran', 'status_penyelesaian_anggaran', 'persentase_ketercapaian', 'evaluasi_pengerjaan'];
     }
 
     public function columnLabels(): array
@@ -31,6 +31,7 @@ class RealisasiProgramKerjasExport extends Export
         return [
             'name' => 'Nama Realisasi',
             'unit_kerja' => 'Unit Kerja',
+            'jenis_realisasi' => 'Tipe Pengajuan',
             'nominal_diajukan' => 'Nominal Diajukan',
             'nominal_disetujui' => 'Nominal Disetujui',
             'persentase_persetujuan' => '% Persetujuan',
@@ -69,6 +70,7 @@ class RealisasiProgramKerjasExport extends Export
             ->map(fn (RealisasiProgramKerja $realisasi): array => [
                 $realisasi->name,
                 $realisasi->pengajuanProgramKerja?->unitKerja?->name,
+                $realisasi->jenis_realisasi?->getLabel(),
                 $realisasi->nominalDiajukan(),
                 $realisasi->nominal_disetujui,
                 $realisasi->persentasePersetujuan(),

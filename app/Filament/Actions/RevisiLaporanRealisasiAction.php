@@ -38,7 +38,7 @@ class RevisiLaporanRealisasiAction extends Action
             ->modalDescription('Laporan dikembalikan ke unit kerja untuk diperbaiki dan dikirim ulang. Sampaikan bagian mana yang perlu diperbaiki.')
             ->modalSubmitActionLabel('Kirim Revisi')
             ->modalWidth(Width::Large)
-            ->visible(fn (RealisasiProgramKerja $record): bool => VerifikasiLaporanResource::currentUserCanVerify()
+            ->visible(fn (RealisasiProgramKerja $record): bool => VerifikasiLaporanResource::currentUserCanVerifyRecord($record)
                 && VerifikasiLaporanResource::isPendingAtStage($record))
             ->schema([
                 RichEditor::make('catatan')

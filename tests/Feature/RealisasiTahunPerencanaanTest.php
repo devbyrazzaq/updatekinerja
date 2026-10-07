@@ -15,6 +15,7 @@ use App\Models\PengajuanProgramKerja;
 use App\Models\Periode;
 use App\Models\Program;
 use App\Models\RealisasiProgramKerja;
+use App\Models\Setting;
 use App\Models\TahunKerja;
 use App\Models\UnitKerja;
 use App\Models\User;
@@ -176,6 +177,76 @@ class RealisasiTahunPerencanaanTest extends TestCase
             ->assertNotified('Realisasi berhasil diajukan');
 
         $this->assertSame(EnumStatusRealisasi::Diajukan, $draftTahunBaru->refresh()->status);
+    }
+
+    /**
+     * Bila aturan tunggakan dimatikan di Pengaturan Sistem, unit kerja tetap boleh
+     * mengajukan realisasi tahun baru; tunggakannya hanya menjadi peringatan.
+     */
+    public function test_tunggakan_tidak_menahan_realisasi_baru_saat_aturan_dimatikan(): void
+    {
+        Setting::set(Setting::BLOKIR_TUNGGAKAN_TAHUN_LALU, 0);
+
+        $this->realisasi($this->berjalan, EnumStatusRealisasi::MenungguLaporan);
+
+        app(TransisiTahunKerja::class)->mulaiTahunKerja($this->perencanaan);
+
+        $draftTahunBaru = $this->realisasi($this->perencanaan->refresh(), EnumStatusRealisasi::Draft);
+
+        $this->assertTrue($draftTahunBaru->dapatDiajukan());
+
+        Livewire::test(ListRealisasiProgramKerjas::class)
+            ->mountAction(TestAction::make('ajukanRealisasi')->table($draftTahunBaru))
+            ->assertMountedActionModalSee('segera selesaikan lewat menu Penyelesaian Tahun Lalu');
+
+        Livewire::test(ListRealisasiProgramKerjas::class)
+            ->callAction(TestAction::make('ajukanRealisasi')->table($draftTahunBaru), $this->dataProposal())
+            ->assertNotified('Realisasi berhasil diajukan');
+
+        $this->assertSame(EnumStatusRealisasi::Diajukan, $draftTahunBaru->refresh()->status);
+    }
+
+    /**
+     * Aturan tunggakan tidak melonggarkan kuota: tunggakan tetap dihitung sebagai
+     * realisasi berjalan.
+     */
+    public function test_tunggakan_tetap_memakai_kuota_saat_aturan_dimatikan(): void
+    {
+        Setting::set(Setting::BLOKIR_TUNGGAKAN_TAHUN_LALU, 0);
+        Setting::set(Setting::MAKS_REALISASI_BERJALAN, 1);
+
+        $this->realisasi($this->berjalan, EnumStatusRealisasi::MenungguLaporan);
+
+        app(TransisiTahunKerja::class)->mulaiTahunKerja($this->perencanaan);
+
+        $draftTahunBaru = $this->realisasi($this->perencanaan->refresh(), EnumStatusRealisasi::Draft);
+
+        $this->assertFalse($draftTahunBaru->dapatDiajukan());
+
+        Livewire::test(ListRealisasiProgramKerjas::class)
+            ->callAction(TestAction::make('ajukanRealisasi')->table($draftTahunBaru), $this->dataProposal())
+            ->assertNotified('Kuota realisasi berjalan sudah penuh');
+    }
+
+    /**
+     * Hanya tahun Penutupan (tepat sebelum tahun berjalan) yang dihitung sebagai
+     * tunggakan. Sisa realisasi tahun yang sudah Selesai tidak bisa dituntaskan lagi,
+     * sehingga tidak menahan pengajuan maupun memakai kuota.
+     */
+    public function test_sisa_realisasi_tahun_selesai_tidak_menahan_dan_tidak_memakai_kuota(): void
+    {
+        Setting::set(Setting::MAKS_REALISASI_BERJALAN, 1);
+
+        $sisaLama = $this->realisasi($this->berjalan, EnumStatusRealisasi::MenungguLaporan);
+
+        app(TransisiTahunKerja::class)->mulaiTahunKerja($this->perencanaan);
+        $this->berjalan->refresh()->update(['status' => EnumStatusTahunKerja::Selesai]);
+
+        $draftTahunBaru = $this->realisasi($this->perencanaan->refresh(), EnumStatusRealisasi::Draft);
+
+        $this->assertFalse(RealisasiProgramKerja::tunggakanTahunLampau($this->unit->id)->whereKey($sisaLama->id)->exists());
+        $this->assertSame(0, RealisasiProgramKerja::berjalanUntukUnit($this->unit->id)->count());
+        $this->assertTrue($draftTahunBaru->dapatDiajukan());
     }
 
     /**

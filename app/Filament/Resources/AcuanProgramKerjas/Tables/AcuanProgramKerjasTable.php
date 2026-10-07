@@ -43,20 +43,16 @@ class AcuanProgramKerjasTable
             ->emptyStateDescription('Klik tombol tambah di kanan atas untuk menambahkan acuan program kerja baru.')
             ->emptyStateIcon('heroicon-o-document-text')
             ->columns([
+                TextColumn::make('unitKerja.name')
+                    ->label('Unit Kerja')
+                    ->searchable()
+                    ->extraHeaderAttributes(['class' => 'kolom-lekat'])
+                    ->extraCellAttributes(['class' => 'kolom-lekat']),
                 TextColumn::make('name')
                     ->label('Nama Program Kerja')
                     ->searchable()
                     ->sortable()
                     ->wrap(),
-                TextColumn::make('kelompokAcuan.name')
-                    ->label('Kelompok Acuan')
-                    ->badge()
-                    ->color('gray')
-                    ->toggleable(),
-                TextColumn::make('unitKerja.name')
-                    ->label('Unit Kerja')
-                    ->searchable()
-                    ->toggleable(),
                 TextColumn::make('bidang.name')
                     ->label('Bidang')
                     ->toggleable(),

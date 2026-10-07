@@ -30,7 +30,7 @@ class RingkasanAnggaranWidget extends StatsOverviewWidget
 
     protected int|string|array $columnSpan = 'full';
 
-    protected array|int|null $columns = 4;
+    protected array|int|null $columns = 2;
 
     protected function getHeading(): ?string
     {

@@ -9,6 +9,7 @@ use App\Filament\Forms\StateCasts\MoneyStateCast;
 use App\Filament\Pages\Concerns\HasPageAuthorization;
 use App\Filament\Resources\TahunKerjas\TahunKerjaResource;
 use App\Models\KelompokAcuan;
+use App\Models\Setting;
 use App\Models\TahunKerja;
 use App\Services\GeneratePenawaranFromAcuan;
 use App\Services\TransisiTahunKerja;
@@ -926,7 +927,9 @@ class PengaturanProgramKerja extends Page
         $dampak = $berjalan === null
             ? ''
             : "<li>{$berjalan->name} berpindah ke status Penutupan: pengajuan dan realisasi barunya ditutup, tetapi realisasi yang sudah berjalan masih bisa dituntaskan.</li>"
-                .'<li>Unit kerja yang masih menyisakan realisasi belum tuntas di tahun tersebut belum boleh mengajukan realisasi tahun baru sampai tunggakannya selesai.</li>';
+                .(Setting::blokirTunggakanTahunLalu()
+                    ? '<li>Unit kerja yang masih menyisakan realisasi belum tuntas di tahun tersebut belum boleh mengajukan realisasi tahun baru sampai tunggakannya selesai.</li>'
+                    : '<li>Unit kerja yang masih menyisakan realisasi belum tuntas di tahun tersebut tetap boleh mengajukan realisasi tahun baru, sesuai Pengaturan Sistem.</li>');
 
         return new HtmlString(<<<HTML
             <ul class="list-disc ps-5 space-y-1">

@@ -37,9 +37,9 @@ class PintasanMenuWidget extends Widget
 
     protected string $view = 'filament.widgets.pintasan-menu';
 
-    protected static ?int $sort = 3;
+    protected static ?int $sort = 6;
 
-    protected int|string|array $columnSpan = 1;
+    protected int|string|array $columnSpan = 'full';
 
     /**
      * Menu yang dipintaskan beserta alasan singkat membukanya, urut mengikuti alur

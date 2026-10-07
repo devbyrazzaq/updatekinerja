@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\EnumJenisLatarMasuk;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
@@ -22,6 +23,13 @@ class Setting extends Model
      * Jumlah realisasi yang boleh berjalan bersamaan pada satu unit kerja.
      */
     public const MAKS_REALISASI_BERJALAN = 'maks_realisasi_berjalan';
+
+    /**
+     * Unit kerja yang masih menyisakan realisasi belum tuntas pada tahun kerja
+     * sebelumnya tidak boleh mengajukan realisasi baru (1) atau tetap boleh dengan
+     * peringatan (0).
+     */
+    public const BLOKIR_TUNGGAKAN_TAHUN_LALU = 'blokir_tunggakan_tahun_lalu';
 
     /**
      * Jumlah maksimum berkas proposal yang boleh diunggah pada satu realisasi.
@@ -76,6 +84,71 @@ class Setting extends Model
     public const BRAND_LOGO_DISK = 'public';
 
     /**
+     * Jenis latar panel brand halaman masuk; lihat EnumJenisLatarMasuk.
+     */
+    public const MASUK_LATAR_JENIS = 'masuk_latar_jenis';
+
+    /**
+     * Path gambar latar halaman masuk pada disk publik; kosong berarti memakai gambar
+     * bawaan sistem.
+     */
+    public const MASUK_LATAR_GAMBAR = 'masuk_latar_gambar';
+
+    /**
+     * Path berkas video latar halaman masuk pada disk publik.
+     */
+    public const MASUK_LATAR_VIDEO = 'masuk_latar_video';
+
+    /**
+     * Tautan video YouTube yang diputar sebagai latar halaman masuk.
+     */
+    public const MASUK_LATAR_YOUTUBE = 'masuk_latar_youtube';
+
+    /**
+     * Judul besar pada panel brand halaman masuk.
+     */
+    public const MASUK_JUDUL = 'masuk_judul';
+
+    /**
+     * Kalimat penjelas di bawah judul halaman masuk.
+     */
+    public const MASUK_DESKRIPSI = 'masuk_deskripsi';
+
+    /**
+     * Judul blok catatan akses pada kartu formulir masuk.
+     */
+    public const MASUK_CATATAN_JUDUL = 'masuk_catatan_judul';
+
+    /**
+     * Butir catatan akses, disimpan sebagai daftar dipisah baris baru karena nilai
+     * pengaturan selalu berupa string tunggal.
+     */
+    public const MASUK_CATATAN = 'masuk_catatan';
+
+    /**
+     * Batas jumlah butir catatan akses. Kartu formulir masuk sengaja pendek: lebih dari
+     * ini butir catatannya mendorong tombol Masuk keluar layar di ponsel.
+     */
+    public const MASUK_CATATAN_MAKS_BUTIR = 4;
+
+    /**
+     * Batas panjang satu butir catatan akses.
+     */
+    public const MASUK_CATATAN_MAKS_PANJANG = 120;
+
+    /**
+     * Disk penyimpanan berkas latar halaman masuk. Sama seperti logo brand: perlu URL
+     * tetap karena tampil sebelum pengguna terautentikasi.
+     */
+    public const MASUK_LATAR_DISK = 'public';
+
+    /**
+     * Gambar bawaan halaman masuk. Dilayani langsung dari `public/` dan tidak pernah
+     * dihapus, sehingga aksi Kembalikan ke Bawaan selalu punya tujuan.
+     */
+    public const MASUK_LATAR_BAWAAN = 'images/campus.webp';
+
+    /**
      * Jabatan penanda tangan yang tercetak di atas nama pada blok tanda tangan
      * laporan pencairan.
      */
@@ -105,6 +178,7 @@ class Setting extends Model
     public const DEFAULTS = [
         self::TAHUN_PER_PERIODE => 5,
         self::MAKS_REALISASI_BERJALAN => 2,
+        self::BLOKIR_TUNGGAKAN_TAHUN_LALU => 1,
         self::MAKS_PROPOSAL_REALISASI => 3,
         self::MAKS_LAPORAN_REALISASI => 3,
         self::MAKS_UKURAN_PROPOSAL_MB => 10,
@@ -114,6 +188,14 @@ class Setting extends Model
         self::BRAND_NAMA => 'SIM KINERJA',
         self::BRAND_INSTANSI => 'Universitas Muhammadiyah Lamongan',
         self::BRAND_LOGO => '',
+        self::MASUK_LATAR_JENIS => EnumJenisLatarMasuk::Gambar->value,
+        self::MASUK_LATAR_GAMBAR => '',
+        self::MASUK_LATAR_VIDEO => '',
+        self::MASUK_LATAR_YOUTUBE => '',
+        self::MASUK_JUDUL => 'Kelola kinerja unit kerja dalam satu ruang.',
+        self::MASUK_DESKRIPSI => 'Satu akun untuk merencanakan program kerja, mengajukan anggaran, mencatat pemasukan, dan memantau realisasi hingga selesai.',
+        self::MASUK_CATATAN_JUDUL => 'Catatan akses',
+        self::MASUK_CATATAN => "Gunakan username dan password yang diberikan pengelola sistem.\nHubungi admin jika akun belum aktif atau lupa akses.",
         self::PENANDATANGAN_JABATAN => '',
         self::PENANDATANGAN_NAMA => '',
         self::PENANDATANGAN_NOMOR => '',
@@ -172,6 +254,15 @@ class Setting extends Model
     public static function maksRealisasiBerjalan(): int
     {
         return max(1, (int) static::get(self::MAKS_REALISASI_BERJALAN));
+    }
+
+    /**
+     * Tunggakan realisasi tahun kerja sebelumnya menahan pengajuan realisasi baru
+     * unit kerja yang bersangkutan.
+     */
+    public static function blokirTunggakanTahunLalu(): bool
+    {
+        return (bool) (int) static::get(self::BLOKIR_TUNGGAKAN_TAHUN_LALU);
     }
 
     public static function maksProposalRealisasi(): int
@@ -289,6 +380,242 @@ class Setting extends Model
         }
 
         $disk = Storage::disk(self::BRAND_LOGO_DISK);
+
+        return $disk->exists($path) ? $disk->url($path) : null;
+    }
+
+    /**
+     * Judul besar halaman masuk; kembali ke bawaan bila dikosongkan.
+     */
+    public static function masukJudul(): string
+    {
+        $judul = trim((string) static::get(self::MASUK_JUDUL));
+
+        return $judul !== '' ? $judul : (string) self::DEFAULTS[self::MASUK_JUDUL];
+    }
+
+    /**
+     * Kalimat penjelas halaman masuk; kembali ke bawaan bila dikosongkan.
+     */
+    public static function masukDeskripsi(): string
+    {
+        $deskripsi = trim((string) static::get(self::MASUK_DESKRIPSI));
+
+        return $deskripsi !== '' ? $deskripsi : (string) self::DEFAULTS[self::MASUK_DESKRIPSI];
+    }
+
+    /**
+     * Judul blok catatan akses; kembali ke bawaan bila dikosongkan.
+     */
+    public static function masukCatatanJudul(): string
+    {
+        $judul = trim((string) static::get(self::MASUK_CATATAN_JUDUL));
+
+        return $judul !== '' ? $judul : (string) self::DEFAULTS[self::MASUK_CATATAN_JUDUL];
+    }
+
+    /**
+     * Butir catatan akses halaman masuk. Daftar kosong berarti bloknya tidak ditampilkan
+     * sama sekali, bukan tampil tanpa isi.
+     *
+     * @return list<string>
+     */
+    public static function masukCatatan(): array
+    {
+        return collect(preg_split('/\r\n|\r|\n/', (string) static::get(self::MASUK_CATATAN)) ?: [])
+            ->map(fn (string $butir): string => trim($butir))
+            ->filter(fn (string $butir): bool => $butir !== '')
+            ->map(fn (string $butir): string => mb_substr($butir, 0, self::MASUK_CATATAN_MAKS_PANJANG))
+            ->take(self::MASUK_CATATAN_MAKS_BUTIR)
+            ->values()
+            ->all();
+    }
+
+    /**
+     * Butir catatan dalam bentuk baris repeater.
+     *
+     * @return list<array{butir: string}>
+     */
+    public static function barisCatatanMasuk(): array
+    {
+        return array_map(
+            static fn (string $butir): array => ['butir' => $butir],
+            static::masukCatatan(),
+        );
+    }
+
+    /**
+     * Kebalikan barisCatatanMasuk(): merangkai baris repeater menjadi nilai pengaturan.
+     *
+     * @param  array<int, array{butir?: string|null}>  $baris
+     */
+    public static function rangkaiCatatanMasuk(array $baris): string
+    {
+        return collect($baris)
+            ->map(fn (mixed $satu): string => trim((string) (is_array($satu) ? ($satu['butir'] ?? '') : $satu)))
+            ->filter(fn (string $satu): bool => $satu !== '')
+            ->take(self::MASUK_CATATAN_MAKS_BUTIR)
+            ->implode("\n");
+    }
+
+    /**
+     * Jenis latar yang dipilih di pengaturan, belum tentu sama dengan yang benar-benar
+     * bisa ditampilkan — lihat masukLatarJenisTerpasang().
+     */
+    public static function masukLatarJenis(): EnumJenisLatarMasuk
+    {
+        return EnumJenisLatarMasuk::tryFrom((string) static::get(self::MASUK_LATAR_JENIS))
+            ?? EnumJenisLatarMasuk::Gambar;
+    }
+
+    /**
+     * Jenis latar yang benar-benar dipasang halaman masuk. Video atau YouTube yang
+     * berkasnya hilang atau tautannya tidak sah turun ke gambar, supaya halaman masuk
+     * tidak pernah tampil berlatar kosong.
+     */
+    public static function masukLatarJenisTerpasang(): EnumJenisLatarMasuk
+    {
+        return match (static::masukLatarJenis()) {
+            EnumJenisLatarMasuk::Video => static::masukLatarVideoUrl() !== null
+                ? EnumJenisLatarMasuk::Video
+                : EnumJenisLatarMasuk::Gambar,
+            EnumJenisLatarMasuk::Youtube => static::masukLatarYoutubeId() !== null
+                ? EnumJenisLatarMasuk::Youtube
+                : EnumJenisLatarMasuk::Gambar,
+            EnumJenisLatarMasuk::Gambar => EnumJenisLatarMasuk::Gambar,
+        };
+    }
+
+    /**
+     * Path gambar latar halaman masuk pada disk publik, `null` bila belum diunggah.
+     */
+    public static function masukLatarGambarPath(): ?string
+    {
+        $path = trim((string) static::get(self::MASUK_LATAR_GAMBAR));
+
+        return $path !== '' ? $path : null;
+    }
+
+    /**
+     * URL gambar latar halaman masuk; selalu terisi — jatuh ke gambar bawaan bila belum
+     * ada unggahan atau berkasnya sudah tidak ada.
+     */
+    public static function masukLatarGambarUrl(): string
+    {
+        return static::urlBerkasMasuk(static::masukLatarGambarPath())
+            ?? asset(self::MASUK_LATAR_BAWAAN);
+    }
+
+    /**
+     * Path berkas video latar pada disk publik, `null` bila belum diunggah.
+     */
+    public static function masukLatarVideoPath(): ?string
+    {
+        $path = trim((string) static::get(self::MASUK_LATAR_VIDEO));
+
+        return $path !== '' ? $path : null;
+    }
+
+    /**
+     * URL berkas video latar, `null` bila belum diunggah atau berkasnya sudah tidak ada.
+     */
+    public static function masukLatarVideoUrl(): ?string
+    {
+        return static::urlBerkasMasuk(static::masukLatarVideoPath());
+    }
+
+    /**
+     * Tautan YouTube yang tersimpan apa adanya, `null` bila kosong.
+     */
+    public static function masukLatarYoutube(): ?string
+    {
+        $tautan = trim((string) static::get(self::MASUK_LATAR_YOUTUBE));
+
+        return $tautan !== '' ? $tautan : null;
+    }
+
+    /**
+     * Id video YouTube hasil penguraian tautan tersimpan, `null` bila tautannya tidak
+     * dikenali.
+     */
+    public static function masukLatarYoutubeId(): ?string
+    {
+        return static::uraiYoutubeId(static::masukLatarYoutube());
+    }
+
+    /**
+     * Id video dari berbagai bentuk tautan YouTube (watch, youtu.be, embed, shorts,
+     * live) maupun id yang diketik langsung. `null` berarti tautannya tidak dikenali —
+     * dipakai juga sebagai aturan validasi isian.
+     */
+    public static function uraiYoutubeId(?string $tautan): ?string
+    {
+        $tautan = trim((string) $tautan);
+
+        if ($tautan === '') {
+            return null;
+        }
+
+        if (preg_match('/^[A-Za-z0-9_-]{11}$/', $tautan) === 1) {
+            return $tautan;
+        }
+
+        $pola = [
+            '#youtu\.be/([A-Za-z0-9_-]{11})#',
+            '#youtube\.com/watch\?(?:[^\s]*&)?v=([A-Za-z0-9_-]{11})#',
+            '#youtube\.com/(?:embed|v|shorts|live)/([A-Za-z0-9_-]{11})#',
+        ];
+
+        foreach ($pola as $satu) {
+            if (preg_match($satu, $tautan, $cocok) === 1) {
+                return $cocok[1];
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Mengembalikan seluruh setelan halaman masuk ke bawaan sekaligus membuang berkas
+     * yang pernah diunggah, karena setelah ini tidak ada lagi yang merujuknya.
+     */
+    public static function pulihkanBawaanHalamanMasuk(): void
+    {
+        $disk = Storage::disk(self::MASUK_LATAR_DISK);
+
+        foreach ([static::masukLatarGambarPath(), static::masukLatarVideoPath()] as $path) {
+            if ($path !== null && $disk->exists($path)) {
+                $disk->delete($path);
+            }
+        }
+
+        $bawaan = [
+            self::MASUK_LATAR_JENIS,
+            self::MASUK_LATAR_GAMBAR,
+            self::MASUK_LATAR_VIDEO,
+            self::MASUK_LATAR_YOUTUBE,
+            self::MASUK_JUDUL,
+            self::MASUK_DESKRIPSI,
+            self::MASUK_CATATAN_JUDUL,
+            self::MASUK_CATATAN,
+        ];
+
+        foreach ($bawaan as $kunci) {
+            static::set($kunci, self::DEFAULTS[$kunci]);
+        }
+    }
+
+    /**
+     * URL berkas halaman masuk pada disk publik, `null` bila path kosong atau berkasnya
+     * sudah tidak ada.
+     */
+    protected static function urlBerkasMasuk(?string $path): ?string
+    {
+        if ($path === null) {
+            return null;
+        }
+
+        $disk = Storage::disk(self::MASUK_LATAR_DISK);
 
         return $disk->exists($path) ? $disk->url($path) : null;
     }

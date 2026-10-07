@@ -3,9 +3,11 @@
 namespace App\Filament\Resources\VerifikasiLaporans;
 
 use App\Enums\EnumStatusRealisasi;
+use App\Enums\EnumStatusTahunKerja;
 use App\Filament\Resources\Concerns\HasResourceAuthorization;
 use App\Filament\Resources\Concerns\HasVerificationStageScopes;
 use App\Filament\Resources\RealisasiProgramKerjas\Schemas\RealisasiProgramKerjaInfolist;
+use App\Filament\Resources\VerifikasiLaporanLampaus\VerifikasiLaporanLampauResource;
 use App\Filament\Resources\VerifikasiLaporans\Pages\ListVerifikasiLaporans;
 use App\Filament\Resources\VerifikasiLaporans\Pages\ViewVerifikasiLaporan;
 use App\Filament\Resources\VerifikasiLaporans\Tables\VerifikasiLaporansTable;
@@ -81,6 +83,18 @@ class VerifikasiLaporanResource extends Resource
     public static function currentUserCanVerify(): bool
     {
         return static::currentUserCan(static::getPermissionName('verifikasi'));
+    }
+
+    /**
+     * Hak memverifikasi laporan realisasi ini. Laporan tahun Penutupan diverifikasi
+     * lewat menu Verifikasi Laporan Lampau dengan permission-nya sendiri, sedangkan
+     * laporan tahun lain memakai permission Verifikasi Laporan.
+     */
+    public static function currentUserCanVerifyRecord(RealisasiProgramKerja $record): bool
+    {
+        return $record->tahunKerja()?->status === EnumStatusTahunKerja::Penutupan
+            ? VerifikasiLaporanLampauResource::currentUserCanVerify()
+            : self::currentUserCanVerify();
     }
 
     public static function canCreate(): bool

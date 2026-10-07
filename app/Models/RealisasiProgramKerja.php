@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\EnumCaraPenyelesaianAnggaran;
 use App\Enums\EnumJenisDokumenRealisasi;
+use App\Enums\EnumJenisRealisasi;
 use App\Enums\EnumMetodePembayaran;
 use App\Enums\EnumStatusAnggaran;
 use App\Enums\EnumStatusPencairan;
@@ -48,6 +49,7 @@ class RealisasiProgramKerja extends Model
     protected $fillable = [
         'pengajuan_program_kerja_id',
         'name',
+        'jenis_realisasi',
         'description',
         'proposal_path',
         'proposal_original_names',
@@ -82,6 +84,17 @@ class RealisasiProgramKerja extends Model
         'laporan_diserahkan_at',
         'laporan_disetujui_at',
         'verifikator_laporan_id',
+        'dicatat_oleh_id',
+    ];
+
+    /**
+     * Realisasi baru berjenis beranggaran kecuali dinyatakan lain, sehingga instance
+     * yang belum tersimpan pun sudah punya jenis yang bisa dibaca tampilan.
+     *
+     * @var array<string, mixed>
+     */
+    protected $attributes = [
+        'jenis_realisasi' => EnumJenisRealisasi::Anggaran->value,
     ];
 
     protected function casts(): array
@@ -92,6 +105,7 @@ class RealisasiProgramKerja extends Model
             'anggaran_digunakan' => 'decimal:2',
             'nominal_diajukan' => 'decimal:2',
             'nominal_disetujui' => 'decimal:2',
+            'jenis_realisasi' => EnumJenisRealisasi::class,
             'status' => EnumStatusRealisasi::class,
             'urgensi' => EnumUrgensiRealisasi::class,
             'proposal_path' => 'array',
@@ -212,6 +226,16 @@ class RealisasiProgramKerja extends Model
     public function verifikatorLaporan(): BelongsTo
     {
         return $this->belongsTo(User::class, 'verifikator_laporan_id');
+    }
+
+    /**
+     * Pengguna yang mencatat capaian tanpa anggaran ini. Hanya terisi untuk realisasi
+     * berjenis {@see EnumJenisRealisasi::TanpaAnggaran}; realisasi beranggaran
+     * pengajunya diambil dari pengajuan program kerja induknya.
+     */
+    public function dicatatOleh(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'dicatat_oleh_id');
     }
 
     public function jadwalPencairan(): BelongsTo
@@ -395,12 +419,68 @@ class RealisasiProgramKerja extends Model
     }
 
     /**
+     * Capaian yang dicatat langsung dari Monitoring Program Kerja: tidak melewati
+     * verifikasi berjenjang maupun pencairan, sehingga seluruh tampilan bernuansa
+     * anggaran (besaran realisasi, persetujuan nominal, status penyerapan) tidak
+     * berlaku baginya.
+     */
+    public function adalahTanpaAnggaran(): bool
+    {
+        return $this->jenis_realisasi?->tanpaAnggaran() ?? false;
+    }
+
+    /**
+     * Tahapan yang dirender stepper untuk realisasi ini. Capaian tanpa anggaran hanya
+     * melewati tiga langkah, sehingga delapan tahap alur beranggaran tidak ditampilkan
+     * agar tidak terbaca seolah ada verifikasi dan pencairan yang terlewat.
+     *
+     * @return array<int, EnumTahapanRealisasi>
+     */
+    public function tahapanAlur(): array
+    {
+        if (! $this->adalahTanpaAnggaran()) {
+            return EnumTahapanRealisasi::flowCases();
+        }
+
+        return [
+            EnumTahapanRealisasi::Draf,
+            EnumTahapanRealisasi::Pelaksanaan,
+            EnumTahapanRealisasi::Selesai,
+        ];
+    }
+
+    /**
+     * Judul sebuah tahapan pada stepper, disesuaikan untuk capaian tanpa anggaran yang
+     * memaknai tahapan yang sama secara berbeda.
+     */
+    public function labelTahapan(EnumTahapanRealisasi $tahapan): string
+    {
+        if (! $this->adalahTanpaAnggaran()) {
+            return $tahapan->getLabel();
+        }
+
+        return match ($tahapan) {
+            EnumTahapanRealisasi::Draf => 'Pencatatan Capaian',
+            EnumTahapanRealisasi::Pelaksanaan => 'Laporan Diunggah',
+            default => $tahapan->getLabel(),
+        };
+    }
+
+    /**
      * Keterangan sebuah tahapan pada stepper. Tahap pencairan diperjelas dengan
      * tanggal anggaran benar-benar diserahkan bila sudah cair, agar terlihat kapan
      * unit kerja menerima dananya.
      */
     public function deskripsiTahapan(EnumTahapanRealisasi $tahapan): string
     {
+        if ($this->adalahTanpaAnggaran()) {
+            return match ($tahapan) {
+                EnumTahapanRealisasi::Draf => 'Capaian dicatat langsung dari halaman Monitoring Program Kerja.',
+                EnumTahapanRealisasi::Pelaksanaan => 'Laporan pelaksanaan kegiatan diunggah sebagai bukti capaian.',
+                default => 'Ketercapaian target tercatat tanpa penggunaan anggaran.',
+            };
+        }
+
         if ($tahapan === EnumTahapanRealisasi::Pencairan && $this->dicairkan_at !== null) {
             return 'Anggaran dicairkan pada '.$this->dicairkan_at->locale('id')->translatedFormat('d F Y').'.';
         }
@@ -882,13 +962,21 @@ class RealisasiProgramKerja extends Model
      * Realisasi milik satu unit kerja yang masih berjalan (sudah diajukan, belum
      * selesai/ditolak). Realisasi yang selesai membebaskan kembali kuotanya.
      *
+     * Realisasi milik tahun kerja yang sudah Selesai tidak dihitung: tahun itu hanya
+     * bisa dibaca, sehingga sisa realisasinya tidak mungkin dituntaskan dan tidak
+     * boleh menyandera kuota selamanya.
+     *
      * @return Builder<self>
      */
     public static function berjalanUntukUnit(int $unitKerjaId): Builder
     {
         return static::query()
             ->whereIn('status', array_column(EnumStatusRealisasi::berjalan(), 'value'))
-            ->whereHas('pengajuanProgramKerja', fn (Builder $query) => $query->where('unit_kerja_id', $unitKerjaId));
+            ->whereHas('pengajuanProgramKerja', fn (Builder $query) => $query->where('unit_kerja_id', $unitKerjaId))
+            ->whereDoesntHave(
+                'pengajuanProgramKerja.penawaranProgramKerja.tahunKerja',
+                fn (Builder $query): Builder => $query->where('status', EnumStatusTahunKerja::Selesai->value),
+            );
     }
 
     /**
@@ -902,8 +990,10 @@ class RealisasiProgramKerja extends Model
 
     /**
      * Realisasi unit kerja ini yang masih berjalan padahal tahun kerjanya sudah
-     * tidak berjalan lagi. Tunggakan seperti ini harus dituntaskan lebih dulu
-     * sebelum unit kerja boleh mengajukan realisasi pada tahun kerja yang baru.
+     * masuk Penutupan — tahun tepat sebelum tahun berjalan. Tunggakan seperti ini
+     * dituntaskan lewat Penyelesaian Tahun Lalu, dan (bila diaktifkan di Pengaturan
+     * Sistem) menahan pengajuan realisasi tahun kerja yang baru. Tahun yang lebih
+     * lama dan sudah Selesai tidak lagi dihitung.
      *
      * @return Builder<self>
      */
@@ -911,7 +1001,7 @@ class RealisasiProgramKerja extends Model
     {
         return static::berjalanUntukUnit($unitKerjaId)->whereHas(
             'pengajuanProgramKerja.penawaranProgramKerja.tahunKerja',
-            fn (Builder $query): Builder => $query->where('status', '!=', EnumStatusTahunKerja::Berjalan->value),
+            fn (Builder $query): Builder => $query->where('status', EnumStatusTahunKerja::Penutupan->value),
         );
     }
 
@@ -973,8 +1063,8 @@ class RealisasiProgramKerja extends Model
 
     /**
      * Realisasi ini boleh diajukan bila tahun kerjanya masih menerima pengajuannya,
-     * unit kerjanya tidak menunggak realisasi tahun sebelumnya, dan kuota realisasi
-     * berjalannya belum habis. Perbaikan revisi hanya diuji pada syarat pertama:
+     * unit kerjanya tidak menunggak realisasi tahun sebelumnya (selama aturan itu
+     * diaktifkan di Pengaturan Sistem), dan kuota realisasi berjalannya belum habis. Perbaikan revisi hanya diuji pada syarat pertama:
      * kuotanya sudah terpakai sejak pengajuan pertama, dan justru realisasi inilah
      * tunggakan yang sedang dituntaskan.
      */
@@ -994,7 +1084,7 @@ class RealisasiProgramKerja extends Model
             return true;
         }
 
-        if (static::tunggakanTahunLampau($unitKerjaId)->whereKeyNot($this->getKey())->exists()) {
+        if (Setting::blokirTunggakanTahunLalu() && static::tunggakanTahunLampau($unitKerjaId)->whereKeyNot($this->getKey())->exists()) {
             return false;
         }
 

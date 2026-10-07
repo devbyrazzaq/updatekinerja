@@ -45,11 +45,12 @@ new class extends Component
             <x-slot name="trigger">
                 <button
                     type="button"
+                    x-bind:class="$store.sidebar.isOpen ? '' : 'justify-center'"
                     class="flex w-full items-center gap-2 rounded-lg bg-gray-50 px-2.5 py-2 text-sm font-medium text-gray-700 ring-1 ring-gray-950/10 transition hover:bg-gray-100 dark:bg-white/5 dark:text-gray-200 dark:ring-white/20 dark:hover:bg-white/10"
                 >
                     <x-filament::icon icon="heroicon-m-building-office-2" class="h-5 w-5 shrink-0 text-gray-400 dark:text-gray-500" />
-                    <span class="min-w-0 flex-1 truncate text-start">{{ $this->opsi[$unitKerjaId] ?? 'Pilih Unit Kerja' }}</span>
-                    <x-filament::icon icon="heroicon-m-chevron-up-down" class="h-5 w-5 shrink-0 text-gray-400 dark:text-gray-500" />
+                    <span x-show="$store.sidebar.isOpen" class="min-w-0 flex-1 truncate text-start">{{ $this->opsi[$unitKerjaId] ?? 'Pilih Unit Kerja' }}</span>
+                    <x-filament::icon x-show="$store.sidebar.isOpen" icon="heroicon-m-chevron-up-down" class="h-5 w-5 shrink-0 text-gray-400 dark:text-gray-500" />
                 </button>
             </x-slot>
 

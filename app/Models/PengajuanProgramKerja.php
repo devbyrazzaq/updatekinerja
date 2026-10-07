@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\EnumStatusPengajuan;
 use Database\Factories\PengajuanProgramKerjaFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -88,6 +89,28 @@ class PengajuanProgramKerja extends Model
     public function logs(): HasMany
     {
         return $this->hasMany(PengajuanProgramKerjaLog::class);
+    }
+
+    /**
+     * Pengajuan yang capaiannya boleh dicatat: pengajuannya sudah diterima, program
+     * kerja induknya berada pada tahun kerja yang dipantau, dan unit kerjanya termasuk
+     * cakupan data yang boleh diakses pengguna.
+     *
+     * Dipakai bersama oleh aksi Catat Capaian, impor capaian, dan lembar referensi
+     * kode pada berkas templatenya, supaya ketiganya tidak pernah berbeda pendapat
+     * soal program kerja mana yang tersedia.
+     *
+     * @param  Builder<static>  $query
+     * @param  array<int, int>  $unitKerjaIds  Kosong berarti tidak ada satu pun yang lolos.
+     * @return Builder<static>
+     */
+    public function scopeDapatDicatatCapaiannya(Builder $query, ?int $tahunKerjaId, array $unitKerjaIds): Builder
+    {
+        return $query
+            ->where('status', EnumStatusPengajuan::Diterima->value)
+            ->whereIn('unit_kerja_id', array_values(array_unique(array_map('intval', $unitKerjaIds))))
+            ->whereHas('penawaranProgramKerja', fn (Builder $penawaran): Builder => $penawaran
+                ->where('tahun_kerja_id', $tahunKerjaId));
     }
 
     /**

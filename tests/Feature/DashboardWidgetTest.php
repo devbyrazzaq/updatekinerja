@@ -5,11 +5,17 @@ namespace Tests\Feature;
 use App\Enums\EnumStatusPengajuan;
 use App\Enums\EnumStatusRealisasi;
 use App\Enums\EnumStatusTahunKerja;
-use App\Filament\Widgets\AntreanTugasWidget;
+use App\Filament\Widgets\AksiCepatWidget;
+use App\Filament\Widgets\MenungguKeputusanWidget;
 use App\Filament\Widgets\PenyerapanBulananWidget;
+use App\Filament\Widgets\PeriodeBerjalanWidget;
+use App\Filament\Widgets\PerluTindakLanjutWidget;
 use App\Filament\Widgets\PintasanMenuWidget;
 use App\Filament\Widgets\RingkasanAnggaranWidget;
+use App\Filament\Widgets\RingkasanProgramKerjaWidget;
+use App\Filament\Widgets\SisaWaktuTahunKerjaWidget;
 use App\Filament\Widgets\StatusRealisasiWidget;
+use App\Filament\Widgets\TentangSistemWidget;
 use App\Models\Bidang;
 use App\Models\Kategori;
 use App\Models\PaguAnggaran;
@@ -18,6 +24,7 @@ use App\Models\PengajuanProgramKerja;
 use App\Models\Periode;
 use App\Models\Program;
 use App\Models\RealisasiProgramKerja;
+use App\Models\Setting;
 use App\Models\TahunKerja;
 use App\Models\UnitKerja;
 use App\Models\User;
@@ -30,8 +37,8 @@ use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
 
 /**
- * Widget dashboard: ringkasan anggaran tahun berjalan, daftar tugas yang menunggu,
- * pintasan menu, dan grafik penyerapan serta status realisasi.
+ * Widget dashboard: kartu tentang sistem, ringkasan anggaran tahun berjalan, dua daftar
+ * tugas yang menunggu, pintasan menu, dan grafik penyerapan serta status realisasi.
  *
  * Cakupan seluruh widget mengikuti tahun kerja berjalan dan unit kerja yang boleh
  * diakses pengguna — tanpa penyaring, karena dashboard tidak punya form.
@@ -80,11 +87,33 @@ class DashboardWidgetTest extends TestCase
 
         $this->get('/app')
             ->assertOk()
+            ->assertSeeLivewire(TentangSistemWidget::class)
+            ->assertSeeLivewire(PeriodeBerjalanWidget::class)
+            ->assertSeeLivewire(SisaWaktuTahunKerjaWidget::class)
             ->assertSeeLivewire(RingkasanAnggaranWidget::class)
-            ->assertSeeLivewire(AntreanTugasWidget::class)
+            ->assertSeeLivewire(RingkasanProgramKerjaWidget::class)
+            ->assertSeeLivewire(AksiCepatWidget::class)
+            ->assertSeeLivewire(MenungguKeputusanWidget::class)
+            ->assertSeeLivewire(PerluTindakLanjutWidget::class)
             ->assertSeeLivewire(PintasanMenuWidget::class)
             ->assertSeeLivewire(PenyerapanBulananWidget::class)
             ->assertSeeLivewire(StatusRealisasiWidget::class);
+    }
+
+    public function test_tentang_sistem_membaca_identitas_aplikasi(): void
+    {
+        Livewire::test(TentangSistemWidget::class)
+            ->assertOk()
+            ->assertSee('SIM KINERJA')
+            ->assertSee('Universitas Muhammadiyah Lamongan');
+
+        Setting::set(Setting::BRAND_NAMA, 'SIM ANGGARAN');
+        Setting::set(Setting::BRAND_INSTANSI, 'Universitas Contoh');
+
+        Livewire::test(TentangSistemWidget::class)
+            ->assertOk()
+            ->assertSee('SIM ANGGARAN')
+            ->assertSee('Universitas Contoh');
     }
 
     public function test_ringkasan_anggaran_membaca_tahun_kerja_berjalan(): void
@@ -132,7 +161,7 @@ class DashboardWidgetTest extends TestCase
         $pengajuan = $this->seedPengajuan($this->unitA, 10_000_000, EnumStatusPengajuan::Diterima);
         $this->seedRealisasi($pengajuan, 4_000_000, EnumStatusRealisasi::Diajukan);
 
-        $baris = $this->barisTugas('Menunggu Keputusan Anda');
+        $baris = $this->barisTugas(new MenungguKeputusanWidget);
 
         $this->assertSame(1, $baris['Verifikasi Rektor']['jumlah'] ?? null);
         $this->assertStringContainsString(
@@ -140,7 +169,7 @@ class DashboardWidgetTest extends TestCase
             $baris['Verifikasi Rektor']['keterangan'],
         );
 
-        Livewire::test(AntreanTugasWidget::class)
+        Livewire::test(MenungguKeputusanWidget::class)
             ->assertOk()
             ->assertSee('Menunggu Keputusan Anda')
             ->assertSee('Verifikasi Rektor');
@@ -155,11 +184,16 @@ class DashboardWidgetTest extends TestCase
             'dicairkan_at' => Carbon::create(2026, 3, 1),
         ]);
 
-        $baris = $this->barisTugas('Perlu Ditindaklanjuti');
+        $baris = $this->barisTugas(new PerluTindakLanjutWidget);
 
         $this->assertSame(1, $baris['Pengajuan Perlu Revisi']['jumlah'] ?? null);
         $this->assertSame(1, $baris['Realisasi Perlu Revisi']['jumlah'] ?? null);
         $this->assertSame(1, $baris['Laporan Realisasi Belum Dikirim']['jumlah'] ?? null);
+
+        Livewire::test(PerluTindakLanjutWidget::class)
+            ->assertOk()
+            ->assertSee('Perlu Ditindaklanjuti')
+            ->assertSee('Pengajuan Perlu Revisi');
     }
 
     public function test_antrean_tugas_menyembunyikan_menu_yang_tidak_boleh_dibuka(): void
@@ -172,14 +206,158 @@ class DashboardWidgetTest extends TestCase
 
         $this->actingAs(User::factory()->create(['unit_kerja_id' => $this->unitA->id]));
 
-        $this->assertArrayNotHasKey('Verifikasi Rektor', $this->barisTugas('Menunggu Keputusan Anda'));
+        $this->assertArrayNotHasKey('Verifikasi Rektor', $this->barisTugas(new MenungguKeputusanWidget));
     }
 
     public function test_antrean_tugas_kosong_ketika_tidak_ada_yang_menunggu(): void
     {
-        Livewire::test(AntreanTugasWidget::class)
+        Livewire::test(MenungguKeputusanWidget::class)
             ->assertOk()
-            ->assertSee('Tidak ada tugas yang menunggu');
+            ->assertSee('Tidak ada berkas yang menunggu keputusan');
+
+        Livewire::test(PerluTindakLanjutWidget::class)
+            ->assertOk()
+            ->assertSee('Tidak ada berkas yang perlu ditindaklanjuti');
+    }
+
+    public function test_periode_berjalan_membaca_periode_tahun_kerja_berjalan(): void
+    {
+        Livewire::test(PeriodeBerjalanWidget::class)
+            ->assertOk()
+            ->assertSee('Periode Berjalan')
+            ->assertSee('P1')
+            ->assertSee('TA 2026')
+            ->assertSee('01 Januari 2026 — 31 Desember 2026');
+    }
+
+    public function test_periode_berjalan_kosong_tanpa_tahun_kerja_berjalan(): void
+    {
+        $this->tahunKerja->update(['status' => EnumStatusTahunKerja::Selesai]);
+
+        Livewire::test(PeriodeBerjalanWidget::class)
+            ->assertOk()
+            ->assertSee('Belum ada periode berjalan');
+    }
+
+    public function test_sisa_waktu_menghitung_mundur_akhir_tahun_kerja(): void
+    {
+        Carbon::setTestNow(Carbon::create(2026, 12, 1, 8));
+
+        $widget = new SisaWaktuTahunKerjaWidget;
+
+        $this->assertSame(30, $widget->sisaHari());
+        $this->assertSame('warning', $widget->warna());
+
+        Livewire::test(SisaWaktuTahunKerjaWidget::class)
+            ->assertOk()
+            ->assertSee('30 hari lagi')
+            ->assertSee('31 Desember 2026');
+
+        Carbon::setTestNow();
+    }
+
+    public function test_sisa_waktu_menandai_tahun_kerja_yang_sudah_terlampaui(): void
+    {
+        Carbon::setTestNow(Carbon::create(2027, 1, 15, 8));
+
+        $widget = new SisaWaktuTahunKerjaWidget;
+
+        $this->assertLessThan(0, $widget->sisaHari());
+        $this->assertSame('danger', $widget->warna());
+        $this->assertSame('Sudah terlampaui', $widget->sisaWaktu());
+
+        Carbon::setTestNow();
+    }
+
+    public function test_ringkasan_program_kerja_menghitung_berkas_tahun_berjalan(): void
+    {
+        $pengajuan = $this->seedPengajuan($this->unitA, 10_000_000, EnumStatusPengajuan::Diterima);
+
+        $this->seedRealisasi($pengajuan, 4_000_000, EnumStatusRealisasi::Diajukan);
+        $this->seedRealisasi($pengajuan, 3_000_000, EnumStatusRealisasi::Selesai, [
+            'nominal_disetujui' => 3_000_000,
+            'dicairkan_at' => Carbon::create(2026, 3, 1),
+        ]);
+
+        Livewire::test(RingkasanProgramKerjaWidget::class)
+            ->assertOk()
+            ->assertSee('Total Program Kerja')
+            ->assertSee('Total Pengajuan')
+            ->assertSee('Total Realisasi')
+            ->assertSee('Realisasi Selesai')
+            ->assertSee('1 realisasi masih berjalan')
+            ->assertSee('50,0% dari seluruh realisasi');
+    }
+
+    public function test_ringkasan_program_kerja_mengabaikan_unit_di_luar_cakupan(): void
+    {
+        $this->seedPengajuan($this->unitA, 10_000_000, EnumStatusPengajuan::Diterima);
+        $this->seedPengajuan($this->unitB, 10_000_000, EnumStatusPengajuan::Diterima);
+
+        $this->actingAs(User::factory()->create(['unit_kerja_id' => $this->unitA->id]));
+
+        $widget = new RingkasanProgramKerjaWidget;
+        $jumlahPengajuan = new ReflectionMethod($widget, 'jumlahPengajuan');
+
+        $this->assertSame(1, $jumlahPengajuan->invoke($widget, null));
+    }
+
+    public function test_aksi_cepat_menawarkan_pintasan_pembuatan_berkas(): void
+    {
+        $kartu = collect((new AksiCepatWidget)->aksiCepat());
+
+        $this->assertSame([
+            'Buat Pengajuan Program Kerja',
+            'Buat Realisasi Program Kerja',
+            'Catat Pemasukan Unit',
+            'Catat Capaian Program',
+        ], $kartu->pluck('label')->all());
+
+        // Kartunya membuka modal aksi, bukan berpindah halaman.
+        $this->assertSame("mountAction('buatPengajuan')", $kartu->firstWhere('label', 'Buat Pengajuan Program Kerja')['pemicu']);
+
+        Livewire::test(AksiCepatWidget::class)
+            ->assertOk()
+            ->assertSee('Aksi Cepat')
+            ->assertSee('Buat Realisasi Program Kerja');
+    }
+
+    /**
+     * Modal tiap aksi cepat memakai form Resource yang utuh, jadi yang diuji di sini
+     * modalnya benar-benar dapat dirakit — kesalahan skema akan terlihat sejak dipasang.
+     */
+    public function test_setiap_aksi_cepat_dapat_membuka_modalnya(): void
+    {
+        $this->seedPagu($this->unitA, 20_000_000);
+        $this->seedPengajuan($this->unitA, 10_000_000, EnumStatusPengajuan::Diterima);
+
+        foreach (['buatPengajuan', 'buatRealisasi', 'catatPemasukan', 'catatCapaian'] as $aksi) {
+            Livewire::test(AksiCepatWidget::class)
+                ->call('mountAction', $aksi)
+                ->assertOk()
+                ->assertHasNoErrors();
+        }
+    }
+
+    public function test_aksi_cepat_menyembunyikan_aksi_yang_tidak_boleh_dibuat(): void
+    {
+        Permission::findOrCreate('create_realisasi_program_kerja', 'web');
+        Permission::findOrCreate('update_capaian_monitoring_program_kerja', 'web');
+
+        $this->actingAs(User::factory()->create(['unit_kerja_id' => $this->unitA->id]));
+
+        $label = collect((new AksiCepatWidget)->aksiCepat())->pluck('label')->all();
+
+        $this->assertNotContains('Buat Realisasi Program Kerja', $label);
+        $this->assertNotContains('Catat Capaian Program', $label);
+    }
+
+    public function test_warna_status_realisasi_tidak_ada_yang_kembar(): void
+    {
+        $warna = collect(EnumStatusRealisasi::cases())
+            ->map(fn (EnumStatusRealisasi $status): string => $status->getColor());
+
+        $this->assertCount($warna->count(), $warna->unique());
     }
 
     public function test_pintasan_menu_mengikuti_hak_akses_pengguna(): void
@@ -249,7 +427,13 @@ class DashboardWidgetTest extends TestCase
             ->all();
 
         $this->assertContains('view_widget_ringkasan_anggaran', $dashboard);
-        $this->assertContains('view_widget_antrean_tugas', $dashboard);
+        $this->assertContains('view_widget_menunggu_keputusan', $dashboard);
+        $this->assertContains('view_widget_perlu_tindak_lanjut', $dashboard);
+        $this->assertContains('view_widget_tentang_sistem', $dashboard);
+        $this->assertContains('view_widget_periode_berjalan', $dashboard);
+        $this->assertContains('view_widget_sisa_waktu_tahun_kerja', $dashboard);
+        $this->assertContains('view_widget_ringkasan_program_kerja', $dashboard);
+        $this->assertContains('view_widget_aksi_cepat', $dashboard);
         $this->assertContains('view_widget_pintasan_menu', $dashboard);
         $this->assertContains('view_widget_penyerapan_bulanan', $dashboard);
         $this->assertContains('view_widget_status_realisasi', $dashboard);
@@ -282,15 +466,14 @@ class DashboardWidgetTest extends TestCase
     }
 
     /**
-     * Baris satu kelompok tugas, dikunci menurut labelnya agar mudah diperiksa.
+     * Baris tugas sebuah widget, dikunci menurut labelnya agar mudah diperiksa.
      *
+     * @param  MenungguKeputusanWidget|PerluTindakLanjutWidget  $widget
      * @return array<string, array<string, mixed>>
      */
-    private function barisTugas(string $judul): array
+    private function barisTugas(object $widget): array
     {
-        $kelompok = collect((new AntreanTugasWidget)->kelompokTugas())->firstWhere('judul', $judul);
-
-        return collect($kelompok['baris'] ?? [])->keyBy('label')->all();
+        return collect($widget->barisTugas())->keyBy('label')->all();
     }
 
     /**

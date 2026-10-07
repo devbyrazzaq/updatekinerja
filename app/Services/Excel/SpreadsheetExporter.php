@@ -58,12 +58,12 @@ class SpreadsheetExporter
     /**
      * Tulis berkas .xlsx ke path tertentu. Dipisah dari {@see download()} agar bisa
      * dipakai langsung (mis. dalam pengujian) tanpa merakit respons HTTP.
+     *
+     * Lembar utama ditulis lebih dahulu, disusul {@see Export::additionalSheets()}
+     * bila ada — urutan itu penting karena impor balik hanya membaca lembar pertama.
      */
     public function write(Export $export, string $path): void
     {
-        $columns = $export->columns();
-        $columnCount = max(count($columns), 1);
-
         $options = new Options;
         $options->DEFAULT_ROW_STYLE = (new Style)
             ->setFontName(ExportTheme::FONT)
@@ -74,10 +74,34 @@ class SpreadsheetExporter
         $writer->setCreator(Setting::brandNama());
         $writer->openToFile($path);
 
-        $sheet = $writer->getCurrentSheet();
-        $sheet->setName($this->sheetName($export));
+        $namesUsed = [];
 
-        $this->writeDocumentHeader($writer, $options, $export, $columnCount);
+        foreach ([$export, ...$export->additionalSheets()] as $index => $sheetExport) {
+            if ($index > 0) {
+                $writer->addNewSheetAndMakeItCurrent();
+            }
+
+            $this->writeSheet($writer, $options, $sheetExport, $index, $namesUsed);
+        }
+
+        $writer->close();
+    }
+
+    /**
+     * Tulis satu lembar utuh: blok kepala dokumen, kepala tabel dua tingkat, baris
+     * data, lalu lebar kolom dan pembekuan barisnya.
+     *
+     * @param  list<string>  $namesUsed  Nama lembar yang sudah terpakai pada berkas ini.
+     */
+    protected function writeSheet(Writer $writer, Options $options, Export $export, int $sheetIndex, array &$namesUsed): void
+    {
+        $columns = $export->columns();
+        $columnCount = max(count($columns), 1);
+
+        $sheet = $writer->getCurrentSheet();
+        $sheet->setName($this->sheetName($export, $namesUsed));
+
+        $this->writeDocumentHeader($writer, $options, $export, $columnCount, $sheetIndex);
         $this->writeTableHeader($writer, $columns);
 
         $widths = $this->initialWidths($columns);
@@ -85,8 +109,6 @@ class SpreadsheetExporter
 
         $this->applyColumnWidths($sheet, $widths);
         $this->applySheetView($sheet, $columnCount, $rowCount);
-
-        $writer->close();
     }
 
     /**
@@ -94,7 +116,7 @@ class SpreadsheetExporter
      *
      * @param  positive-int  $columnCount
      */
-    protected function writeDocumentHeader(Writer $writer, Options $options, Export $export, int $columnCount): void
+    protected function writeDocumentHeader(Writer $writer, Options $options, Export $export, int $columnCount, int $sheetIndex = 0): void
     {
         $lastColumnIndex = $columnCount - 1;
         $rowNumber = 1;
@@ -111,13 +133,13 @@ class SpreadsheetExporter
 
         foreach ($lines as [$text, $style]) {
             $writer->addRow($this->mergedRow($text, $style, $columnCount));
-            $options->mergeCells(0, $rowNumber, $lastColumnIndex, $rowNumber);
+            $options->mergeCells(0, $rowNumber, $lastColumnIndex, $rowNumber, $sheetIndex);
             $rowNumber++;
         }
 
         // Garis aksen: satu baris pendek berlatar emas sebagai penutup blok kepala.
         $writer->addRow($this->mergedRow('', $this->accentStyle(), $columnCount)->setHeight(6));
-        $options->mergeCells(0, $rowNumber, $lastColumnIndex, $rowNumber);
+        $options->mergeCells(0, $rowNumber, $lastColumnIndex, $rowNumber, $sheetIndex);
         $rowNumber++;
 
         $writer->addRow(Row::fromValues([''])->setHeight(6));
@@ -344,10 +366,31 @@ class SpreadsheetExporter
             .' · '.count($export->headings()).' kolom';
     }
 
-    protected function sheetName(Export $export): string
+    /**
+     * Nama lembar yang aman bagi Excel: maksimal 31 karakter, tanpa tanda baca
+     * terlarang, dan unik dalam satu berkas — openspout menolak nama kembar.
+     *
+     * @param  list<string>  $namesUsed
+     */
+    protected function sheetName(Export $export, array &$namesUsed = []): string
     {
-        // Excel membatasi nama sheet 31 karakter dan melarang beberapa tanda baca.
-        return mb_substr(preg_replace('/[\\\\\/\?\*\[\]:]/', '', $export->title()) ?? 'Data', 0, 31);
+        $name = trim(mb_substr(preg_replace('/[\\\\\/\?\*\[\]:]/', '', $export->title()) ?? 'Data', 0, 31));
+
+        if ($name === '') {
+            $name = 'Data';
+        }
+
+        $unique = $name;
+        $suffix = 2;
+
+        while (in_array($unique, $namesUsed, true)) {
+            $penanda = ' ('.$suffix++.')';
+            $unique = mb_substr($name, 0, 31 - mb_strlen($penanda)).$penanda;
+        }
+
+        $namesUsed[] = $unique;
+
+        return $unique;
     }
 
     /**

@@ -8,7 +8,9 @@ use Closure;
 use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
 use Filament\Notifications\Notification;
+use Filament\Schemas\Components\Component;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Arr;
 use Illuminate\Validation\ValidationException;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
@@ -31,6 +33,16 @@ class ExcelImportAction extends AuthorizedAction
      * @var array<int, mixed>|Closure
      */
     protected array|Closure $formFields = [];
+
+    /**
+     * Konteks tetap yang tidak diisikan pengguna, mis. cakupan tahun kerja dan unit
+     * kerja yang sedang dibaca halaman pemanggilnya. Nilainya dipakai baik saat
+     * mengunduh template maupun saat berkasnya diimpor, sehingga daftar referensi di
+     * berkas template selalu sama dengan yang diterima saat impor.
+     *
+     * @var array<string, mixed>|Closure
+     */
+    protected array|Closure $importerContext = [];
 
     public static function getDefaultName(): ?string
     {
@@ -60,6 +72,18 @@ class ExcelImportAction extends AuthorizedAction
         return $this;
     }
 
+    /**
+     * Konteks tetap dari halaman pemanggil (lihat {@see $importerContext}).
+     *
+     * @param  array<string, mixed>|Closure  $context
+     */
+    public function importerContext(array|Closure $context): static
+    {
+        $this->importerContext = $context;
+
+        return $this;
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -80,7 +104,13 @@ class ExcelImportAction extends AuthorizedAction
                         ->label('Unduh Template')
                         ->icon(Heroicon::ArrowDownTray)
                         ->color('primary')
-                        ->action(fn () => app($this->importer)->downloadTemplate()),
+                        // Isian form modal ikut dibawa, sehingga pilihan yang mengubah
+                        // bentuk template — mis. sumber lembar referensi — sudah berlaku
+                        // pada berkas yang diunduh. Field yang menentukannya perlu
+                        // `->live()` agar nilainya sudah tersimpan saat tombol ditekan.
+                        ->action(fn (Component $component) => app($this->importer)
+                            ->withContext([...$this->getImporterContext(), ...$this->getFormState($component)])
+                            ->downloadTemplate()),
                 )
                 ->helperText('Format .xlsx atau .csv. Baris pertama harus berupa nama kolom.')
                 ->acceptedFileTypes([
@@ -120,6 +150,29 @@ class ExcelImportAction extends AuthorizedAction
     }
 
     /**
+     * Isian form modal impor ini, tanpa berkas unggahannya. Dibaca dari container milik
+     * field berkas — bukan dari aksi yang sedang di-mount — karena tombol "Unduh
+     * Template" sendiri adalah aksi bersarang, sehingga aksi terakhir yang di-mount
+     * justru tombol itu dan datanya kosong.
+     *
+     * @return array<string, mixed>
+     */
+    protected function getFormState(Component $component): array
+    {
+        $state = $component->getContainer()->getRawState();
+
+        return Arr::except($state instanceof Arrayable ? $state->toArray() : $state, 'file');
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    protected function getImporterContext(): array
+    {
+        return $this->evaluate($this->importerContext) ?? [];
+    }
+
+    /**
      * @param  array<string, mixed>  $context
      */
     protected function runImport(TemporaryUploadedFile $file, array $context): ImportResult
@@ -130,7 +183,9 @@ class ExcelImportAction extends AuthorizedAction
 
         try {
             return app($this->importer)
-                ->withContext($context)
+                // Konteks dari form modal boleh menimpa konteks tetap halaman, bukan
+                // sebaliknya, supaya field tambahan tetap punya kata akhir.
+                ->withContext([...$this->getImporterContext(), ...$context])
                 ->import($path);
         } finally {
             @unlink($path);
@@ -154,6 +209,19 @@ class ExcelImportAction extends AuthorizedAction
 
     protected function notifyResult(ImportResult $result): void
     {
+        // Catatan tidak membatalkan apa pun, tetapi harus terbaca: barisnya tersimpan
+        // justru dengan keadaan yang perlu diketahui pengimpor.
+        if ($result->hasWarnings()) {
+            Notification::make()
+                ->title('Impor selesai dengan catatan')
+                ->body("{$result->imported} baris berhasil diimpor. ".implode(' ', $result->warnings))
+                ->warning()
+                ->persistent()
+                ->send();
+
+            return;
+        }
+
         Notification::make()
             ->title('Impor selesai')
             ->body("{$result->imported} baris berhasil diimpor.")

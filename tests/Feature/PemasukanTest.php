@@ -3,12 +3,14 @@
 namespace Tests\Feature;
 
 use App\Enums\EnumJenisWaktuPemasukan;
+use App\Enums\EnumStatusPemasukan;
 use App\Enums\EnumStatusPengajuan;
 use App\Enums\EnumStatusRealisasi;
 use App\Enums\EnumStatusTahunKerja;
 use App\Enums\EnumSumberPemasukan;
 use App\Filament\Resources\Pemasukans\Pages\CreatePemasukan;
 use App\Filament\Resources\Pemasukans\Pages\ListPemasukans;
+use App\Filament\Resources\Pemasukans\Widgets\PemasukanHarianChart;
 use App\Filament\Resources\Pemasukans\Widgets\PemasukanOverview;
 use App\Models\Bidang;
 use App\Models\Kategori;
@@ -239,6 +241,47 @@ class PemasukanTest extends TestCase
     /**
      * Cakupan satu unit langsung disebut namanya; gabungan unit menyebut daftarnya.
      */
+    /**
+     * Grafik menumpuk nominal valid dan dalam verifikasi per tanggal pelaksanaan,
+     * hanya dalam rentang periode aktif dan unit kerja yang tercakup.
+     */
+    public function test_chart_groups_pemasukan_per_date_within_active_periode(): void
+    {
+        ['unit' => $unit] = $this->seedProgramKerja();
+        $unitLain = UnitKerja::create(['name' => 'Unit B']);
+
+        Periode::create([
+            'name' => 'Periode Aktif',
+            'start_datetime' => '2026-01-01',
+            'end_datetime' => '2026-12-31',
+            'is_active' => true,
+        ]);
+
+        $pemasukan = fn (array $atribut): Pemasukan => Pemasukan::factory()->create([
+            'unit_kerja_id' => $unit->id,
+            ...$atribut,
+        ]);
+
+        $pemasukan(['tanggal_pelaksanaan' => '2026-03-04', 'nominal_pendapatan' => 1000000, 'status' => EnumStatusPemasukan::Valid]);
+        $pemasukan(['tanggal_pelaksanaan' => '2026-03-04', 'nominal_pendapatan' => 500000, 'status' => EnumStatusPemasukan::Valid]);
+        $pemasukan(['tanggal_pelaksanaan' => '2026-03-04', 'nominal_pendapatan' => 250000, 'status' => EnumStatusPemasukan::Diajukan]);
+        $pemasukan(['tanggal_pelaksanaan' => '2026-05-19', 'nominal_pendapatan' => 2000000, 'status' => EnumStatusPemasukan::VerifikasiKeuangan]);
+        $pemasukan(['tanggal_pelaksanaan' => '2026-06-01', 'nominal_pendapatan' => 9000000, 'status' => EnumStatusPemasukan::Draft]);
+        $pemasukan(['tanggal_pelaksanaan' => '2026-06-02', 'nominal_pendapatan' => 9000000, 'status' => EnumStatusPemasukan::Ditolak]);
+        $pemasukan(['tanggal_pelaksanaan' => '2025-12-31', 'nominal_pendapatan' => 9000000, 'status' => EnumStatusPemasukan::Valid]);
+        $pemasukan(['tanggal_pelaksanaan' => '2026-03-04', 'nominal_pendapatan' => 9000000, 'status' => EnumStatusPemasukan::Valid, 'unit_kerja_id' => $unitLain->id]);
+
+        $widget = Livewire::test(PemasukanHarianChart::class, ['unitKerjaId' => null])
+            ->assertOk()
+            ->assertSee('Periode Aktif')
+            ->instance();
+        $data = (new \ReflectionMethod($widget, 'getData'))->invoke($widget);
+
+        $this->assertSame(['04 Mar 2026', '19 Mei 2026'], $data['labels']);
+        $this->assertSame([1500000.0, 0.0], $data['datasets'][0]['data']);
+        $this->assertSame([250000.0, 2000000.0], $data['datasets'][1]['data']);
+    }
+
     public function test_widget_names_the_covered_units(): void
     {
         ['unit' => $unit] = $this->seedProgramKerja();

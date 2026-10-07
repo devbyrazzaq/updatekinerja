@@ -6,6 +6,7 @@ use App\Filament\Actions\AuthorizedEditAction;
 use App\Filament\Actions\AuthorizedViewAction;
 use App\Filament\Actions\CaptchaDeleteAction;
 use App\Filament\Actions\CaptchaDeleteBulkAction;
+use App\Models\AcuanTarget;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
 use Filament\Tables\Columns\TextColumn;
@@ -23,6 +24,12 @@ class PenawaranProgramKerjasTable
             ->emptyStateDescription('Klik tombol tambah di kanan atas untuk menambahkan penawaran program kerja baru.')
             ->emptyStateIcon('heroicon-o-document-check')
             ->columns([
+                TextColumn::make('unitKerja.name')
+                    ->label('Unit Kerja')
+                    ->searchable()
+                    ->sortable()
+                    ->extraHeaderAttributes(['class' => 'kolom-lekat'])
+                    ->extraCellAttributes(['class' => 'kolom-lekat']),
                 TextColumn::make('name')
                     ->label('Nama Program Kerja')
                     ->searchable()
@@ -37,11 +44,6 @@ class PenawaranProgramKerjasTable
                     ->toggleable(),
                 TextColumn::make('tahunKerja.name')
                     ->label('Tahun Kerja')
-                    ->searchable()
-                    ->sortable()
-                    ->toggleable(),
-                TextColumn::make('unitKerja.name')
-                    ->label('Unit Kerja')
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
@@ -69,9 +71,11 @@ class PenawaranProgramKerjasTable
                     ->toggleable(),
                 TextColumn::make('target')
                     ->label('Target')
+                    ->formatStateUsing(fn (?string $state): ?string => $state !== null ? AcuanTarget::formatNilai($state) : null)
                     ->toggleable(),
                 TextColumn::make('nilai_standar')
                     ->label('Nilai Standar')
+                    ->formatStateUsing(fn (?string $state): ?string => $state !== null ? AcuanTarget::formatNilai($state) : null)
                     ->toggleable(),
                 TextColumn::make('satuan_nilai_standar')
                     ->label('Satuan Nilai Standar')

@@ -9,10 +9,12 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationGroup;
 use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\Support\Icons\Heroicon;
 use Filament\View\PanelsRenderHook;
 use Filament\Widgets\AccountWidget;
 use Illuminate\Contracts\View\View;
@@ -43,27 +45,56 @@ class AppPanelProvider extends PanelProvider
             ->login(fn () => redirect('/'))
             ->databaseTransactions()
             ->databaseNotifications()
+            // Selain warna utama, palet tambahan didaftarkan agar tiap status realisasi
+            // punya warnanya sendiri tanpa ada yang kembar
+            // (lihat App\Enums\EnumStatusRealisasi::getColor()).
             ->colors([
                 'primary' => Color::Amber,
+                'indigo' => Color::Indigo,
+                'violet' => Color::Violet,
+                'cyan' => Color::Cyan,
+                'teal' => Color::Teal,
+                'orange' => Color::Orange,
+                'rose' => Color::Rose,
+                'slate' => Color::Slate,
             ])
+            // Sidebar bisa diciutkan di desktop. Saat ciut, hanya ikon grup yang tampil
+            // dan anak menunya muncul sebagai dropdown ketika ikon grup disorot; ikon
+            // tiap menu otomatis disembunyikan Filament saat sidebar terbuka.
+            ->sidebarCollapsibleOnDesktop()
             ->navigationGroups([
-                'Master Data',
-                'Anggaran',
-                'Program Kerja',
-                'Pelaksanaan',
-                'Pemasukan',
-                'Verifikasi Pemasukan',
-                'Verifikasi Pengajuan',
-                'Verifikasi Realisasi',
-                'Perencanaan',
-                'Verifikasi Pengajuan Perencanaan',
-                'Monitoring',
-                'Pengguna',
-                'Manajemen Akses',
-                'Pengaturan Sistem',
+                NavigationGroup::make('Master Data')
+                    ->icon(Heroicon::OutlinedCircleStack),
+                NavigationGroup::make('Anggaran')
+                    ->icon(Heroicon::OutlinedWallet),
+                NavigationGroup::make('Program Kerja')
+                    ->icon(Heroicon::OutlinedBriefcase),
+                NavigationGroup::make('Pelaksanaan')
+                    ->icon(Heroicon::OutlinedPlayCircle),
+                NavigationGroup::make('Pemasukan')
+                    ->icon(Heroicon::OutlinedArrowDownTray),
+                NavigationGroup::make('Verifikasi Pemasukan')
+                    ->icon(Heroicon::OutlinedReceiptPercent),
+                NavigationGroup::make('Verifikasi Pengajuan')
+                    ->icon(Heroicon::OutlinedShieldCheck),
+                NavigationGroup::make('Verifikasi Realisasi')
+                    ->icon(Heroicon::OutlinedClipboardDocumentCheck),
+                NavigationGroup::make('Perencanaan')
+                    ->icon(Heroicon::OutlinedCalendarDays),
+                NavigationGroup::make('Verifikasi Pengajuan Perencanaan')
+                    ->icon(Heroicon::OutlinedDocumentMagnifyingGlass),
+                NavigationGroup::make('Monitoring')
+                    ->icon(Heroicon::OutlinedChartBar),
+                NavigationGroup::make('Pengguna')
+                    ->icon(Heroicon::OutlinedUsers),
+                NavigationGroup::make('Manajemen Akses')
+                    ->icon(Heroicon::OutlinedKey),
+                NavigationGroup::make('Pengaturan Sistem')
+                    ->icon(Heroicon::OutlinedCog6Tooth),
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
+            ->discoverClusters(in: app_path('Filament/Clusters'), for: 'App\Filament\Clusters')
             ->pages([
                 Dashboard::class,
             ])

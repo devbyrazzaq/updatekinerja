@@ -38,15 +38,19 @@ class RealisasiProgramKerjaInfolist
                             ->schema([
                                 // Dokumen proposal diletakkan paling atas karena itulah berkas
                                 // pertama yang dibuka verifikator saat meninjau realisasi.
-                                static::dokumenSection('Dokumen Proposal', 'proposals', 'proposal_path', 'proposal', 'heroicon-o-document-text'),
+                                static::dokumenSection('Dokumen Proposal', 'proposals', 'proposal_path', 'proposal', 'heroicon-o-document-text')
+                                    // Capaian tanpa anggaran tidak melewati pengajuan, jadi tidak
+                                    // pernah punya proposal.
+                                    ->hidden(fn (RealisasiProgramKerja $record): bool => $record->adalahTanpaAnggaran()),
                                 Section::make('Detail Pengaju')
+                                    ->heading(fn (RealisasiProgramKerja $record): string => $record->adalahTanpaAnggaran() ? 'Dicatat Oleh' : 'Detail Pengaju')
                                     ->icon('heroicon-o-user-circle')
                                     ->schema([
                                         View::make('filament.infolists.realisasi-pengaju'),
                                     ]),
                                 Section::make('Besaran Realisasi')
                                     ->icon('heroicon-o-banknotes')
-                                    ->hidden($sembunyikanBesaranRealisasi)
+                                    ->hidden(fn (RealisasiProgramKerja $record): bool => $sembunyikanBesaranRealisasi || $record->adalahTanpaAnggaran())
                                     ->schema([
                                         TextEntry::make('anggaran_digunakan')
                                             ->hiddenLabel()
@@ -67,6 +71,12 @@ class RealisasiProgramKerjaInfolist
                                     ->columns(2)
                                     ->schema([
                                         TextEntry::make('name')->label('Nama Kegiatan')->columnSpanFull(),
+                                        TextEntry::make('jenis_realisasi')
+                                            ->label('Tipe Pengajuan')
+                                            ->badge()
+                                            ->placeholder('-')
+                                            ->helperText(fn (RealisasiProgramKerja $record): ?string => $record->jenis_realisasi?->getDescription())
+                                            ->columnSpanFull(),
                                         TextEntry::make('pengajuanProgramKerja.penawaranProgramKerja.name')->label('Program Kerja'),
                                         TextEntry::make('pengajuanProgramKerja.unitKerja.name')->label('Unit Kerja'),
                                         TextEntry::make('status')
@@ -74,22 +84,31 @@ class RealisasiProgramKerjaInfolist
                                             ->badge()
                                             ->formatStateUsing(fn (RealisasiProgramKerja $record): string => $record->labelStatus())
                                             ->color(fn (RealisasiProgramKerja $record): string => $record->status->getColor()),
-                                        TextEntry::make('urgensi')->label('Urgensi')->badge(),
+                                        TextEntry::make('urgensi')
+                                            ->label('Urgensi')
+                                            ->badge()
+                                            ->visible(fn (RealisasiProgramKerja $record): bool => ! $record->adalahTanpaAnggaran()),
                                         TextEntry::make('start_datetime')->label('Mulai')->dateTime('d F Y H:i')->placeholder('-'),
                                         TextEntry::make('end_datetime')->label('Selesai')->dateTime('d F Y H:i')->placeholder('-'),
                                         TextEntry::make('nominal_diajukan')
                                             ->label('Nominal Diajukan')
                                             ->state(fn (RealisasiProgramKerja $record): float => $record->nominalDiajukan())
-                                            ->money('IDR'),
+                                            ->money('IDR')
+                                            ->visible(fn (RealisasiProgramKerja $record): bool => ! $record->adalahTanpaAnggaran()),
                                         TextEntry::make('nominal_disetujui')
                                             ->label('Nominal Disetujui')
                                             ->money('IDR')
-                                            ->placeholder('Belum disetujui'),
-                                        TextEntry::make('anggaran_digunakan')->label('Realisasi Akhir')->money('IDR'),
+                                            ->placeholder('Belum disetujui')
+                                            ->visible(fn (RealisasiProgramKerja $record): bool => ! $record->adalahTanpaAnggaran()),
+                                        TextEntry::make('anggaran_digunakan')
+                                            ->label('Realisasi Akhir')
+                                            ->money('IDR')
+                                            ->visible(fn (RealisasiProgramKerja $record): bool => ! $record->adalahTanpaAnggaran()),
                                         TextEntry::make('persentase_anggaran')
                                             ->label('Persentase Anggaran')
                                             ->state(fn (RealisasiProgramKerja $record): string => static::deskripsiPersentaseAnggaran($record))
-                                            ->helperText('Anggaran digunakan terhadap alokasi pengajuan.'),
+                                            ->helperText('Anggaran digunakan terhadap alokasi pengajuan.')
+                                            ->visible(fn (RealisasiProgramKerja $record): bool => ! $record->adalahTanpaAnggaran()),
                                         TextEntry::make('description')->label('Deskripsi')->html()->placeholder('-')->columnSpanFull(),
                                     ]),
                                 static::targetSection(),
@@ -105,7 +124,8 @@ class RealisasiProgramKerjaInfolist
                                 static::dokumenSection('Dokumen Laporan', 'laporans', 'laporan_path', 'laporan', 'heroicon-o-document-check')
                                     ->visible(fn (RealisasiProgramKerja $record): bool => $record->sudahAdaLaporan()),
                                 static::laporanRealisasiSection(),
-                                static::persetujuanAnggaranSection(),
+                                static::persetujuanAnggaranSection()
+                                    ->visible(fn (RealisasiProgramKerja $record): bool => ! $record->adalahTanpaAnggaran()),
                                 Section::make('Komentar')
                                     ->description('Diskusi antara unit kerja dan verifikator.')
                                     ->icon('heroicon-o-chat-bubble-left-right')
@@ -119,6 +139,7 @@ class RealisasiProgramKerjaInfolist
                                     ->description('Pergerakan anggaran realisasi ini pada buku anggaran unit kerja.')
                                     ->icon('heroicon-o-book-open')
                                     ->collapsible()
+                                    ->visible(fn (RealisasiProgramKerja $record): bool => ! $record->adalahTanpaAnggaran())
                                     ->schema([
                                         View::make('filament.infolists.buku-anggaran'),
                                     ]),
@@ -179,7 +200,10 @@ class RealisasiProgramKerjaInfolist
     protected static function laporanRealisasiSection(): Section
     {
         return Section::make('Laporan Realisasi')
-            ->description('Laporan pelaksanaan yang dikirim unit kerja.')
+            ->heading(fn (RealisasiProgramKerja $record): string => $record->adalahTanpaAnggaran() ? 'Laporan Capaian' : 'Laporan Realisasi')
+            ->description(fn (RealisasiProgramKerja $record): string => $record->adalahTanpaAnggaran()
+                ? 'Laporan pelaksanaan yang menyertai pencatatan capaian.'
+                : 'Laporan pelaksanaan yang dikirim unit kerja.')
             ->icon('heroicon-o-clipboard-document-list')
             ->columns(2)
             ->visible(fn (RealisasiProgramKerja $record): bool => $record->sudahAdaLaporan())
@@ -188,11 +212,15 @@ class RealisasiProgramKerjaInfolist
                     ->label('Status Anggaran')
                     ->badge()
                     ->placeholder('-')
-                    ->helperText(fn (RealisasiProgramKerja $record): string => 'Anggaran diterima Rp '.number_format($record->nominalDiterima(), 0, ',', '.').', realisasi akhir Rp '.number_format((float) $record->anggaran_digunakan, 0, ',', '.').'.'),
+                    ->helperText(fn (RealisasiProgramKerja $record): string => 'Anggaran diterima Rp '.number_format($record->nominalDiterima(), 0, ',', '.').', realisasi akhir Rp '.number_format((float) $record->anggaran_digunakan, 0, ',', '.').'.')
+                    // Tanpa anggaran yang diserap, tidak ada penyerapan yang bisa dinilai
+                    // habis, bersisa, maupun kurang.
+                    ->visible(fn (RealisasiProgramKerja $record): bool => ! $record->adalahTanpaAnggaran()),
                 TextEntry::make('persentase_ketercapaian')
                     ->label('Ketercapaian Target')
                     ->formatStateUsing(fn (?int $state): ?string => $state === null ? null : "{$state}%")
-                    ->placeholder('-'),
+                    ->placeholder('-')
+                    ->columnSpan(fn (RealisasiProgramKerja $record): int => $record->adalahTanpaAnggaran() ? 2 : 1),
                 TextEntry::make('nominal_selisih_anggaran')
                     ->label(fn (RealisasiProgramKerja $record): string => $record->status_anggaran?->labelSelisih() ?? 'Selisih Anggaran')
                     ->money('IDR')

@@ -24,7 +24,7 @@
                 </span>
             </div>
         @else
-            <div class="grid gap-3 sm:grid-cols-2">
+            <div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
                 @foreach ($pintasan as $item)
                     <a
                         href="{{ $item['url'] }}"

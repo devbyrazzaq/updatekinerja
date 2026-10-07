@@ -7,12 +7,18 @@ use Livewire\Component;
 
 new class extends Component
 {
-    public PengajuanProgramKerja $record;
+    public ?PengajuanProgramKerja $record = null;
+
+    /**
+     * Pengguna yang ditampilkan bila bukan pengaju sebuah pengajuan program kerja,
+     * mis. pencatat capaian tanpa anggaran pada halaman realisasi.
+     */
+    public ?User $pengguna = null;
 
     #[Computed]
     public function pengaju(): ?User
     {
-        return $this->record->user;
+        return $this->pengguna ?? $this->record?->user;
     }
 
     /**
@@ -48,7 +54,7 @@ new class extends Component
 
     <div class="min-w-0 flex-1">
         <p class="truncate text-base font-semibold text-gray-950 dark:text-white">
-            {{ $pengaju?->name ?? 'Pengaju tidak diketahui' }}
+            {{ $pengaju?->name ?? 'Tidak diketahui' }}
         </p>
         <p class="mt-0.5 truncate text-sm text-gray-500 dark:text-gray-400">
             {{ $this->jabatan ?? 'Tanpa jabatan' }}
