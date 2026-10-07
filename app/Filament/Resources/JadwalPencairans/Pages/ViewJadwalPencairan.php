@@ -12,6 +12,7 @@ use App\Models\JadwalPencairan;
 use App\Models\Setting;
 use App\Reports\LaporanPencairanReport;
 use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Forms\Components\DatePicker;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Support\Icons\Heroicon;
@@ -46,11 +47,17 @@ class ViewJadwalPencairan extends ViewRecord
     {
         return [
             JadwalPencairansTable::cairkanAction(),
-            ExcelExportAction::make()
-                ->label('Ekspor Excel')
-                ->permission(static::getResource()::getPermissionName('export'))
-                ->action(fn (): BinaryFileResponse => (new JadwalPencairanExport($this->jadwal()))->download()),
-            $this->laporanPencairanAction(),
+            ActionGroup::make([
+                ExcelExportAction::make()
+                    ->label('Ekspor Excel')
+                    ->permission(static::getResource()::getPermissionName('export'))
+                    ->action(fn (): BinaryFileResponse => (new JadwalPencairanExport($this->jadwal()))->download()),
+                $this->laporanPencairanAction(),
+            ])
+                ->label('Ekspor')
+                ->icon(Heroicon::OutlinedArrowDownTray)
+                ->color('gray')
+                ->button(),
             AuthorizedEditAction::make()
                 ->label('Masuk ke Edit Mode')
                 ->icon('heroicon-o-pencil-square'),

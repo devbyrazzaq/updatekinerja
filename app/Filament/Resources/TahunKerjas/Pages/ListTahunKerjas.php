@@ -9,7 +9,9 @@ use App\Filament\Actions\ExcelImportAction;
 use App\Filament\Actions\PdfReportAction;
 use App\Filament\Resources\TahunKerjas\TahunKerjaResource;
 use App\Imports\TahunKerjasImport;
+use Filament\Actions\ActionGroup;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Support\Icons\Heroicon;
 use Illuminate\Contracts\Support\Htmlable;
 
 class ListTahunKerjas extends ListRecords
@@ -40,9 +42,15 @@ class ListTahunKerjas extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            ExcelImportAction::make()->importer(TahunKerjasImport::class)->permission('import_tahun_kerja'),
-            ExcelExportAction::make()->exporter(TahunKerjasExport::class)->permission('export_tahun_kerja'),
-            PdfReportAction::make()->reporter(TahunKerjasExport::class)->permission('report_tahun_kerja'),
+            ActionGroup::make([
+                ExcelImportAction::make()->importer(TahunKerjasImport::class)->permission('import_tahun_kerja'),
+                ExcelExportAction::make()->exporter(TahunKerjasExport::class)->permission('export_tahun_kerja'),
+                PdfReportAction::make()->reporter(TahunKerjasExport::class)->permission('report_tahun_kerja'),
+            ])
+                ->label('Impor & Ekspor')
+                ->icon(Heroicon::OutlinedArrowsUpDown)
+                ->color('gray')
+                ->button(),
             AuthorizedCreateAction::make()->label('Tambah Tahun Kerja'),
         ];
     }

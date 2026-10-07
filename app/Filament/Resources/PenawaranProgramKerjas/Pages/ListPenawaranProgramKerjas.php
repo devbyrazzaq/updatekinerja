@@ -11,8 +11,10 @@ use App\Filament\Resources\PenawaranProgramKerjas\PenawaranProgramKerjaResource;
 use App\Services\GeneratePenawaranFromAcuan;
 use App\Services\KonteksProgramKerja;
 use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Support\Icons\Heroicon;
 use Illuminate\Contracts\Support\Htmlable;
 use RuntimeException;
 
@@ -50,60 +52,72 @@ class ListPenawaranProgramKerjas extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Action::make('sinkronDariAcuan')
-                ->label('Sinkron Ulang dari Acuan')
-                ->icon('heroicon-o-arrow-path')
-                ->color('gray')
-                ->visible(fn (): bool => PenawaranProgramKerjaResource::currentUserCanSinkron())
-                ->disabled(fn (): bool => ! KonteksProgramKerja::siap())
-                ->requiresConfirmation()
-                ->modalHeading('Sinkron Ulang Penawaran dari Acuan')
-                ->modalDescription(fn (): string => KonteksProgramKerja::siap()
-                    ? 'Menyelaraskan penawaran pada konteks aktif ('.KonteksProgramKerja::label().') dengan acuan program kerja terkini, sekaligus menambahkan penawaran untuk acuan baru. Perubahan manual pada penawaran akan tertimpa; pengajuan yang sudah berjalan tetap aman.'
-                    : 'Konteks program kerja belum ditetapkan.')
-                ->modalSubmitActionLabel('Ya, Sinkron Ulang')
-                ->action(function (Action $action): void {
-                    $kelompokAcuan = KonteksProgramKerja::kelompokAcuan();
-                    $tahunKerja = KonteksProgramKerja::tahunBerjalan();
+            ActionGroup::make([
+                Action::make('sinkronDariAcuan')
+                    ->label('Sinkron Ulang dari Acuan')
+                    ->icon('heroicon-o-arrow-path')
+                    ->color('gray')
+                    ->visible(fn (): bool => PenawaranProgramKerjaResource::currentUserCanSinkron())
+                    ->disabled(fn (): bool => ! KonteksProgramKerja::siap())
+                    ->requiresConfirmation()
+                    ->modalHeading('Sinkron Ulang Penawaran dari Acuan')
+                    ->modalDescription(fn (): string => KonteksProgramKerja::siap()
+                        ? 'Menyelaraskan penawaran pada konteks aktif ('.KonteksProgramKerja::label().') dengan acuan program kerja terkini, sekaligus menambahkan penawaran untuk acuan baru. Perubahan manual pada penawaran akan tertimpa; pengajuan yang sudah berjalan tetap aman.'
+                        : 'Konteks program kerja belum ditetapkan.')
+                    ->modalSubmitActionLabel('Ya, Sinkron Ulang')
+                    ->action(function (Action $action): void {
+                        $kelompokAcuan = KonteksProgramKerja::kelompokAcuan();
+                        $tahunKerja = KonteksProgramKerja::tahunBerjalan();
 
-                    if ($kelompokAcuan === null || $tahunKerja === null) {
+                        if ($kelompokAcuan === null || $tahunKerja === null) {
+                            Notification::make()
+                                ->title('Sinkron dibatalkan')
+                                ->body('Tetapkan kelompok acuan & tahun kerja aktif lebih dulu di halaman Pengaturan Program Kerja.')
+                                ->danger()
+                                ->send();
+
+                            $action->halt();
+                        }
+
+                        try {
+                            $hasil = app(GeneratePenawaranFromAcuan::class)
+                                ->handle($kelompokAcuan, $tahunKerja, EnumModeGenerate::Sinkron);
+                        } catch (RuntimeException $exception) {
+                            Notification::make()
+                                ->title('Sinkron gagal')
+                                ->body($exception->getMessage())
+                                ->danger()
+                                ->persistent()
+                                ->send();
+
+                            $action->halt();
+                        }
+
                         Notification::make()
-                            ->title('Sinkron dibatalkan')
-                            ->body('Tetapkan kelompok acuan & tahun kerja aktif lebih dulu di halaman Pengaturan Program Kerja.')
-                            ->danger()
+                            ->title('Sinkron penawaran selesai')
+                            ->body("{$hasil['created']} dibuat, {$hasil['updated']} diperbarui, {$hasil['skipped']} dilewati.")
+                            ->success()
                             ->send();
-
-                        $action->halt();
-                    }
-
-                    try {
-                        $hasil = app(GeneratePenawaranFromAcuan::class)
-                            ->handle($kelompokAcuan, $tahunKerja, EnumModeGenerate::Sinkron);
-                    } catch (RuntimeException $exception) {
-                        Notification::make()
-                            ->title('Sinkron gagal')
-                            ->body($exception->getMessage())
-                            ->danger()
-                            ->persistent()
-                            ->send();
-
-                        $action->halt();
-                    }
-
-                    Notification::make()
-                        ->title('Sinkron penawaran selesai')
-                        ->body("{$hasil['created']} dibuat, {$hasil['updated']} diperbarui, {$hasil['skipped']} dilewati.")
-                        ->success()
-                        ->send();
-                }),
-            Action::make('aturKonteks')
-                ->label('Atur Kelompok Acuan & Tahun Kerja')
-                ->icon('heroicon-o-adjustments-horizontal')
+                    }),
+                Action::make('aturKonteks')
+                    ->label('Atur Kelompok Acuan & Tahun Kerja')
+                    ->icon('heroicon-o-adjustments-horizontal')
+                    ->color('gray')
+                    ->visible(fn (): bool => PengaturanProgramKerja::canAccess())
+                    ->url(fn (): string => PengaturanProgramKerja::getUrl()),
+            ])
+                ->label('Kelola Penawaran')
+                ->icon(Heroicon::OutlinedCog6Tooth)
                 ->color('gray')
-                ->visible(fn (): bool => PengaturanProgramKerja::canAccess())
-                ->url(fn (): string => PengaturanProgramKerja::getUrl()),
-            ExcelExportAction::make()->exporter(PenawaranProgramKerjasExport::class)->permission('export_penawaran_program_kerja'),
-            PdfReportAction::make()->reporter(PenawaranProgramKerjasExport::class)->permission('report_penawaran_program_kerja'),
+                ->button(),
+            ActionGroup::make([
+                ExcelExportAction::make()->exporter(PenawaranProgramKerjasExport::class)->permission('export_penawaran_program_kerja'),
+                PdfReportAction::make()->reporter(PenawaranProgramKerjasExport::class)->permission('report_penawaran_program_kerja'),
+            ])
+                ->label('Ekspor')
+                ->icon(Heroicon::OutlinedArrowDownTray)
+                ->color('gray')
+                ->button(),
         ];
     }
 }

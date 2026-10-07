@@ -8,7 +8,9 @@ use App\Filament\Actions\ExcelExportAction;
 use App\Filament\Actions\ExcelImportAction;
 use App\Filament\Actions\PdfReportAction;
 use App\Imports\UsersImport;
+use Filament\Actions\ActionGroup;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Support\Icons\Heroicon;
 use Illuminate\Contracts\Support\Htmlable;
 
 abstract class ListUsers extends ListRecords
@@ -37,9 +39,15 @@ abstract class ListUsers extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            ExcelImportAction::make()->importer(UsersImport::class)->permission(static::getResource()::getPermissionName('import')),
-            ExcelExportAction::make()->exporter(UsersExport::class)->permission(static::getResource()::getPermissionName('export')),
-            PdfReportAction::make()->reporter(UsersExport::class)->permission(static::getResource()::getPermissionName('report')),
+            ActionGroup::make([
+                ExcelImportAction::make()->importer(UsersImport::class)->permission(static::getResource()::getPermissionName('import')),
+                ExcelExportAction::make()->exporter(UsersExport::class)->permission(static::getResource()::getPermissionName('export')),
+                PdfReportAction::make()->reporter(UsersExport::class)->permission(static::getResource()::getPermissionName('report')),
+            ])
+                ->label('Impor & Ekspor')
+                ->icon(Heroicon::OutlinedArrowsUpDown)
+                ->color('gray')
+                ->button(),
             AuthorizedCreateAction::make()->label('Tambah '.static::getResource()::getModelLabel()),
         ];
     }

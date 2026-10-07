@@ -9,7 +9,9 @@ use App\Filament\Actions\ExcelImportAction;
 use App\Filament\Actions\PdfReportAction;
 use App\Filament\Resources\Programs\ProgramResource;
 use App\Imports\ProgramsImport;
+use Filament\Actions\ActionGroup;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Support\Icons\Heroicon;
 use Illuminate\Contracts\Support\Htmlable;
 
 class ListPrograms extends ListRecords
@@ -40,9 +42,15 @@ class ListPrograms extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            ExcelImportAction::make()->importer(ProgramsImport::class)->permission('import_program'),
-            ExcelExportAction::make()->exporter(ProgramsExport::class)->permission('export_program'),
-            PdfReportAction::make()->reporter(ProgramsExport::class)->permission('report_program'),
+            ActionGroup::make([
+                ExcelImportAction::make()->importer(ProgramsImport::class)->permission('import_program'),
+                ExcelExportAction::make()->exporter(ProgramsExport::class)->permission('export_program'),
+                PdfReportAction::make()->reporter(ProgramsExport::class)->permission('report_program'),
+            ])
+                ->label('Impor & Ekspor')
+                ->icon(Heroicon::OutlinedArrowsUpDown)
+                ->color('gray')
+                ->button(),
             AuthorizedCreateAction::make()->label('Tambah Program Induk'),
         ];
     }

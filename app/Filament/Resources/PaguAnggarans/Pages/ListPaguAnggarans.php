@@ -12,7 +12,9 @@ use App\Imports\PaguAnggaransImport;
 use App\Models\PaguAnggaran;
 use App\Models\TahunKerja;
 use App\Models\UnitKerja;
+use Filament\Actions\ActionGroup;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Support\Icons\Heroicon;
 use Illuminate\Contracts\Support\Htmlable;
 
 class ListPaguAnggarans extends ListRecords
@@ -93,9 +95,15 @@ class ListPaguAnggarans extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            ExcelImportAction::make()->importer(PaguAnggaransImport::class)->permission('import_pagu_anggaran'),
-            ExcelExportAction::make()->exporter(PaguAnggaransExport::class)->permission('export_pagu_anggaran'),
-            PdfReportAction::make()->reporter(PaguAnggaransExport::class)->permission('report_pagu_anggaran'),
+            ActionGroup::make([
+                ExcelImportAction::make()->importer(PaguAnggaransImport::class)->permission('import_pagu_anggaran'),
+                ExcelExportAction::make()->exporter(PaguAnggaransExport::class)->permission('export_pagu_anggaran'),
+                PdfReportAction::make()->reporter(PaguAnggaransExport::class)->permission('report_pagu_anggaran'),
+            ])
+                ->label('Impor & Ekspor')
+                ->icon(Heroicon::OutlinedArrowsUpDown)
+                ->color('gray')
+                ->button(),
         ];
     }
 }

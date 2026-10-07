@@ -11,6 +11,7 @@ use App\Filament\Resources\RealisasiProgramKerjas\Widgets\PenggunaanAnggaranChar
 use App\Filament\Resources\RealisasiProgramKerjas\Widgets\RealisasiProgramKerjaOverview;
 use App\Models\UnitKerja;
 use App\Services\PermissionRegistrar;
+use Filament\Actions\ActionGroup;
 use Filament\Forms\Components\Select;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Schemas\Components\EmbeddedTable;
@@ -55,8 +56,14 @@ class ListRealisasiProgramKerjas extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            ExcelExportAction::make()->exporter(RealisasiProgramKerjasExport::class)->permission('export_realisasi_program_kerja'),
-            PdfReportAction::make()->reporter(RealisasiProgramKerjasExport::class)->permission('report_realisasi_program_kerja'),
+            ActionGroup::make([
+                ExcelExportAction::make()->exporter(RealisasiProgramKerjasExport::class)->permission('export_realisasi_program_kerja'),
+                PdfReportAction::make()->reporter(RealisasiProgramKerjasExport::class)->permission('report_realisasi_program_kerja'),
+            ])
+                ->label('Ekspor')
+                ->icon(Heroicon::OutlinedArrowDownTray)
+                ->color('gray')
+                ->button(),
             AuthorizedCreateAction::make()->label('Tambah Realisasi Program Kerja'),
         ];
     }

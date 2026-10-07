@@ -9,7 +9,9 @@ use App\Filament\Actions\ExcelImportAction;
 use App\Filament\Actions\PdfReportAction;
 use App\Filament\Resources\UnitKerjas\UnitKerjaResource;
 use App\Imports\UnitKerjasImport;
+use Filament\Actions\ActionGroup;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Support\Icons\Heroicon;
 use Illuminate\Contracts\Support\Htmlable;
 
 class ListUnitKerjas extends ListRecords
@@ -40,9 +42,15 @@ class ListUnitKerjas extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            ExcelImportAction::make()->importer(UnitKerjasImport::class)->permission('import_unit_kerja'),
-            ExcelExportAction::make()->exporter(UnitKerjasExport::class)->permission('export_unit_kerja'),
-            PdfReportAction::make()->reporter(UnitKerjasExport::class)->permission('report_unit_kerja'),
+            ActionGroup::make([
+                ExcelImportAction::make()->importer(UnitKerjasImport::class)->permission('import_unit_kerja'),
+                ExcelExportAction::make()->exporter(UnitKerjasExport::class)->permission('export_unit_kerja'),
+                PdfReportAction::make()->reporter(UnitKerjasExport::class)->permission('report_unit_kerja'),
+            ])
+                ->label('Impor & Ekspor')
+                ->icon(Heroicon::OutlinedArrowsUpDown)
+                ->color('gray')
+                ->button(),
             AuthorizedCreateAction::make()->label('Tambah Unit Kerja'),
         ];
     }

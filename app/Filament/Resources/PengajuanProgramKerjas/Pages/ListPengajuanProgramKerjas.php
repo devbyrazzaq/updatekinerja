@@ -10,6 +10,7 @@ use App\Filament\Resources\PengajuanProgramKerjas\PengajuanProgramKerjaResource;
 use App\Filament\Resources\PengajuanProgramKerjas\Widgets\PengajuanProgramKerjaOverview;
 use App\Models\UnitKerja;
 use App\Services\PermissionRegistrar;
+use Filament\Actions\ActionGroup;
 use Filament\Forms\Components\Select;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Schemas\Components\EmbeddedTable;
@@ -54,12 +55,18 @@ class ListPengajuanProgramKerjas extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            ExcelExportAction::make()
-                ->exporter(PengajuanProgramKerjasExport::class)
-                ->permission(static::getResource()::getPermissionName('export')),
-            PdfReportAction::make()
-                ->reporter(PengajuanProgramKerjasExport::class)
-                ->permission(static::getResource()::getPermissionName('report')),
+            ActionGroup::make([
+                ExcelExportAction::make()
+                    ->exporter(PengajuanProgramKerjasExport::class)
+                    ->permission(static::getResource()::getPermissionName('export')),
+                PdfReportAction::make()
+                    ->reporter(PengajuanProgramKerjasExport::class)
+                    ->permission(static::getResource()::getPermissionName('report')),
+            ])
+                ->label('Ekspor')
+                ->icon(Heroicon::OutlinedArrowDownTray)
+                ->color('gray')
+                ->button(),
             AuthorizedCreateAction::make()->label('Tambah Pengajuan Program Kerja'),
         ];
     }

@@ -7,7 +7,9 @@ use App\Filament\Actions\SetujuiPemasukanAction;
 use App\Filament\Actions\TolakPemasukanAction;
 use App\Filament\Resources\VerifikasiKeuanganPemasukans\VerifikasiKeuanganPemasukanResource;
 use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Resources\Pages\ViewRecord;
+use Filament\Support\Icons\Heroicon;
 use Illuminate\Contracts\Support\Htmlable;
 
 class ViewVerifikasiKeuanganPemasukan extends ViewRecord
@@ -26,8 +28,14 @@ class ViewVerifikasiKeuanganPemasukan extends ViewRecord
     {
         return [
             SetujuiPemasukanAction::make(),
-            RevisiPemasukanAction::make(),
-            TolakPemasukanAction::make(),
+            ActionGroup::make([
+                RevisiPemasukanAction::make(),
+                TolakPemasukanAction::make(),
+            ])
+                ->label('Keputusan Lain')
+                ->icon(Heroicon::OutlinedEllipsisHorizontalCircle)
+                ->color('gray')
+                ->button(),
         ];
     }
 

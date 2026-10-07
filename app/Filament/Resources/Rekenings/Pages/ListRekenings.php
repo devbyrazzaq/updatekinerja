@@ -9,7 +9,9 @@ use App\Filament\Actions\ExcelImportAction;
 use App\Filament\Actions\PdfReportAction;
 use App\Filament\Resources\Rekenings\RekeningResource;
 use App\Imports\RekeningsImport;
+use Filament\Actions\ActionGroup;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Support\Icons\Heroicon;
 use Illuminate\Contracts\Support\Htmlable;
 
 class ListRekenings extends ListRecords
@@ -40,9 +42,15 @@ class ListRekenings extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            ExcelImportAction::make()->importer(RekeningsImport::class)->permission('import_rekening'),
-            ExcelExportAction::make()->exporter(RekeningsExport::class)->permission('export_rekening'),
-            PdfReportAction::make()->reporter(RekeningsExport::class)->permission('report_rekening'),
+            ActionGroup::make([
+                ExcelImportAction::make()->importer(RekeningsImport::class)->permission('import_rekening'),
+                ExcelExportAction::make()->exporter(RekeningsExport::class)->permission('export_rekening'),
+                PdfReportAction::make()->reporter(RekeningsExport::class)->permission('report_rekening'),
+            ])
+                ->label('Impor & Ekspor')
+                ->icon(Heroicon::OutlinedArrowsUpDown)
+                ->color('gray')
+                ->button(),
             AuthorizedCreateAction::make()->label('Tambah C.O.A'),
         ];
     }

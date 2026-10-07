@@ -9,7 +9,9 @@ use App\Filament\Actions\ExcelImportAction;
 use App\Filament\Actions\PdfReportAction;
 use App\Filament\Resources\Periodes\PeriodeResource;
 use App\Imports\PeriodesImport;
+use Filament\Actions\ActionGroup;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Support\Icons\Heroicon;
 use Illuminate\Contracts\Support\Htmlable;
 
 class ListPeriodes extends ListRecords
@@ -40,9 +42,15 @@ class ListPeriodes extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            ExcelImportAction::make()->importer(PeriodesImport::class)->permission('import_periode'),
-            ExcelExportAction::make()->exporter(PeriodesExport::class)->permission('export_periode'),
-            PdfReportAction::make()->reporter(PeriodesExport::class)->permission('report_periode'),
+            ActionGroup::make([
+                ExcelImportAction::make()->importer(PeriodesImport::class)->permission('import_periode'),
+                ExcelExportAction::make()->exporter(PeriodesExport::class)->permission('export_periode'),
+                PdfReportAction::make()->reporter(PeriodesExport::class)->permission('report_periode'),
+            ])
+                ->label('Impor & Ekspor')
+                ->icon(Heroicon::OutlinedArrowsUpDown)
+                ->color('gray')
+                ->button(),
             AuthorizedCreateAction::make()->label('Tambah Periode'),
         ];
     }

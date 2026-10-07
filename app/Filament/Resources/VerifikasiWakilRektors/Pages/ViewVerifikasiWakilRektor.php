@@ -5,7 +5,9 @@ namespace App\Filament\Resources\VerifikasiWakilRektors\Pages;
 use App\Filament\Resources\Concerns\HasSetujuiRealisasiAction;
 use App\Filament\Resources\VerifikasiWakilRektors\VerifikasiWakilRektorResource;
 use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Resources\Pages\ViewRecord;
+use Filament\Support\Icons\Heroicon;
 use Illuminate\Contracts\Support\Htmlable;
 
 class ViewVerifikasiWakilRektor extends ViewRecord
@@ -26,8 +28,14 @@ class ViewVerifikasiWakilRektor extends ViewRecord
     {
         return [
             $this->setujuiRealisasiAction(),
-            $this->revisiRealisasiAction(),
-            $this->tolakRealisasiAction(),
+            ActionGroup::make([
+                $this->revisiRealisasiAction(),
+                $this->tolakRealisasiAction(),
+            ])
+                ->label('Keputusan Lain')
+                ->icon(Heroicon::OutlinedEllipsisHorizontalCircle)
+                ->color('gray')
+                ->button(),
         ];
     }
 

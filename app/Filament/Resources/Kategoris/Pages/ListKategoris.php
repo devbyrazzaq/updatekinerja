@@ -9,7 +9,9 @@ use App\Filament\Actions\ExcelImportAction;
 use App\Filament\Actions\PdfReportAction;
 use App\Filament\Resources\Kategoris\KategoriResource;
 use App\Imports\KategorisImport;
+use Filament\Actions\ActionGroup;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Support\Icons\Heroicon;
 use Illuminate\Contracts\Support\Htmlable;
 
 class ListKategoris extends ListRecords
@@ -40,9 +42,15 @@ class ListKategoris extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            ExcelImportAction::make()->importer(KategorisImport::class)->permission('import_kategori'),
-            ExcelExportAction::make()->exporter(KategorisExport::class)->permission('export_kategori'),
-            PdfReportAction::make()->reporter(KategorisExport::class)->permission('report_kategori'),
+            ActionGroup::make([
+                ExcelImportAction::make()->importer(KategorisImport::class)->permission('import_kategori'),
+                ExcelExportAction::make()->exporter(KategorisExport::class)->permission('export_kategori'),
+                PdfReportAction::make()->reporter(KategorisExport::class)->permission('report_kategori'),
+            ])
+                ->label('Impor & Ekspor')
+                ->icon(Heroicon::OutlinedArrowsUpDown)
+                ->color('gray')
+                ->button(),
             AuthorizedCreateAction::make()->label('Tambah Kategori'),
         ];
     }

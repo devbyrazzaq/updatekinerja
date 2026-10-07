@@ -9,7 +9,9 @@ use App\Filament\Actions\ExcelImportAction;
 use App\Filament\Actions\PdfReportAction;
 use App\Filament\Resources\AcuanProgramKerjas\AcuanProgramKerjaResource;
 use App\Imports\AcuanProgramKerjasImport;
+use Filament\Actions\ActionGroup;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Support\Icons\Heroicon;
 use Illuminate\Contracts\Support\Htmlable;
 
 class ListAcuanProgramKerjas extends ListRecords
@@ -40,9 +42,15 @@ class ListAcuanProgramKerjas extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            ExcelImportAction::make()->importer(AcuanProgramKerjasImport::class)->permission('import_acuan_program_kerja'),
-            ExcelExportAction::make()->exporter(AcuanProgramKerjasExport::class)->permission('export_acuan_program_kerja'),
-            PdfReportAction::make()->reporter(AcuanProgramKerjasExport::class)->permission('report_acuan_program_kerja'),
+            ActionGroup::make([
+                ExcelImportAction::make()->importer(AcuanProgramKerjasImport::class)->permission('import_acuan_program_kerja'),
+                ExcelExportAction::make()->exporter(AcuanProgramKerjasExport::class)->permission('export_acuan_program_kerja'),
+                PdfReportAction::make()->reporter(AcuanProgramKerjasExport::class)->permission('report_acuan_program_kerja'),
+            ])
+                ->label('Impor & Ekspor')
+                ->icon(Heroicon::OutlinedArrowsUpDown)
+                ->color('gray')
+                ->button(),
             AuthorizedCreateAction::make()->label('Tambah Acuan Program Kerja'),
         ];
     }

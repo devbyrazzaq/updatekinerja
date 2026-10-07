@@ -281,15 +281,21 @@ class MonitoringProgramKerja extends Page implements HasTable
                 ->icon(Heroicon::OutlinedClipboardDocumentCheck)
                 ->color('primary')
                 ->button(),
-            ExcelExportAction::make()
-                ->permission(static::getPagePermission())
-                ->action(fn () => $this->export($this->unitKerjaId)->download()),
-            PdfReportAction::make()
-                ->permission(static::getPagePermission())
-                ->cakupan($this->skemaCakupanLaporan(fn (): ?int => $this->unitKerjaId))
-                ->action(fn (array $data) => (new TabularReport(
-                    $this->export($this->cakupanUnitKerja($data)),
-                ))->download()),
+            ActionGroup::make([
+                ExcelExportAction::make()
+                    ->permission(static::getPagePermission())
+                    ->action(fn () => $this->export($this->unitKerjaId)->download()),
+                PdfReportAction::make()
+                    ->permission(static::getPagePermission())
+                    ->cakupan($this->skemaCakupanLaporan(fn (): ?int => $this->unitKerjaId))
+                    ->action(fn (array $data) => (new TabularReport(
+                        $this->export($this->cakupanUnitKerja($data)),
+                    ))->download()),
+            ])
+                ->label('Ekspor')
+                ->icon(Heroicon::OutlinedArrowDownTray)
+                ->color('gray')
+                ->button(),
         ];
     }
 

@@ -9,7 +9,9 @@ use App\Filament\Actions\ExcelImportAction;
 use App\Filament\Actions\PdfReportAction;
 use App\Filament\Resources\Bidangs\BidangResource;
 use App\Imports\BidangsImport;
+use Filament\Actions\ActionGroup;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Support\Icons\Heroicon;
 use Illuminate\Contracts\Support\Htmlable;
 
 class ListBidangs extends ListRecords
@@ -40,9 +42,15 @@ class ListBidangs extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            ExcelImportAction::make()->importer(BidangsImport::class)->permission('import_bidang'),
-            ExcelExportAction::make()->exporter(BidangsExport::class)->permission('export_bidang'),
-            PdfReportAction::make()->reporter(BidangsExport::class)->permission('report_bidang'),
+            ActionGroup::make([
+                ExcelImportAction::make()->importer(BidangsImport::class)->permission('import_bidang'),
+                ExcelExportAction::make()->exporter(BidangsExport::class)->permission('export_bidang'),
+                PdfReportAction::make()->reporter(BidangsExport::class)->permission('report_bidang'),
+            ])
+                ->label('Impor & Ekspor')
+                ->icon(Heroicon::OutlinedArrowsUpDown)
+                ->color('gray')
+                ->button(),
             AuthorizedCreateAction::make()->label('Tambah Bidang'),
         ];
     }

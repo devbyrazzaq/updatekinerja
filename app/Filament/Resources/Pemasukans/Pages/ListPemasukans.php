@@ -10,10 +10,12 @@ use App\Filament\Resources\Concerns\HasUnitKerjaPageFilter;
 use App\Filament\Resources\Pemasukans\PemasukanResource;
 use App\Filament\Resources\Pemasukans\Widgets\PemasukanHarianChart;
 use App\Filament\Resources\Pemasukans\Widgets\PemasukanOverview;
+use Filament\Actions\ActionGroup;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Schemas\Components\EmbeddedTable;
 use Filament\Schemas\Components\RenderHook;
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 use Filament\View\PanelsRenderHook;
 use Illuminate\Contracts\Support\Htmlable;
 
@@ -54,8 +56,14 @@ class ListPemasukans extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            ExcelExportAction::make()->exporter(PemasukansExport::class)->permission('export_pemasukan'),
-            PdfReportAction::make()->reporter(PemasukansExport::class)->permission('report_pemasukan'),
+            ActionGroup::make([
+                ExcelExportAction::make()->exporter(PemasukansExport::class)->permission('export_pemasukan'),
+                PdfReportAction::make()->reporter(PemasukansExport::class)->permission('report_pemasukan'),
+            ])
+                ->label('Ekspor')
+                ->icon(Heroicon::OutlinedArrowDownTray)
+                ->color('gray')
+                ->button(),
             AuthorizedCreateAction::make()->label('Tambah Pemasukan'),
         ];
     }
