@@ -4,6 +4,7 @@ namespace App\Filament\Resources\DaftarProgramKerjas\Tables;
 
 use App\Enums\EnumStatusPengajuan;
 use App\Filament\Forms\Components\MoneyInput;
+use App\Models\AcuanTarget;
 use App\Models\PenawaranProgramKerja;
 use App\Models\PengajuanProgramKerja;
 use Filament\Actions\Action;
@@ -36,16 +37,16 @@ class DaftarProgramKerjasTable
                     ->withSum('pengajuanProgramKerjas', 'alokasi_anggaran');
             })
             ->columns([
-                TextColumn::make('name')
-                    ->label('Program Kerja')
-                    ->searchable()
-                    ->sortable()
-                    ->wrap(),
                 TextColumn::make('unitKerja.name')
                     ->label('Unit Kerja')
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
+                TextColumn::make('name')
+                    ->label('Program Kerja')
+                    ->searchable()
+                    ->sortable()
+                    ->wrap(),
                 TextColumn::make('kategori.name')
                     ->label('Kategori')
                     ->badge(),
@@ -53,7 +54,8 @@ class DaftarProgramKerjasTable
                     ->label('Program Induk')
                     ->toggleable(),
                 TextColumn::make('target')
-                    ->label('Target'),
+                    ->label('Target')
+                    ->formatStateUsing(fn (?string $state): ?string => $state !== null ? AcuanTarget::formatNilai($state) : null),
                 TextColumn::make('pengajuan_program_kerjas_count')
                     ->label('Jumlah Pengajuan')
                     ->badge()
