@@ -101,7 +101,7 @@ class DaftarProgramKerjaResource extends Resource
 
         $user = auth()->user();
 
-        if ($user !== null && ! $user->isPrivileged()) {
+        if ($user !== null && ! $user->canViewAllUnitData(static::getPermissionName('view_any'))) {
             $query->whereIn('unit_kerja_id', PermissionRegistrar::permittedUnitIds($user)->all());
         }
 

@@ -52,7 +52,7 @@ class RekeningBankResource extends Resource
 
         $user = auth()->user();
 
-        if ($user !== null && ! $user->isPrivileged()) {
+        if ($user !== null && ! $user->canViewAllUnitData(static::getPermissionName('view_any'))) {
             // Rekening umum (tanpa unit kerja) tetap terlihat karena juga menjadi
             // pilihan pencairan unit mana pun.
             $unitIds = PermissionRegistrar::permittedUnitIds($user)->all();
@@ -88,7 +88,7 @@ class RekeningBankResource extends Resource
             return false;
         }
 
-        if ($user->isPrivileged()) {
+        if ($user->canViewAllUnitData(static::getPermissionName('view_any'))) {
             return true;
         }
 

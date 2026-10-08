@@ -51,7 +51,11 @@ trait HasPageAuthorization
             ?? [static::getPagePermission() => 'Mengakses halaman '.str(static::getPermissionHeading())->lower()->toString().'.'];
     }
 
-    protected static function getPagePermission(): string
+    /**
+     * Publik supaya halaman turunan yang menumpang hak akses halaman ini, maupun
+     * widgetnya, bisa menyebut permission yang sama.
+     */
+    public static function getPagePermission(): string
     {
         return 'view_page_'.str(class_basename(static::class))
             ->beforeLast('Page')

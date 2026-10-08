@@ -109,6 +109,7 @@ class ListRealisasiProgramKerjas extends ListRecords
     {
         return [
             'unitKerjaId' => $this->unitKerjaId,
+            'permissionLingkup' => static::getResource()::getPermissionName('view_any'),
         ];
     }
 
@@ -123,7 +124,7 @@ class ListRealisasiProgramKerjas extends ListRecords
 
         $user = auth()->user();
 
-        if ($user !== null && ! $user->isPrivileged()) {
+        if ($user !== null && ! $user->canViewAllUnitData(static::getResource()::getPermissionName('view_any'))) {
             $query->whereIn('id', PermissionRegistrar::permittedUnitIds($user)->all());
         }
 

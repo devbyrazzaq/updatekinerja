@@ -134,6 +134,16 @@ trait HasResourceAuthorization
         return $ability.'_'.static::getPermissionPrefix();
     }
 
+    /**
+     * Apakah pengguna memegang sebuah ability resource ini, tanpa memandang record.
+     * Dipakai aksi alur (mis. "Ajukan") yang menumpang hak akses menu, agar pemegang
+     * hak baca saja tidak ikut melihat tombolnya.
+     */
+    public static function currentUserCanAbility(string $ability): bool
+    {
+        return static::currentUserCan(static::getPermissionName($ability));
+    }
+
     protected static function getPermissionPrefix(): string
     {
         return static::$permissionPrefix ?? str(class_basename(static::class))

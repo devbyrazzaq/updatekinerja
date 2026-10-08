@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Satu gelombang pencairan anggaran, mis. "Pencairan Awal Bulan Januari" pada
@@ -35,6 +36,20 @@ class JadwalPencairan extends Model
     public function getRouteKeyName(): string
     {
         return 'uuid';
+    }
+
+    /**
+     * Realisasi yang belum menerima anggaran dikembalikan ke antrean penjadwalan
+     * Biro Keuangan saat jadwalnya dihapus, agar tidak tertinggal berstatus
+     * "Menunggu Anggaran Diberikan" tanpa jadwal.
+     */
+    protected static function booted(): void
+    {
+        static::deleting(function (self $jadwal): void {
+            foreach ($jadwal->realisasiBelumDicairkan()->get() as $realisasi) {
+                $realisasi->keluarkanDariJadwal(auth()->id());
+            }
+        });
     }
 
     protected $fillable = [
@@ -174,6 +189,56 @@ class JadwalPencairan extends Model
         ]);
 
         return $realisasis->count();
+    }
+
+    /**
+     * Ada realisasi pada jadwal ini yang anggarannya sudah diserahkan, sehingga
+     * jadwalnya tidak boleh lagi dihapus.
+     */
+    public function adaRealisasiDicairkan(): bool
+    {
+        return $this->realisasiProgramKerjas()->whereNotNull('dicairkan_at')->exists();
+    }
+
+    /**
+     * Realisasi yang sudah dicairkan namun pencairannya tidak dapat dibatalkan lagi,
+     * mis. karena laporannya sudah diserahkan atau sudah selesai diverifikasi.
+     * Selama masih ada, pencairan jadwal tidak dapat di-reset.
+     *
+     * @return Collection<int, RealisasiProgramKerja>
+     */
+    public function realisasiPenghalangReset(): Collection
+    {
+        return $this->realisasiProgramKerjas()
+            ->whereNotNull('dicairkan_at')
+            ->get()
+            ->reject(fn (RealisasiProgramKerja $realisasi): bool => $realisasi->pencairanDapatDibatalkan())
+            ->values();
+    }
+
+    /**
+     * Membatalkan pencairan jadwal: seluruh realisasinya kembali menunggu anggaran
+     * diberikan dan jadwal kembali berstatus dijadwalkan sehingga dapat diubah,
+     * dicairkan ulang, atau dihapus. Pemanggil wajib memastikan
+     * {@see self::realisasiPenghalangReset()} kosong. Mengembalikan jumlah realisasi
+     * yang pencairannya dibatalkan.
+     */
+    public function resetPencairan(?int $userId = null, ?string $alasan = null): int
+    {
+        return DB::transaction(function () use ($userId, $alasan): int {
+            $realisasis = $this->realisasiProgramKerjas()->whereNotNull('dicairkan_at')->get();
+
+            foreach ($realisasis as $realisasi) {
+                $realisasi->batalkanPencairan($userId, $alasan);
+            }
+
+            $this->update([
+                'status' => EnumStatusPencairan::Dijadwalkan,
+                'dicairkan_at' => null,
+            ]);
+
+            return $realisasis->count();
+        });
     }
 
     /**

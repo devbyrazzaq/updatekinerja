@@ -146,6 +146,7 @@ class BukuAnggaran extends Page implements HasTable
         return [
             'unitKerjaId' => $this->unitKerjaId,
             'tahunKerjaId' => $this->tahunKerjaId,
+            'permissionLingkup' => static::getPagePermission(),
         ];
     }
 
@@ -376,7 +377,7 @@ class BukuAnggaran extends Page implements HasTable
 
         $user = auth()->user();
 
-        if ($user !== null && ! $user->isPrivileged()) {
+        if ($user !== null && ! $user->canViewAllUnitData(static::getPagePermission())) {
             $query->whereIn('id', PermissionRegistrar::permittedUnitIds($user)->all());
         }
 

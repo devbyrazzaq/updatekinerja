@@ -4,6 +4,7 @@ namespace App\Filament\Widgets\Concerns;
 
 use App\Models\UnitKerja;
 use App\Services\PermissionRegistrar;
+use Livewire\Attributes\Locked;
 
 /**
  * Unit kerja yang menjadi dasar perhitungan widget, mengikuti penyaring halaman induk
@@ -12,6 +13,14 @@ use App\Services\PermissionRegistrar;
  */
 trait ScopesUnitKerja
 {
+    /**
+     * Permission menu induk widget ini, diisi halaman induk lewat data widget. Menjadi
+     * dasar apakah akses seluruh unit pengguna berlaku di menu tersebut (lihat
+     * User::canViewAllUnitData()). Terkunci agar tidak bisa diganti dari peramban.
+     */
+    #[Locked]
+    public ?string $permissionLingkup = null;
+
     /**
      * @return array<int, int>
      */
@@ -29,7 +38,7 @@ trait ScopesUnitKerja
 
         $query = UnitKerja::query()->where('is_active', true);
 
-        if (! $user->isPrivileged()) {
+        if (! $user->canViewAllUnitData($this->permissionLingkup)) {
             $query->whereIn('id', PermissionRegistrar::permittedUnitIds($user)->all());
         }
 

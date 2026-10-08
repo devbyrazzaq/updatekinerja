@@ -23,9 +23,11 @@ use App\Models\RealisasiDokumen;
 use App\Models\RealisasiProgramKerja;
 use App\Models\RekeningBank;
 use App\Models\TahunKerja;
+use App\Models\User;
 use App\Services\GeneratePenawaranFromAcuan;
 use Closure;
 use Illuminate\Database\ConnectionInterface;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -45,7 +47,9 @@ use RuntimeException;
  * dengan spasi yang dinormalkan, pengguna lewat {@see PencocokPengguna}.
  *
  * Impor bersifat idempoten: baris yang sudah pernah dipindahkan dikenali lewat kunci
- * alaminya sehingga perintah aman dijalankan ulang.
+ * alaminya sehingga perintah aman dijalankan ulang. Menjalankannya ulang dengan dump
+ * yang lebih baru menyelaraskan baris tersebut dengan isi terbarunya, termasuk role
+ * dan unit kerja pengguna menurut penugasan LAMADU ({@see PenugasanPengguna}).
  */
 class ImporLama2025
 {
@@ -66,6 +70,12 @@ class ImporLama2025
 
     /** @var array<int, string> id user lama → nama role di aplikasi lama */
     private array $peranPengguna = [];
+
+    /** @var array<int, string> id user lama → path foto profil pada arsip */
+    private array $fotoPengguna = [];
+
+    /** @var array<int, object> id user lama → baris users aplikasi lama */
+    private array $identitasPengguna = [];
 
     /** @var array<int, int> id distribution_schedule lama → id jadwal pencairan baru */
     private array $petaJadwal = [];
@@ -88,6 +98,7 @@ class ImporLama2025
     public function __construct(
         private readonly PencocokPengguna $pengguna,
         private readonly SalinBerkasLama $berkas,
+        private readonly PenugasanPengguna $penugasan,
     ) {}
 
     /**
@@ -102,16 +113,23 @@ class ImporLama2025
         $this->siapkanTahunKerja();
         $this->siapkanPenawaran();
         $this->siapkanPengguna();
+        $this->terapkanPenugasan();
         $this->siapkanRekeningBank();
 
+        // Peta path dokumen selalu dibentuk, juga saat penyalinan berkas dilewati:
+        // tanpanya kolom dokumen realisasi yang diselaraskan ulang ikut terkosongkan.
+        $antrianBerkas = $this->petakanBerkas();
+
         if ($salinBerkas) {
-            $this->salinBerkas($arsip ?? base_path(self::ARSIP_BERKAS));
+            $this->salinBerkas($arsip ?? base_path(self::ARSIP_BERKAS), $antrianBerkas);
+            $this->salinFotoProfil($arsip ?? base_path(self::ARSIP_BERKAS));
         }
 
         DB::transaction(function (): void {
             $this->imporJadwalPencairan();
             $this->imporPengajuan();
             $this->imporRealisasi();
+            $this->hapusJadwalTanpaPadanan();
             $this->imporPemasukan();
         });
 
@@ -215,11 +233,20 @@ class ImporLama2025
      * kegiatan, dan indikatornya. Spasi berlebih dinormalkan karena data hasil
      * seeder sudah dirapikan sedangkan dump aslinya belum.
      *
+     * Pencarian dibatasi pada kelompok acuan milik tahun kerja LAMADU: kelompok acuan
+     * hasil impor 2023 memuat banyak kegiatan dengan unit, nama, dan indikator yang
+     * persis sama, dan acuan itu tidak pernah ditawarkan pada tahun 2024/2025.
+     *
      * @return array<int, int>
      */
     private function petaAcuan(): array
     {
+        $kelompokAcuanIds = TahunKerja::query()
+            ->whereIn('id', array_values($this->petaTahunKerja))
+            ->pluck('kelompok_acuan_id');
+
         $acuans = DB::table('acuan_program_kerjas')
+            ->whereIn('kelompok_acuan_id', $kelompokAcuanIds)
             ->select(['id', 'unit_kerja_id', 'name', 'indikator'])
             ->get()
             ->keyBy(fn (object $acuan): string => $this->kunciAcuan($acuan->unit_kerja_id, $acuan->name, $acuan->indikator));
@@ -273,6 +300,11 @@ class ImporLama2025
         $penggunaLama = collect($this->lama->table('users')->get())->map(function (object $user) use ($unitKerja, $peran, $peranTambahan): array {
             $peranLama = $peran[$user->id] ?? $peranTambahan[$user->id] ?? null;
             $this->peranPengguna[(int) $user->id] = (string) $peranLama;
+            $this->identitasPengguna[(int) $user->id] = $user;
+
+            if (filled($user->profile)) {
+                $this->fotoPengguna[(int) $user->id] = $user->profile;
+            }
 
             return [
                 'id' => (int) $user->id,
@@ -301,7 +333,9 @@ class ImporLama2025
             'super-admin' => EnumRole::SuperAdmin,
             'admin' => EnumRole::Admin,
             'rektorat' => EnumRole::Rektor,
-            'wakil-rektor-1', 'wakil-rektor-2', 'wakil-rektor-3' => EnumRole::WakilRektor,
+            'wakil-rektor-1' => EnumRole::WakilRektorI,
+            'wakil-rektor-2' => EnumRole::WakilRektorII,
+            'wakil-rektor-3' => EnumRole::WakilRektorIII,
             'keuangan' => EnumRole::BiroKeuangan,
             'pimpinan-unit' => EnumRole::PimpinanUnit,
             default => EnumRole::UnitKerja,
@@ -313,6 +347,154 @@ class ImporLama2025
     private function berperan(?int $userIdLama, string ...$peran): bool
     {
         return $userIdLama !== null && in_array($this->peranPengguna[$userIdLama] ?? '', $peran, true);
+    }
+
+    /**
+     * Menyelaraskan role dan unit kerja tiap akun dengan penugasannya di LAMADU:
+     * seluruh peran pada `multi_roles` (atau role aktifnya bila tak tercatat di sana),
+     * unit utama dari `assignments`, dan unit tambahan dari `list_of_assignments`.
+     *
+     * Beberapa akun LAMADU bisa bermuara pada satu akun di sini (mis. akun ganda milik
+     * orang yang sama), sehingga penugasannya digabung lebih dulu. Akun yang di sistem
+     * ini sudah Super Admin dilewati: aksesnya sudah menyeluruh, dan penugasan uji coba
+     * pengembang di LAMADU tidak perlu ikut terbawa.
+     */
+    private function terapkanPenugasan(): void
+    {
+        $peranAktif = $this->lama->table('model_has_roles')
+            ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
+            ->pluck('roles.name', 'model_has_roles.model_id');
+
+        $peranTambahan = collect($this->lama->table('multi_roles')
+            ->join('roles', 'roles.id', '=', 'multi_roles.role_id')
+            ->where('multi_roles.status', 1)
+            ->get(['multi_roles.user_id', 'roles.name']))
+            ->groupBy('user_id');
+
+        $unitUtama = $this->lama->table('assignments')
+            ->where('status', 'active')
+            ->orderBy('id')
+            ->pluck('departement_id', 'user_id');
+
+        $unitTambahan = collect($this->lama->table('list_of_assignments')
+            ->join('user_assignments', 'user_assignments.id', '=', 'list_of_assignments.user_assignment_id')
+            ->where('list_of_assignments.status', 'active')
+            ->where('user_assignments.status', 'active')
+            ->get(['user_assignments.user_id', 'list_of_assignments.departement_id']))
+            ->groupBy('user_id');
+
+        $penugasan = [];
+
+        foreach ($this->petaPengguna as $userIdLama => $userId) {
+            $peran = ($peranTambahan[$userIdLama] ?? collect())->pluck('name');
+
+            if ($peran->isEmpty() && isset($peranAktif[$userIdLama])) {
+                $peran = collect([$peranAktif[$userIdLama]]);
+            }
+
+            $penugasan[$userId] ??= ['roles' => [], 'unit_utama' => null, 'unit' => [], 'persona' => null];
+            $penugasan[$userId]['persona'] ??= $this->personaBawaan($userIdLama);
+            $penugasan[$userId]['roles'] = [
+                ...$penugasan[$userId]['roles'],
+                ...$peran->flatMap(fn (string $nama): array => $this->rolesBaru($nama))->all(),
+            ];
+            $penugasan[$userId]['unit_utama'] ??= isset($unitUtama[$userIdLama]) ? (int) $unitUtama[$userIdLama] : null;
+            $penugasan[$userId]['unit'] = [
+                ...$penugasan[$userId]['unit'],
+                ...($unitTambahan[$userIdLama] ?? collect())->pluck('departement_id')->map(fn (mixed $id): int => (int) $id)->all(),
+            ];
+        }
+
+        $diterapkan = 0;
+
+        foreach ($penugasan as $userId => $tugas) {
+            $user = User::find($userId);
+
+            if ($user === null || $user->hasRole(EnumRole::SuperAdmin->value) || $tugas['roles'] === []) {
+                continue;
+            }
+
+            $this->penugasan->terapkan(
+                $user,
+                array_values(array_unique($tugas['roles'])),
+                $tugas['unit_utama'],
+                array_values(array_unique($tugas['unit'])),
+                $tugas['persona'],
+            );
+            $diterapkan++;
+        }
+
+        $this->lengkapiGelar();
+        $this->ringkasan['penugasan_diterapkan'] = $diterapkan;
+    }
+
+    /**
+     * Persona bagi akun yang belum punya persona: Dosen bila nomor anggotanya berupa
+     * NIDN (10 digit), selain itu Tenaga Pendidik.
+     */
+    private function personaBawaan(int $userIdLama): EnumRole
+    {
+        $nomorAnggota = (string) ($this->identitasPengguna[$userIdLama]->memberId ?? '');
+
+        return preg_match('/^\d{10}$/', $nomorAnggota) === 1
+            ? EnumRole::Dosen
+            : EnumRole::TenagaPendidik;
+    }
+
+    /**
+     * Gelar depan dan belakang dari LAMADU diisikan pada akun yang belum mencatatnya,
+     * sehingga gelar yang sudah diisi di sistem ini tidak tertimpa.
+     */
+    private function lengkapiGelar(): void
+    {
+        foreach ($this->identitasPengguna as $userIdLama => $lama) {
+            $user = User::find($this->petaPengguna[$userIdLama] ?? null);
+
+            if ($user === null) {
+                continue;
+            }
+
+            $user->forceFill([
+                'front_title' => $user->front_title ?: (trim((string) $lama->prefix) ?: null),
+                'back_title' => $user->back_title ?: (trim((string) $lama->suffix) ?: null),
+            ])->save();
+        }
+    }
+
+    /**
+     * Foto profil LAMADU dipasang pada akun padanannya selama akun itu belum punya
+     * foto sendiri, sehingga foto yang diunggah di sistem ini tidak tertimpa.
+     */
+    private function salinFotoProfil(string $arsip): void
+    {
+        $antrian = [];
+        $pemilik = [];
+
+        foreach ($this->fotoPengguna as $userIdLama => $path) {
+            $user = User::find($this->petaPengguna[$userIdLama] ?? null);
+
+            if ($user === null || filled($user->avatar_url)) {
+                continue;
+            }
+
+            $tujuan = $this->berkas->pathTujuan(SalinBerkasLama::DIREKTORI_AVATAR, $path);
+            $antrian[$tujuan] = $this->kandidatEntri($path);
+            $pemilik[$tujuan] = $user;
+        }
+
+        if ($antrian === []) {
+            return;
+        }
+
+        $this->berkas->dariZip($arsip, $antrian);
+
+        foreach ($pemilik as $tujuan => $user) {
+            if ($this->berkas->disk()->exists($tujuan)) {
+                $user->forceFill(['avatar_url' => $tujuan])->save();
+            }
+        }
+
+        $this->ringkasan['foto_profil'] = count($pemilik);
     }
 
     /**
@@ -360,11 +542,11 @@ class ImporLama2025
     }
 
     /**
-     * Menyalin dokumen proposal dan laporan dari arsip berkas publik aplikasi lama ke
-     * disk privat sistem ini, sekaligus menyiapkan peta path lama → path baru yang
-     * dipakai saat menulis kolom dokumen.
+     * Menyiapkan peta path lama → path baru yang dipakai saat menulis kolom dokumen.
+     *
+     * @return array<string, array<int, string>> path tujuan → kandidat entri arsip
      */
-    private function salinBerkas(string $arsip): void
+    private function petakanBerkas(): array
     {
         $antrian = [];
 
@@ -381,6 +563,17 @@ class ImporLama2025
             }
         }
 
+        return $antrian;
+    }
+
+    /**
+     * Menyalin dokumen proposal dan laporan dari arsip berkas publik aplikasi lama ke
+     * disk privat sistem ini.
+     *
+     * @param  array<string, array<int, string>>  $antrian
+     */
+    private function salinBerkas(string $arsip, array $antrian): void
+    {
         $this->lapor->__invoke('Menyalin '.count($antrian).' berkas dokumen dari arsip...');
 
         $hasil = $this->berkas->dariZip($arsip, $antrian);
@@ -417,7 +610,8 @@ class ImporLama2025
     /**
      * Jadwal pencairan (gelombang penyerahan anggaran). Tahun kerjanya ditentukan
      * dari tanggal pencairan; bila di luar rentang tahun mana pun, dipakai tahun
-     * kerja terakhir yang dipindahkan.
+     * kerja terakhir yang dipindahkan. Jadwal yang sudah pernah dipindahkan ikut
+     * diperbarui statusnya.
      */
     private function imporJadwalPencairan(): void
     {
@@ -440,17 +634,15 @@ class ImporLama2025
 
             $jadwal = JadwalPencairan::firstOrNew(['tahun_kerja_id' => $tahunKerja->id, 'name' => $lama->name]);
 
-            if (! $jadwal->exists) {
-                $jadwal->fill([
-                    'tanggal_pencairan' => $tanggal,
-                    'status' => $sudahCair ? EnumStatusPencairan::Dicairkan : EnumStatusPencairan::Dijadwalkan,
-                    'catatan' => $lama->description,
-                    'dicairkan_at' => $sudahCair ? $lama->updated_at : null,
-                ]);
-                $jadwal->created_at = $lama->created_at;
-                $jadwal->updated_at = $lama->updated_at;
-                $jadwal->save();
-            }
+            $jadwal->fill([
+                'tanggal_pencairan' => $tanggal,
+                'status' => $sudahCair ? EnumStatusPencairan::Dicairkan : EnumStatusPencairan::Dijadwalkan,
+                'catatan' => $lama->description,
+                'dicairkan_at' => $sudahCair ? $lama->updated_at : null,
+            ]);
+            $jadwal->created_at = $lama->created_at;
+            $jadwal->updated_at = $lama->updated_at;
+            $jadwal->save();
 
             $this->petaJadwal[(int) $lama->id] = $jadwal->id;
         }
@@ -459,8 +651,30 @@ class ImporLama2025
     }
 
     /**
+     * Jadwal pencairan pada tahun kerja LAMADU yang tidak punya padanan di LAMADU
+     * (mis. jadwal uji coba), sehingga daftar jadwal sama persis dengan sumbernya.
+     * Dijalankan setelah realisasi diselaraskan agar realisasi yang semula menunjuk
+     * jadwal tersebut sudah berpindah ke jadwal aslinya; jadwal yang masih dipakai
+     * realisasi tetap dibiarkan.
+     */
+    private function hapusJadwalTanpaPadanan(): void
+    {
+        $this->ringkasan['jadwal_pencairan_dihapus'] = JadwalPencairan::query()
+            ->whereIn('tahun_kerja_id', array_values($this->petaTahunKerja))
+            ->whereNotIn('id', array_values($this->petaJadwal))
+            ->whereDoesntHave('realisasiProgramKerjas')
+            ->get()
+            ->each(fn (JadwalPencairan $jadwal) => $jadwal->delete())
+            ->count();
+    }
+
+    /**
      * Pengajuan anggaran program kerja beserta riwayat verifikasinya. Kosakata status
      * kedua aplikasi kebetulan sama persis sehingga dipakai apa adanya.
+     *
+     * Pengajuan yang sudah pernah dipindahkan diselaraskan ulang dengan LAMADU —
+     * isinya ditimpa dan riwayat bersumber LAMADU ditulis ulang — sedangkan yang sudah
+     * dihapus di LAMADU ikut dihapus di sini.
      */
     private function imporPengajuan(): void
     {
@@ -476,6 +690,7 @@ class ImporLama2025
             ->groupBy('budget_submission_id');
 
         $dibuat = 0;
+        $diperbarui = 0;
         $dilewati = 0;
 
         foreach ($this->lama->table('budget_submissions')->orderBy('id')->get() as $lama) {
@@ -496,12 +711,7 @@ class ImporLama2025
                 'created_at' => $lama->created_at,
             ]);
 
-            if ($pengajuan->exists) {
-                $this->petaPengajuan[(int) $lama->id] = $pengajuan->id;
-                $dilewati++;
-
-                continue;
-            }
+            $sudahAda = $pengajuan->exists;
 
             $pengajuan->fill([
                 'user_id' => $this->penggunaBaru($pengaju[$lama->id]->user_id ?? null),
@@ -516,13 +726,40 @@ class ImporLama2025
             $pengajuan->updated_at = $lama->updated_at;
             $pengajuan->save();
 
+            if ($sudahAda) {
+                $pengajuan->logs()->where('properties->sumber', 'LAMADU')->delete();
+            }
+
             $this->petaPengajuan[(int) $lama->id] = $pengajuan->id;
             $this->tulisLogPengajuan($pengajuan, $logs[$lama->id] ?? collect(), $tanggapan[$lama->id] ?? collect());
-            $dibuat++;
+            $sudahAda ? $diperbarui++ : $dibuat++;
         }
 
         $this->ringkasan['pengajuan_dibuat'] = $dibuat;
+        $this->ringkasan['pengajuan_diperbarui'] = $diperbarui;
         $this->ringkasan['pengajuan_dilewati'] = $dilewati;
+        $this->ringkasan['pengajuan_dihapus'] = $this->hapusPengajuanTerhapus();
+    }
+
+    /**
+     * Pengajuan hasil impor LAMADU yang sumbernya sudah dihapus di LAMADU. Pengenalnya
+     * kode pengajuan LAMADU yang tersimpan pada riwayatnya: hanya pengajuan yang
+     * kodenya tidak lagi ada di LAMADU yang dihapus, sehingga pengajuan yang dibuat
+     * langsung di sistem ini — maupun yang sekadar gagal ditautkan — tidak tersentuh.
+     * Yang sudah punya realisasi juga dibiarkan.
+     */
+    private function hapusPengajuanTerhapus(): int
+    {
+        $kodeBerlaku = $this->lama->table('budget_submissions')->pluck('item_id')->all();
+
+        return PengajuanProgramKerja::query()
+            ->whereNotIn('id', array_values($this->petaPengajuan))
+            ->whereHas('logs', fn (Builder $log): Builder => $log->where('properties->sumber', 'LAMADU'))
+            ->whereDoesntHave('logs', fn (Builder $log): Builder => $log->whereIn('properties->kode', $kodeBerlaku))
+            ->whereDoesntHave('realisasiProgramKerjas')
+            ->get()
+            ->each(fn (PengajuanProgramKerja $pengajuan) => $pengajuan->delete())
+            ->count();
     }
 
     /**
@@ -603,6 +840,11 @@ class ImporLama2025
      * Realisasi program kerja: inti impor. Satu baris `program_realizations` menjadi
      * satu realisasi lengkap dengan hasil verifikasi berjenjang, pencairan anggaran,
      * laporan pelaksanaan, dan dokumen-dokumennya.
+     *
+     * Selama LAMADU masih menjadi sistem yang dipakai sehari-hari, ialah sumber
+     * kebenarannya: realisasi yang sudah pernah dipindahkan diselaraskan ulang secara
+     * utuh — kolomnya ditimpa, dokumennya disamakan, dan riwayatnya disusun ulang —
+     * sehingga tindakan uji coba di sistem ini atas realisasi tersebut ikut tergantikan.
      */
     private function imporRealisasi(): void
     {
@@ -635,6 +877,7 @@ class ImporLama2025
             ->groupBy(fn (object $berkas): int => (int) ($realisasiLaporan[$berkas->realization_report_id] ?? 0));
 
         $dibuat = 0;
+        $diperbarui = 0;
         $dilewati = 0;
 
         foreach ($this->lama->table('program_realizations')->orderBy('id')->get() as $lama) {
@@ -651,11 +894,7 @@ class ImporLama2025
                 'created_at' => $lama->created_at,
             ]);
 
-            if ($realisasi->exists) {
-                $dilewati++;
-
-                continue;
-            }
+            $sudahAda = $realisasi->exists;
 
             $laporanLama = $laporan[$lama->id] ?? null;
             $berkasProposal = $dokumenProposal[$lama->id] ?? collect();
@@ -680,13 +919,19 @@ class ImporLama2025
             $realisasi->updated_at = $lama->updated_at;
             $realisasi->save();
 
+            if ($sudahAda) {
+                $this->selaraskanDokumen($realisasi);
+                $realisasi->logs()->delete();
+            }
+
             $this->rapikanDokumen($realisasi, $berkasProposal, $berkasLaporan);
             $this->tulisLogRealisasi($realisasi, $logs[$lama->id] ?? collect(), $quotes, $pengaju[$lama->id] ?? null);
             $this->tulisLogTautan($realisasi, $berkasProposal->merge($berkasLaporan));
-            $dibuat++;
+            $sudahAda ? $diperbarui++ : $dibuat++;
         }
 
         $this->ringkasan['realisasi_dibuat'] = $dibuat;
+        $this->ringkasan['realisasi_diperbarui'] = $diperbarui;
         $this->ringkasan['realisasi_dilewati'] = $dilewati;
     }
 
@@ -786,7 +1031,13 @@ class ImporLama2025
     private function atributPencairan(?object $pencairan): array
     {
         if ($pencairan === null) {
-            return [];
+            return [
+                'jadwal_pencairan_id' => null,
+                'status_pencairan' => null,
+                'dicairkan_at' => null,
+                'metode_pembayaran' => null,
+                'rekening_bank_id' => null,
+            ];
         }
 
         $sudahDiterima = $pencairan->status === 'anggaran sudah diterima';
@@ -815,7 +1066,13 @@ class ImporLama2025
     private function atributLaporan(object $lama, ?object $laporan, Collection $quotes): array
     {
         if ($laporan === null) {
-            return ['persentase_ketercapaian' => (int) $lama->fulfillment ?: null];
+            return [
+                'evaluasi_pengerjaan' => null,
+                'persentase_ketercapaian' => (int) $lama->fulfillment ?: null,
+                'laporan_diserahkan_at' => null,
+                'laporan_disetujui_at' => null,
+                'verifikator_laporan_id' => null,
+            ];
         }
 
         $disetujui = $quotes->where('status', 'laporan diterima')->last();
@@ -880,6 +1137,17 @@ class ImporLama2025
             ->all();
 
         return $nama !== [] ? $nama : null;
+    }
+
+    /**
+     * Membuang catatan dokumen yang tidak lagi tercantum pada realisasi (mis. berkas
+     * yang di LAMADU diganti tautan), sehingga daftar dokumen sama dengan sumbernya.
+     */
+    private function selaraskanDokumen(RealisasiProgramKerja $realisasi): void
+    {
+        $berlaku = [...(array) $realisasi->proposal_path, ...(array) $realisasi->laporan_path];
+
+        $realisasi->dokumens()->whereNotIn('path', $berlaku)->delete();
     }
 
     /**
@@ -1051,6 +1319,7 @@ class ImporLama2025
     {
         $realisasiLama = $this->lama->table('program_realizations')->get()->keyBy('id');
         $dibuat = 0;
+        $diperbarui = 0;
 
         $laporan = $this->lama->table('realization_reports')
             ->where('has_income', 'Ada')
@@ -1080,14 +1349,13 @@ class ImporLama2025
 
             $pemasukan = Pemasukan::firstOrNew([
                 'realisasi_program_kerja_id' => $realisasi->id,
-                'nominal_pendapatan' => $lama->income_amount,
+                'created_at' => $lama->created_at,
             ]);
 
-            if ($pemasukan->exists) {
-                continue;
-            }
+            $sudahAda = $pemasukan->exists;
 
             $pemasukan->fill([
+                'nominal_pendapatan' => $lama->income_amount,
                 'unit_kerja_id' => (int) $lama->departement_id,
                 'user_id' => $realisasi->pengajuanProgramKerja?->user_id,
                 'sumber' => EnumSumberPemasukan::Realisasi,
@@ -1103,10 +1371,11 @@ class ImporLama2025
             $pemasukan->updated_at = $lama->updated_at;
             $pemasukan->save();
 
-            $dibuat++;
+            $sudahAda ? $diperbarui++ : $dibuat++;
         }
 
         $this->ringkasan['pemasukan_dibuat'] = $dibuat;
+        $this->ringkasan['pemasukan_diperbarui'] = $diperbarui;
     }
 
     private function penggunaBaru(int|string|null $userIdLama): ?int

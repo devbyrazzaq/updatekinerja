@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\Users\Pages;
 
-use Carbon\Carbon;
+use App\Models\User;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
@@ -11,6 +11,12 @@ use Illuminate\Contracts\Support\Htmlable;
 abstract class CreateUser extends CreateRecord
 {
     protected ?string $generatedPassword = null;
+
+    /**
+     * Role utama yang dilekatkan pada akun baru: pilihan Jenis Akun pada menu
+     * multi-persona, atau satu-satunya persona menu.
+     */
+    protected ?string $personaTerpilih = null;
 
     public function getBreadcrumb(): string
     {
@@ -30,12 +36,11 @@ abstract class CreateUser extends CreateRecord
      */
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $day = ! empty($data['birth_date'])
-            ? Carbon::parse($data['birth_date'])->format('d')
-            : now()->format('d');
-
-        $this->generatedPassword = $data['username'].$day;
+        $this->generatedPassword = User::kataSandiAwal($data['username'], $data['birth_date'] ?? null);
         $data['password'] = $this->generatedPassword;
+
+        $this->personaTerpilih = $data['persona_role'] ?? $this->getResource()::personaRoles()[0] ?? null;
+        unset($data['persona_role']);
 
         return $data;
     }
@@ -46,10 +51,8 @@ abstract class CreateUser extends CreateRecord
      */
     protected function afterCreate(): void
     {
-        $personaRole = $this->getResource()::$personaRole;
-
-        if ($personaRole !== null) {
-            $this->record->assignRole($personaRole);
+        if ($this->personaTerpilih !== null) {
+            $this->record->assignRole($this->personaTerpilih);
         }
     }
 

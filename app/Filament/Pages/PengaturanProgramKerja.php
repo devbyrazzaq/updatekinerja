@@ -166,6 +166,7 @@ class PengaturanProgramKerja extends Page
             ->schema([
                 Grid::make(2)->schema([
                     TextEntry::make("{$prefix}_kelompok_acuan_id")
+                        ->state(fn (): mixed => $this->data["{$prefix}_kelompok_acuan_id"] ?? null)
                         ->label('Kelompok Acuan')
                         ->placeholder('Belum dipilih')
                         ->formatStateUsing(function (mixed $state): ?string {
@@ -177,11 +178,13 @@ class PengaturanProgramKerja extends Page
                         })
                         ->columnSpan(1),
                     TextEntry::make("{$prefix}_tahun_kerja_id")
+                        ->state(fn (): mixed => $this->data["{$prefix}_tahun_kerja_id"] ?? null)
                         ->label('Tahun Kerja')
                         ->placeholder('Belum dipilih')
                         ->formatStateUsing(fn (mixed $state): ?string => TahunKerja::find($state)?->name)
                         ->columnSpan(1),
                     TextEntry::make("{$prefix}_batas_anggaran")
+                        ->state(fn (): mixed => $this->data["{$prefix}_batas_anggaran"] ?? null)
                         ->label('Batas Anggaran Tahun Kerja')
                         ->placeholder('Belum diisi')
                         ->formatStateUsing(fn (mixed $state): ?string => blank($state)
@@ -189,6 +192,7 @@ class PengaturanProgramKerja extends Page
                             : 'Rp '.number_format((float) MoneyStateCast::unformat($state), 0, ',', '.'))
                         ->columnSpan(1),
                     TextEntry::make("{$prefix}_referensi_tahun_kerja_id")
+                        ->state(fn (): mixed => $this->data["{$prefix}_referensi_tahun_kerja_id"] ?? null)
                         ->label('Tahun Anggaran Referensi')
                         ->placeholder('Tidak ada referensi')
                         ->formatStateUsing(fn (mixed $state): ?string => TahunKerja::find($state)?->name)

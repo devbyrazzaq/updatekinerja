@@ -4,6 +4,7 @@ namespace App\Filament\Actions;
 
 use App\Enums\EnumStatusRealisasi;
 use App\Filament\Forms\Components\CatatanRevisi;
+use App\Filament\Resources\RealisasiProgramKerjas\RealisasiProgramKerjaResource;
 use App\Models\RealisasiProgramKerja;
 use App\Models\Setting;
 use App\Services\Notifikasi\NotifikasiVerifikasi;
@@ -43,8 +44,8 @@ class AjukanRealisasiAction extends Action
                 .static::keteranganKuota($record))
             ->modalSubmitActionLabel(fn (RealisasiProgramKerja $record): string => static::adalahPerbaikan($record) ? 'Kirim Ulang' : 'Ajukan')
             ->modalWidth(Width::TwoExtraLarge)
-            ->visible(fn (RealisasiProgramKerja $record): bool => $record->status === EnumStatusRealisasi::Draft
-                || static::adalahPerbaikan($record))
+            ->visible(fn (RealisasiProgramKerja $record): bool => RealisasiProgramKerjaResource::currentUserCanAbility('update')
+                && ($record->status === EnumStatusRealisasi::Draft || static::adalahPerbaikan($record)))
             ->fillForm(fn (RealisasiProgramKerja $record): array => [
                 'proposal_path' => $record->proposal_path,
                 'proposal_original_names' => $record->proposal_original_names,

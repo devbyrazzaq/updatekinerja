@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\RekeningBanks\Schemas;
 
 use App\Filament\Resources\Banks\Schemas\BankForm;
+use App\Filament\Resources\RekeningBanks\RekeningBankResource;
 use App\Models\Bank;
 use App\Models\UnitKerja;
 use App\Services\UnitKerjaAktif;
@@ -108,7 +109,7 @@ class RekeningBankForm
     {
         $query = UnitKerja::query()->where('is_active', true);
 
-        return ($dibatasiUnitKerja ? UnitKerjaAktif::batasiKueri($query) : $query)
+        return ($dibatasiUnitKerja ? UnitKerjaAktif::batasiKueri($query, RekeningBankResource::getPermissionName('view_any')) : $query)
             ->orderBy('name')
             ->pluck('name', 'id')
             ->all();
@@ -122,6 +123,6 @@ class RekeningBankForm
     {
         $user = auth()->user();
 
-        return $user !== null && ! $user->isPrivileged();
+        return $user !== null && ! $user->canViewAllUnitData(RekeningBankResource::getPermissionName('view_any'));
     }
 }

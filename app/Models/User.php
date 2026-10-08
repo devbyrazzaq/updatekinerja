@@ -3,8 +3,10 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Contracts\RestrictsDeletion;
 use App\Enums\EnumJenisKelamin;
 use App\Enums\EnumPermission;
+use App\Enums\EnumRole;
 use Carbon\Carbon;
 use Database\Factories\UserFactory;
 use Filament\Facades\Filament;
@@ -20,6 +22,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
+use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
 
 #[Fillable([
@@ -37,7 +40,7 @@ use Spatie\Permission\Traits\HasRoles;
     'password',
 ])]
 #[Hidden(['password', 'remember_token'])]
-class User extends Authenticatable implements FilamentUser, HasAvatar
+class User extends Authenticatable implements FilamentUser, HasAvatar, RestrictsDeletion
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, HasRoles, Notifiable;
@@ -56,6 +59,45 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
         return $this->can(EnumPermission::BypassDataScope->value);
     }
 
+    /**
+     * Boleh melihat data seluruh unit kerja. Selain pemegang akses penuh, berlaku pula
+     * bagi pimpinan universitas dan Biro Keuangan yang menu-menunya tetap dibatasi
+     * permission masing-masing.
+     *
+     * Akses seluruh unit melekat pada role, bukan pada akun. Pengguna yang merangkap —
+     * mis. Biro Keuangan sekaligus Pimpinan Unit — melihat seluruh unit hanya di menu
+     * yang diberikan role berakses seluruh unit (menu keuangan); menu yang datang dari
+     * role berlingkup unit (Pelaksanaan) tetap dibatasi unitnya sendiri.
+     *
+     * @param  string|null  $permission  Permission menu yang sedang dibuka. Tanpanya
+     *                                   (konteks lintas menu seperti nama cakupan di topbar), akses seluruh unit hanya
+     *                                   berlaku bila pengguna tidak memegang role berlingkup unit sama sekali.
+     */
+    public function canViewAllUnitData(?string $permission = null): bool
+    {
+        if ($this->isPrivileged() || $this->permissions->contains('name', EnumPermission::ViewAllUnitData->value)) {
+            return true;
+        }
+
+        $roles = $this->roles->reject(fn (Role $role): bool => EnumRole::isUnitScopeName($role->name));
+        $roleSeluruhUnit = $roles->filter(fn (Role $role): bool => $this->roleSeluruhUnit($role));
+
+        if ($roleSeluruhUnit->isEmpty()) {
+            return false;
+        }
+
+        if ($permission !== null) {
+            return $roleSeluruhUnit->contains(fn (Role $role): bool => $role->permissions->contains('name', $permission));
+        }
+
+        return ! $roles->contains(fn (Role $role): bool => $role->permissions->isNotEmpty() && ! $this->roleSeluruhUnit($role));
+    }
+
+    private function roleSeluruhUnit(Role $role): bool
+    {
+        return $role->permissions->contains('name', EnumPermission::ViewAllUnitData->value);
+    }
+
     public function getRouteKeyName(): string
     {
         return 'username';
@@ -70,6 +112,51 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
     public function setHashedPassword(string $hash): void
     {
         $this->attributes['password'] = $hash;
+    }
+
+    /**
+     * Penolakan hapus — juga berlaku pada hapus massal: akun sendiri tidak dapat
+     * dihapus, dan akun berakses penuh hanya dapat dihapus oleh pengguna yang juga
+     * berakses penuh.
+     */
+    public function getDeletionRestrictionReason(): ?string
+    {
+        $pengguna = auth()->user();
+
+        if ($this->is($pengguna)) {
+            return 'Akun yang sedang Anda pakai tidak dapat dihapus.';
+        }
+
+        if ($this->isPrivileged() && ! ($pengguna instanceof self && $pengguna->isPrivileged())) {
+            return 'Akun berakses penuh hanya dapat dihapus oleh pengguna berakses penuh.';
+        }
+
+        return null;
+    }
+
+    /**
+     * Kata sandi awal akun: username + dua digit tanggal lahir, atau dua digit
+     * tanggal hari ini bila tanggal lahirnya belum diisi. Dipakai saat akun dibuat
+     * maupun saat kata sandinya di-reset.
+     */
+    public static function kataSandiAwal(string $username, mixed $birthDate): string
+    {
+        $tanggal = filled($birthDate) ? Carbon::parse($birthDate) : now();
+
+        return $username.$tanggal->format('d');
+    }
+
+    /**
+     * Mengembalikan kata sandi ke kata sandi awal, lalu mengembalikan nilainya agar
+     * dapat disampaikan sekali kepada pemilik akun.
+     */
+    public function resetKataSandi(): string
+    {
+        $kataSandi = static::kataSandiAwal($this->username, $this->birth_date);
+
+        $this->update(['password' => $kataSandi]);
+
+        return $kataSandi;
     }
 
     public function unitKerja(): BelongsTo

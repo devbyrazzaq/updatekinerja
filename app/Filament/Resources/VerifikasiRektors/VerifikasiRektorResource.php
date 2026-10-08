@@ -46,9 +46,12 @@ class VerifikasiRektorResource extends Resource
         return (string) self::pendingStageQuery()->count();
     }
 
+    /**
+     * Merah agar antrean verifikasi menonjol dibanding badge menu lain.
+     */
     public static function getNavigationBadgeColor(): string|array|null
     {
-        return 'warning';
+        return 'danger';
     }
 
     /**

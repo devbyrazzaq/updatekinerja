@@ -32,7 +32,7 @@ class UserSeeder extends Seeder
         $accounts = [
             ['Admin Sistem', 'admin', EnumRole::Admin, null],
             ['Rektor UMLA', 'rektor', EnumRole::Rektor, null],
-            ['Wakil Rektor II', 'wakilrektor', EnumRole::WakilRektor, null],
+            ['Wakil Rektor II', 'wakilrektor', EnumRole::WakilRektorII, null],
             ['Staf Biro Keuangan', 'keuangan', EnumRole::BiroKeuangan, null],
             ['Verifikator Laporan', 'verifikator', EnumRole::VerifikatorLaporan, null],
             ['Kepala Fakultas Sains, Teknologi dan Pendidikan', 'unitteknik', EnumRole::UnitKerja, $unitTeknik?->id],

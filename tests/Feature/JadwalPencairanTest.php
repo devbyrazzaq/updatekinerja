@@ -38,6 +38,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\View;
 use Livewire\Livewire;
+use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
 
 class JadwalPencairanTest extends TestCase
@@ -334,6 +335,22 @@ class JadwalPencairanTest extends TestCase
     }
 
     /**
+     * Daftar jadwal diurutkan dari tanggal pencairan terbaru.
+     */
+    public function test_daftar_jadwal_diurutkan_dari_tanggal_terbaru(): void
+    {
+        $lama = $this->jadwal('Pencairan Januari');
+        $lama->update(['tanggal_pencairan' => '2026-01-10']);
+        $baru = $this->jadwal('Pencairan Maret');
+        $baru->update(['tanggal_pencairan' => '2026-03-10']);
+        $tengah = $this->jadwal('Pencairan Februari');
+        $tengah->update(['tanggal_pencairan' => '2026-02-10']);
+
+        Livewire::test(ListJadwalPencairans::class)
+            ->assertCanSeeTableRecords([$baru, $tengah, $lama], inOrder: true);
+    }
+
+    /**
      * Total pencairan satu jadwal = jumlah nominal seluruh realisasi anggotanya.
      */
     public function test_total_pencairan_dihitung_dari_realisasi_terjadwal(): void
@@ -572,6 +589,225 @@ class JadwalPencairanTest extends TestCase
 
         $kedua->tandaiAnggaranDicairkan(auth()->id(), EnumMetodePembayaran::Tunai);
         $this->assertSame(EnumStatusPencairan::Dicairkan, $jadwal->refresh()->status);
+    }
+
+    /**
+     * Mencairkan jadwal dari header halaman detail ikut memperbarui tabel realisasi
+     * di bawahnya tanpa memuat ulang halaman.
+     */
+    public function test_cairkan_dari_halaman_detail_memperbarui_tabel_realisasi(): void
+    {
+        $jadwal = $this->jadwal();
+        $realisasi = $this->realisasiAtKeuangan();
+        $realisasi->jadwalkanPencairan($jadwal, null, null, EnumMetodePembayaran::Tunai);
+
+        $relationManager = Livewire::test(RealisasiProgramKerjasRelationManager::class, [
+            'ownerRecord' => $jadwal,
+            'pageClass' => ViewJadwalPencairan::class,
+        ])
+            ->assertTableActionVisible('tandaiDicairkan', $realisasi);
+
+        Livewire::test(ViewJadwalPencairan::class, ['record' => $jadwal->getRouteKey()])
+            ->callAction('tandaiDicairkan')
+            ->assertHasNoActionErrors()
+            ->assertDispatched(RealisasiProgramKerjasRelationManager::EVENT_JADWAL_DIPERBARUI)
+            ->assertSee(EnumStatusPencairan::Dicairkan->getLabel())
+            ->assertActionHidden('tandaiDicairkan');
+
+        $relationManager
+            ->dispatch(RealisasiProgramKerjasRelationManager::EVENT_JADWAL_DIPERBARUI)
+            ->assertTableActionHidden('tandaiDicairkan', $realisasi)
+            ->assertSee(EnumStatusRealisasi::MenungguLaporan->getLabel());
+    }
+
+    /**
+     * Mengubah anggota jadwal dari tabel realisasi meminta halaman detail memuat
+     * ulang ringkasan total dan status jadwalnya.
+     */
+    public function test_aksi_relation_manager_memuat_ulang_halaman_detail(): void
+    {
+        $jadwal = $this->jadwal();
+        $realisasi = $this->realisasiAtKeuangan();
+        $realisasi->jadwalkanPencairan($jadwal);
+
+        Livewire::test(RealisasiProgramKerjasRelationManager::class, [
+            'ownerRecord' => $jadwal,
+            'pageClass' => ViewJadwalPencairan::class,
+        ])
+            ->callAction(TestAction::make('tandaiDicairkan')->table($realisasi), [
+                'metode_pembayaran' => EnumMetodePembayaran::Tunai->value,
+            ])
+            ->assertDispatched('refresh-page');
+    }
+
+    /**
+     * Jadwal yang sudah dicairkan beserta realisasinya.
+     *
+     * @return array{0: JadwalPencairan, 1: RealisasiProgramKerja}
+     */
+    private function jadwalDicairkan(): array
+    {
+        $jadwal = $this->jadwal();
+        $realisasi = $this->realisasiAtKeuangan();
+        $realisasi->jadwalkanPencairan($jadwal, null, null, EnumMetodePembayaran::Tunai);
+        $jadwal->cairkan();
+
+        return [$jadwal->refresh(), $realisasi->refresh()];
+    }
+
+    public function test_jadwal_dicairkan_tidak_dapat_diubah_maupun_dihapus(): void
+    {
+        [$jadwal] = $this->jadwalDicairkan();
+
+        Livewire::test(ListJadwalPencairans::class)
+            ->assertActionHidden(TestAction::make('edit')->table($jadwal))
+            ->assertActionHidden(TestAction::make('delete')->table($jadwal));
+
+        Livewire::test(ViewJadwalPencairan::class, ['record' => $jadwal->getRouteKey()])
+            ->assertActionHidden('edit');
+
+        $this->get(JadwalPencairanResource::getUrl('edit', ['record' => $jadwal]))->assertForbidden();
+    }
+
+    /**
+     * Jadwal yang sebagian realisasinya sudah dicairkan satu per satu masih dapat
+     * diubah, namun tidak dapat dihapus.
+     */
+    public function test_jadwal_dengan_realisasi_dicairkan_sebagian_tidak_dapat_dihapus(): void
+    {
+        $jadwal = $this->jadwal();
+        $dicairkan = $this->realisasiAtKeuangan('Kegiatan A');
+        $menunggu = $this->realisasiAtKeuangan('Kegiatan B');
+        $dicairkan->jadwalkanPencairan($jadwal, null, null, EnumMetodePembayaran::Tunai);
+        $menunggu->jadwalkanPencairan($jadwal, null, null, EnumMetodePembayaran::Tunai);
+        $dicairkan->tandaiAnggaranDicairkan();
+
+        Livewire::test(ListJadwalPencairans::class)
+            ->assertActionVisible(TestAction::make('edit')->table($jadwal))
+            ->assertActionHidden(TestAction::make('delete')->table($jadwal));
+    }
+
+    /**
+     * Menghapus jadwal mengembalikan realisasinya ke antrean penjadwalan Biro
+     * Keuangan, bukan meninggalkannya menunggu anggaran tanpa jadwal.
+     */
+    public function test_hapus_jadwal_mengembalikan_realisasi_ke_antrean_penjadwalan(): void
+    {
+        $jadwal = $this->jadwal();
+        $realisasi = $this->realisasiAtKeuangan();
+        $realisasi->jadwalkanPencairan($jadwal);
+
+        $jadwal->delete();
+
+        $realisasi->refresh();
+        $this->assertNull($realisasi->jadwal_pencairan_id);
+        $this->assertSame(EnumStatusRealisasi::VerifikasiKeuangan, $realisasi->status);
+    }
+
+    public function test_reset_pencairan_mengembalikan_jadwal_dan_realisasi(): void
+    {
+        [$jadwal, $realisasi] = $this->jadwalDicairkan();
+
+        $halaman = Livewire::test(ViewJadwalPencairan::class, ['record' => $jadwal->getRouteKey()])
+            ->assertActionHidden('tandaiDicairkan');
+
+        $this->jalankanAksiCaptcha($halaman, TestAction::make('resetPencairan'), ['alasan' => 'Salah tandai, dana belum diserahkan'])
+            ->assertHasNoActionErrors()
+            ->assertDispatched(RealisasiProgramKerjasRelationManager::EVENT_JADWAL_DIPERBARUI)
+            ->assertActionHidden('resetPencairan')
+            ->assertActionVisible('tandaiDicairkan')
+            ->assertActionVisible('edit');
+
+        $jadwal->refresh();
+        $realisasi->refresh();
+
+        $this->assertSame(EnumStatusPencairan::Dijadwalkan, $jadwal->status);
+        $this->assertNull($jadwal->dicairkan_at);
+        $this->assertSame(EnumStatusRealisasi::Dijadwalkan, $realisasi->status);
+        $this->assertSame(EnumStatusPencairan::Dijadwalkan, $realisasi->status_pencairan);
+        $this->assertNull($realisasi->dicairkan_at);
+        $this->assertSame($jadwal->id, $realisasi->jadwal_pencairan_id);
+        $this->assertSame(EnumMetodePembayaran::Tunai, $realisasi->metode_pembayaran);
+        $this->assertStringContainsString(
+            'membatalkan penandaan anggaran sudah dicairkan',
+            (string) $realisasi->logs()->latest('id')->value('description'),
+        );
+        $this->assertStringContainsString(
+            'Salah tandai, dana belum diserahkan',
+            (string) $realisasi->logs()->latest('id')->value('description'),
+        );
+    }
+
+    /**
+     * Setelah unit kerja menyerahkan laporan, pencairannya sudah menjadi dasar
+     * verifikasi laporan sehingga tidak boleh di-reset.
+     */
+    public function test_reset_ditolak_bila_laporan_realisasi_sudah_diserahkan(): void
+    {
+        [$jadwal, $realisasi] = $this->jadwalDicairkan();
+        $realisasi->update([
+            'status' => EnumStatusRealisasi::VerifikasiLaporan,
+            'laporan_diserahkan_at' => now(),
+        ]);
+
+        $this->jalankanAksiCaptcha(
+            Livewire::test(ListJadwalPencairans::class),
+            TestAction::make('resetPencairan')->table($jadwal),
+            ['alasan' => 'Coba reset'],
+        )
+            ->assertNotified('Pencairan tidak dapat di-reset');
+
+        $this->assertSame(EnumStatusPencairan::Dicairkan, $jadwal->refresh()->status);
+        $this->assertSame(EnumStatusRealisasi::VerifikasiLaporan, $realisasi->refresh()->status);
+    }
+
+    public function test_reset_pencairan_wajib_menyertakan_alasan(): void
+    {
+        [$jadwal] = $this->jadwalDicairkan();
+
+        $this->jalankanAksiCaptcha(
+            Livewire::test(ListJadwalPencairans::class),
+            TestAction::make('resetPencairan')->table($jadwal),
+            ['alasan' => ''],
+        )
+            ->assertHasActionErrors(['alasan' => 'required']);
+
+        $this->assertSame(EnumStatusPencairan::Dicairkan, $jadwal->refresh()->status);
+    }
+
+    public function test_reset_pencairan_ditolak_saat_jawaban_captcha_salah(): void
+    {
+        [$jadwal] = $this->jadwalDicairkan();
+
+        $this->jalankanAksiCaptcha(
+            Livewire::test(ListJadwalPencairans::class),
+            TestAction::make('resetPencairan')->table($jadwal),
+            ['alasan' => 'Salah tandai'],
+            jawabanBenar: false,
+        )
+            ->assertNotified('Gagal!');
+
+        $this->assertSame(EnumStatusPencairan::Dicairkan, $jadwal->refresh()->status);
+    }
+
+    public function test_reset_pencairan_memerlukan_permission(): void
+    {
+        [$jadwal] = $this->jadwalDicairkan();
+        Permission::findOrCreate(JadwalPencairanResource::getPermissionName('reset'), 'web');
+
+        $user = User::factory()->create();
+        foreach (['view_any', 'view'] as $ability) {
+            $user->givePermissionTo(Permission::findOrCreate(JadwalPencairanResource::getPermissionName($ability), 'web'));
+        }
+        $this->actingAs($user);
+
+        Livewire::test(ViewJadwalPencairan::class, ['record' => $jadwal->getRouteKey()])
+            ->assertActionHidden('resetPencairan');
+
+        $user->givePermissionTo(JadwalPencairanResource::getPermissionName('reset'));
+
+        Livewire::test(ViewJadwalPencairan::class, ['record' => $jadwal->getRouteKey()])
+            ->assertActionVisible('resetPencairan');
     }
 
     public function test_realisasi_dijadwalkan_lewat_relation_manager(): void

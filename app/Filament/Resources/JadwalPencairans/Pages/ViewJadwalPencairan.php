@@ -6,6 +6,7 @@ use App\Exports\JadwalPencairanExport;
 use App\Filament\Actions\AuthorizedEditAction;
 use App\Filament\Actions\ExcelExportAction;
 use App\Filament\Actions\PdfReportAction;
+use App\Filament\Actions\ResetPencairanAction;
 use App\Filament\Resources\JadwalPencairans\JadwalPencairanResource;
 use App\Filament\Resources\JadwalPencairans\Tables\JadwalPencairansTable;
 use App\Models\JadwalPencairan;
@@ -47,6 +48,7 @@ class ViewJadwalPencairan extends ViewRecord
     {
         return [
             JadwalPencairansTable::cairkanAction(),
+            ResetPencairanAction::make(),
             ActionGroup::make([
                 ExcelExportAction::make()
                     ->label('Ekspor Excel')

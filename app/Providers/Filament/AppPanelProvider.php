@@ -3,7 +3,9 @@
 namespace App\Providers\Filament;
 
 use App\Http\Controllers\DokumenRealisasiController;
+use App\Http\Controllers\KembaliDariImpersonasiController;
 use App\Models\Setting;
+use App\Services\Impersonasi;
 use App\Services\KodeDokumenRealisasi;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -63,6 +65,12 @@ class AppPanelProvider extends PanelProvider
             // tiap menu otomatis disembunyikan Filament saat sidebar terbuka.
             ->sidebarCollapsibleOnDesktop()
             ->navigationGroups([
+                // Antrean verifikasi diletakkan tepat di bawah Dashboard agar menjadi
+                // perhatian pertama para verifikator.
+                NavigationGroup::make('Verifikasi Pengajuan')
+                    ->icon(Heroicon::OutlinedShieldCheck),
+                NavigationGroup::make('Verifikasi Realisasi')
+                    ->icon(Heroicon::OutlinedClipboardDocumentCheck),
                 NavigationGroup::make('Master Data')
                     ->icon(Heroicon::OutlinedCircleStack),
                 NavigationGroup::make('Anggaran')
@@ -75,10 +83,6 @@ class AppPanelProvider extends PanelProvider
                     ->icon(Heroicon::OutlinedArrowDownTray),
                 NavigationGroup::make('Verifikasi Pemasukan')
                     ->icon(Heroicon::OutlinedReceiptPercent),
-                NavigationGroup::make('Verifikasi Pengajuan')
-                    ->icon(Heroicon::OutlinedShieldCheck),
-                NavigationGroup::make('Verifikasi Realisasi')
-                    ->icon(Heroicon::OutlinedClipboardDocumentCheck),
                 NavigationGroup::make('Perencanaan')
                     ->icon(Heroicon::OutlinedCalendarDays),
                 NavigationGroup::make('Verifikasi Pengajuan Perencanaan')
@@ -110,12 +114,20 @@ class AppPanelProvider extends PanelProvider
                 PanelsRenderHook::SIDEBAR_NAV_START,
                 fn (): string => Blade::render('<livewire:unit-kerja-switcher />'),
             )
+            // Penanda mode "Masuk Sebagai" tepat di bawah topbar, ikut menempel saat
+            // halaman digulir, lengkap dengan tombol kembali ke akun asli.
+            ->renderHook(
+                PanelsRenderHook::TOPBAR_AFTER,
+                fn (): string => Impersonasi::aktif() ? view('filament.impersonasi-banner')->render() : '',
+            )
             // Penukar kode dokumen realisasi yang tertanam pada berkas ekspor.
             // Didaftarkan sebagai rute terautentikasi supaya tautan yang dibuka orang
             // yang belum masuk singgah dulu di halaman login.
             ->authenticatedRoutes(function (): void {
                 Route::get(KodeDokumenRealisasi::NAMA_RUTE.'/{kode}', DokumenRealisasiController::class)
                     ->name(KodeDokumenRealisasi::NAMA_RUTE);
+                Route::post('impersonasi/kembali', KembaliDariImpersonasiController::class)
+                    ->name('impersonasi.kembali');
             })
             ->middleware([
                 EncryptCookies::class,

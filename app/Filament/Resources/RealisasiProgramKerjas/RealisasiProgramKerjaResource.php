@@ -79,7 +79,7 @@ class RealisasiProgramKerjaResource extends Resource
 
         $user = auth()->user();
 
-        if ($user !== null && ! $user->isPrivileged()) {
+        if ($user !== null && ! $user->canViewAllUnitData(static::getPermissionName('view_any'))) {
             $unitIds = PermissionRegistrar::permittedUnitIds($user)->all();
             $query->whereHas('pengajuanProgramKerja', fn (Builder $q) => $q->whereIn('unit_kerja_id', $unitIds));
         }

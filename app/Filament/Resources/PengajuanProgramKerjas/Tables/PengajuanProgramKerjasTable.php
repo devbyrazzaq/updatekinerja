@@ -16,6 +16,7 @@ use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
 use Filament\Notifications\Notification;
+use Filament\Resources\Pages\Page;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -93,7 +94,8 @@ class PengajuanProgramKerjasTable
                     ->requiresConfirmation()
                     ->modalHeading('Ajukan Program Kerja')
                     ->modalDescription('Pengajuan akan dikirim untuk verifikasi tahap 1 dan tidak dapat diubah sampai ada keputusan.')
-                    ->visible(fn (PengajuanProgramKerja $record): bool => in_array($record->status, [EnumStatusPengajuan::Draft, EnumStatusPengajuan::Revisi], true))
+                    ->visible(fn (PengajuanProgramKerja $record, Page $livewire): bool => $livewire::getResource()::currentUserCanAbility('update')
+                        && in_array($record->status, [EnumStatusPengajuan::Draft, EnumStatusPengajuan::Revisi], true))
                     ->action(function (PengajuanProgramKerja $record): void {
                         $diajukanKembali = $record->status === EnumStatusPengajuan::Revisi;
 

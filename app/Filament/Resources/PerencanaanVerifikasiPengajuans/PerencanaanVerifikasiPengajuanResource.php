@@ -27,6 +27,15 @@ class PerencanaanVerifikasiPengajuanResource extends VerifikasiPengajuanResource
         return 'Verifikasi Pengajuan Perencanaan';
     }
 
+    /**
+     * Warna merah khusus antrean verifikasi tahun berjalan; pengajuan perencanaan
+     * tetap memakai warna peringatan biasa.
+     */
+    public static function getNavigationBadgeColor(): string|array|null
+    {
+        return 'warning';
+    }
+
     public static function slotTahunKerja(): EnumStatusTahunKerja
     {
         return EnumStatusTahunKerja::Perencanaan;

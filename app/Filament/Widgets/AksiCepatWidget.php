@@ -245,7 +245,7 @@ class AksiCepatWidget extends Widget implements HasActions, HasSchemas
 
         $user = auth()->user();
 
-        if ($user !== null && ! $user->isPrivileged()) {
+        if ($user !== null && ! $user->canViewAllUnitData(static::getWidgetPermission())) {
             $query->whereIn('id', PermissionRegistrar::permittedUnitIds($user)->all());
         }
 

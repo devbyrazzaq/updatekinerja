@@ -81,7 +81,8 @@ class ViewPengajuanProgramKerja extends ViewRecord
             ->modalHeading('Ajukan Kembali Pengajuan')
             ->modalDescription('Pengajuan yang telah diperbaiki akan diteruskan kembali untuk verifikasi.')
             ->modalSubmitActionLabel('Ya, Ajukan Kembali')
-            ->visible(fn (PengajuanProgramKerja $record): bool => $record->status === EnumStatusPengajuan::Revisi)
+            ->visible(fn (PengajuanProgramKerja $record): bool => static::getResource()::currentUserCanAbility('update')
+                && $record->status === EnumStatusPengajuan::Revisi)
             ->action(function (PengajuanProgramKerja $record): void {
                 $record->update(['status' => EnumStatusPengajuan::Diajukan]);
 
@@ -104,7 +105,8 @@ class ViewPengajuanProgramKerja extends ViewRecord
             ->modalHeading('Ajukan Pengajuan')
             ->modalDescription('Pengajuan akan diteruskan untuk verifikasi dan tidak dapat diubah statusnya kembali menjadi draf.')
             ->modalSubmitActionLabel('Ya, Ajukan')
-            ->visible(fn (PengajuanProgramKerja $record): bool => $record->status === EnumStatusPengajuan::Draft)
+            ->visible(fn (PengajuanProgramKerja $record): bool => static::getResource()::currentUserCanAbility('update')
+                && $record->status === EnumStatusPengajuan::Draft)
             ->action(function (PengajuanProgramKerja $record): void {
                 $record->update(['status' => EnumStatusPengajuan::Diajukan]);
 

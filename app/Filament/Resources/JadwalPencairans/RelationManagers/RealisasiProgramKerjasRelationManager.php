@@ -18,6 +18,7 @@ use Filament\Support\Enums\Width;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Livewire\Attributes\On;
 
 /**
  * Daftar realisasi yang dijadwalkan pada satu jadwal pencairan. Selain menampilkan
@@ -34,6 +35,24 @@ class RealisasiProgramKerjasRelationManager extends RelationManager
     protected static ?string $title = 'Realisasi Dijadwalkan';
 
     protected static ?string $recordTitleAttribute = 'name';
+
+    /**
+     * Dikirim halaman detail setelah jadwal dicairkan sekaligus, agar tabel ini
+     * ikut menampilkan status realisasi terbaru tanpa memuat ulang halaman.
+     */
+    public const EVENT_JADWAL_DIPERBARUI = 'jadwal-pencairan-diperbarui';
+
+    #[On(self::EVENT_JADWAL_DIPERBARUI)]
+    public function muatUlangRealisasi(): void {}
+
+    /**
+     * Ringkasan total, status jadwal, dan tombol di header halaman detail turut
+     * berubah ketika anggota jadwal diubah dari tabel ini.
+     */
+    protected function muatUlangHalaman(): void
+    {
+        $this->dispatch('refresh-page');
+    }
 
     public function table(Table $table): Table
     {
@@ -120,6 +139,8 @@ class RealisasiProgramKerjasRelationManager extends RelationManager
                     $realisasi->jadwalkanPencairan($jadwal, auth()->id());
                 }
 
+                $this->muatUlangHalaman();
+
                 Notification::make()
                     ->title($realisasis->count().' realisasi dijadwalkan')
                     ->body('Realisasi menunggu anggaran diberikan pada '.$jadwal->tanggal_pencairan?->locale('id')->translatedFormat('d F Y').'.')
@@ -155,6 +176,8 @@ class RealisasiProgramKerjasRelationManager extends RelationManager
                     static::rekeningBankDari($data),
                 );
 
+                $this->muatUlangHalaman();
+
                 Notification::make()
                     ->title('Anggaran ditandai sudah dicairkan')
                     ->body('Unit kerja kini dapat mengirim laporan realisasi.')
@@ -181,6 +204,8 @@ class RealisasiProgramKerjasRelationManager extends RelationManager
                 && VerifikasiBiroKeuanganResource::currentUserCanVerify())
             ->action(function (RealisasiProgramKerja $record): void {
                 $record->keluarkanDariJadwal(auth()->id());
+
+                $this->muatUlangHalaman();
 
                 Notification::make()
                     ->title('Realisasi dikeluarkan dari jadwal')

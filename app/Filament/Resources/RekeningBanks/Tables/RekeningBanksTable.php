@@ -6,6 +6,7 @@ use App\Filament\Actions\AuthorizedEditAction;
 use App\Filament\Actions\AuthorizedViewAction;
 use App\Filament\Actions\CaptchaDeleteAction;
 use App\Filament\Actions\CaptchaDeleteBulkAction;
+use App\Filament\Resources\RekeningBanks\RekeningBankResource;
 use App\Services\UnitKerjaAktif;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
@@ -56,7 +57,7 @@ class RekeningBanksTable
                 SelectFilter::make('bank_id')->label('Bank')->relationship('bank', 'name')->searchable()->preload(),
                 SelectFilter::make('unit_kerja_id')
                     ->label('Unit Kerja')
-                    ->relationship('unitKerja', 'name', fn (Builder $query): Builder => UnitKerjaAktif::batasiKueri($query))
+                    ->relationship('unitKerja', 'name', fn (Builder $query): Builder => UnitKerjaAktif::batasiKueri($query, RekeningBankResource::getPermissionName('view_any')))
                     ->searchable()
                     ->preload(),
                 TernaryFilter::make('is_utama')->label('Rekening Utama'),

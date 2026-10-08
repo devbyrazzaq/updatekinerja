@@ -12,6 +12,7 @@ use App\Filament\Pages\PerbandinganMonitoring;
 use App\Filament\Pages\RingkasanUnitKerja;
 use App\Filament\Pages\Widgets\MonitoringOverview;
 use App\Filament\Pages\Widgets\PenyerapanAnggaranChart;
+use App\Filament\Pages\Widgets\PenyerapanUnitKerjaChart;
 use App\Models\Bidang;
 use App\Models\Kategori;
 use App\Models\PaguAnggaran;
@@ -418,6 +419,31 @@ class MonitoringProgramKerjaTest extends TestCase
             ->assertSee('Rp 30.000.000')
             ->assertSee('Rp 9.000.000')
             ->assertSee('90,0%');
+    }
+
+    public function test_grafik_ringkasan_unit_kerja_hanya_menggambar_batang_pagu_dan_terserap(): void
+    {
+        $this->seedPagu($this->unitA, 20_000_000);
+        $this->seedPagu($this->unitB, 10_000_000);
+
+        $pengajuan = $this->seedPengajuan($this->unitB, 9_000_000, EnumStatusPengajuan::Diterima);
+        $this->seedRealisasi($pengajuan, 9_000_000, EnumStatusRealisasi::Selesai, [
+            'nominal_disetujui' => 9_000_000,
+            'dicairkan_at' => Carbon::create(2026, 4, 1),
+        ]);
+
+        $widget = new PenyerapanUnitKerjaChart;
+        $widget->tahunKerjaId = $this->tahunKerja->id;
+
+        /** @var array{datasets: array<int, array<string, mixed>>, labels: array<int, string>} $data */
+        $data = (new \ReflectionMethod($widget, 'getData'))->invoke($widget);
+
+        $this->assertSame(['Pagu Anggaran (Rp)', 'Anggaran Terserap (Rp)'], array_column($data['datasets'], 'label'));
+        $this->assertSame(['bar', 'bar'], array_column($data['datasets'], 'type'));
+
+        $terserapPerUnit = array_combine($data['labels'], $data['datasets'][1]['data']);
+        $this->assertSame(0.0, $terserapPerUnit['Unit A']);
+        $this->assertSame(9_000_000.0, $terserapPerUnit['Unit B']);
     }
 
     public function test_halaman_perbandingan_menyandingkan_unit_kerja(): void

@@ -21,6 +21,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use UnitEnum;
 
 class JadwalPencairanResource extends Resource
@@ -51,9 +52,12 @@ class JadwalPencairanResource extends Resource
             ->count();
     }
 
+    /**
+     * Merah agar antrean verifikasi menonjol dibanding badge menu lain.
+     */
     public static function getNavigationBadgeColor(): string|array|null
     {
-        return 'warning';
+        return 'danger';
     }
 
     /**
@@ -65,6 +69,7 @@ class JadwalPencairanResource extends Resource
 
         return [
             "cairkan_{$prefix}" => 'Tandai Anggaran Dicairkan',
+            "reset_{$prefix}" => 'Reset Pencairan',
             "export_{$prefix}" => 'Ekspor Data',
             "report_{$prefix}" => 'Unduh Laporan PDF',
         ];
@@ -73,6 +78,31 @@ class JadwalPencairanResource extends Resource
     public static function currentUserCanCairkan(): bool
     {
         return static::currentUserCan(static::getPermissionName('cairkan'));
+    }
+
+    public static function currentUserCanReset(): bool
+    {
+        return static::currentUserCan(static::getPermissionName('reset'));
+    }
+
+    /**
+     * Jadwal yang sudah dicairkan terkunci; untuk mengubahnya, pencairannya perlu
+     * di-reset lebih dulu.
+     */
+    public static function canEdit(Model $record): bool
+    {
+        return static::currentUserCan(static::getPermissionName('update'))
+            && ! ($record instanceof JadwalPencairan && $record->sudahDicairkan());
+    }
+
+    /**
+     * Jadwal tidak dapat dihapus selama ada realisasinya yang anggarannya sudah
+     * diserahkan, termasuk yang dicairkan satu per satu.
+     */
+    public static function canDelete(Model $record): bool
+    {
+        return static::currentUserCan(static::getPermissionName('delete'))
+            && ! ($record instanceof JadwalPencairan && $record->adaRealisasiDicairkan());
     }
 
     public static function getEloquentQuery(): Builder

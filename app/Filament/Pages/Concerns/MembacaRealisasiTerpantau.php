@@ -3,6 +3,7 @@
 namespace App\Filament\Pages\Concerns;
 
 use App\Enums\EnumStatusRealisasi;
+use App\Filament\Pages\MonitoringRealisasi;
 use App\Models\RealisasiProgramKerja;
 use App\Services\PermissionRegistrar;
 
@@ -10,7 +11,8 @@ use App\Services\PermissionRegistrar;
  * Cara halaman-halaman turunan Monitoring Realisasi mengambil satu realisasi dari
  * kunci rutenya, dengan dua penjagaan yang sama: hanya realisasi yang benar-benar
  * berjalan (draf tidak pernah dipantau di sini) dan hanya unit kerja yang menjadi
- * cakupan data pengguna — aturan yang sama dengan tabel di halaman induknya.
+ * cakupan data pengguna — aturan yang sama dengan tabel di halaman induknya, termasuk
+ * permission Monitoring Realisasi yang ditumpangi hak aksesnya.
  */
 trait MembacaRealisasiTerpantau
 {
@@ -35,7 +37,7 @@ trait MembacaRealisasiTerpantau
             return false;
         }
 
-        if ($user->isPrivileged()) {
+        if ($user->canViewAllUnitData(MonitoringRealisasi::getPagePermission())) {
             return true;
         }
 

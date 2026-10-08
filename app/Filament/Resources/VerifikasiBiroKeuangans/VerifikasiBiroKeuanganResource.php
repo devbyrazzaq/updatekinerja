@@ -72,9 +72,12 @@ class VerifikasiBiroKeuanganResource extends Resource
         return 'verifikator_laporan_id';
     }
 
+    /**
+     * Merah agar antrean verifikasi menonjol dibanding badge menu lain.
+     */
     public static function getNavigationBadgeColor(): string|array|null
     {
-        return 'warning';
+        return 'danger';
     }
 
     /**

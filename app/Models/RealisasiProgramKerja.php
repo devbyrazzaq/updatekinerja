@@ -344,6 +344,36 @@ class RealisasiProgramKerja extends Model
     }
 
     /**
+     * Membatalkan penandaan "anggaran sudah dicairkan": realisasi kembali menunggu
+     * anggaran diberikan pada jadwal yang sama, dengan rencana pembayaran yang tetap
+     * tersimpan. Hanya aman selama unit kerja belum menyerahkan laporan, lihat
+     * {@see self::pencairanDapatDibatalkan()}.
+     */
+    public function batalkanPencairan(?int $userId = null, ?string $alasan = null): void
+    {
+        $this->update([
+            'status_pencairan' => EnumStatusPencairan::Dijadwalkan,
+            'dicairkan_at' => null,
+            'status' => EnumStatusRealisasi::Dijadwalkan,
+        ]);
+
+        $this->catatPembatalanPencairan($alasan, $userId);
+    }
+
+    /**
+     * Pencairan masih dapat dibatalkan selama realisasi baru sampai tahap menunggu
+     * laporan dan unit kerja belum menyerahkan laporan apa pun. Setelah laporan masuk,
+     * verifikasi laporan maupun penyelesaian selisih anggaran sudah bergantung pada
+     * dana yang dianggap diterima.
+     */
+    public function pencairanDapatDibatalkan(): bool
+    {
+        return $this->dicairkan_at !== null
+            && $this->status === EnumStatusRealisasi::MenungguLaporan
+            && ! $this->sudahAdaLaporan();
+    }
+
+    /**
      * Realisasi siap dicairkan bila pembayaran tunai, atau transfer yang rekening
      * tujuannya sudah ditentukan.
      */
@@ -621,6 +651,28 @@ class RealisasiProgramKerja extends Model
                 'aktor' => $aktor,
                 'cara_penyelesaian_anggaran' => $cara->value,
                 'nominal_selisih_anggaran' => (float) ($this->nominal_selisih_anggaran ?? 0),
+            ],
+        ]);
+    }
+
+    /**
+     * Mencatat pembatalan penandaan "anggaran sudah dicairkan" (reset pencairan)
+     * beserta alasannya pada riwayat realisasi.
+     */
+    public function catatPembatalanPencairan(?string $alasan, ?int $userId): RealisasiProgramKerjaLog
+    {
+        $aktor = ($userId !== null ? User::find($userId)?->name : null) ?? 'Sistem';
+        $waktu = Carbon::now()->locale('id');
+        $waktuTeks = $waktu->translatedFormat('d F Y').' pukul '.$waktu->format('H.i');
+        $deskripsi = "{$aktor} membatalkan penandaan anggaran sudah dicairkan pada {$waktuTeks}, realisasi kembali menunggu anggaran diberikan.";
+
+        return $this->logs()->create([
+            'user_id' => $userId,
+            'status' => EnumStatusRealisasi::Dijadwalkan,
+            'description' => filled($alasan) ? $deskripsi.' Catatan: '.$alasan : $deskripsi,
+            'properties' => [
+                'aktor' => $aktor,
+                'catatan' => filled($alasan) ? $alasan : null,
             ],
         ]);
     }

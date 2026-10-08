@@ -3,6 +3,7 @@
 namespace App\Filament\Actions;
 
 use App\Enums\EnumStatusPemasukan;
+use App\Filament\Resources\Pemasukans\PemasukanResource;
 use App\Models\Pemasukan;
 use App\Models\Setting;
 use Filament\Actions\Action;
@@ -32,7 +33,8 @@ class UnggahBuktiPemasukanAction extends Action
         $this->label('Unggah Bukti Tanda Terima')
             ->icon('heroicon-o-arrow-up-tray')
             ->color('success')
-            ->visible(fn (Pemasukan $record): bool => $record->status === EnumStatusPemasukan::MenungguBukti)
+            ->visible(fn (Pemasukan $record): bool => PemasukanResource::currentUserCanAbility('update')
+                && $record->status === EnumStatusPemasukan::MenungguBukti)
             ->modalHeading('Unggah Bukti Tanda Terima')
             ->modalDescription('Pemasukan dinyatakan valid dan tercatat pada buku anggaran begitu bukti tanda terima diunggah.')
             ->modalSubmitActionLabel('Unggah & Sahkan')

@@ -253,6 +253,21 @@ class GeneratePenawaranTest extends TestCase
     }
 
     /**
+     * Ringkasan baca-saja tiap slot harus menampilkan tahun kerja yang sedang
+     * menempatinya, bukan placeholder kosong.
+     */
+    public function test_page_shows_the_running_year_in_its_slot_summary(): void
+    {
+        [, $tahunKerja, $kelompokAcuan] = $this->seedAcuan();
+
+        $tahunKerja->update(['kelompok_acuan_id' => $kelompokAcuan->id, 'batas_anggaran' => 1500000]);
+
+        Livewire::test(PengaturanProgramKerja::class)
+            ->assertSeeInOrder(['Tahun Kerja Berjalan', 'RENSTRA 2025-2029 (2025-2029)', 'TA 2026', 'Rp 1.500.000', 'Tahun Kerja Perencanaan'])
+            ->assertDontSee('Isi kelompok acuan dan tahun kerja lewat tombol Ubah');
+    }
+
+    /**
      * Slot dipilih lewat tombol Ubah, dan pilihan itu berhenti di ringkasan halaman:
      * tidak ada slot yang tergeser maupun penawaran yang terbentuk sampai tombol
      * Terapkan ditekan.

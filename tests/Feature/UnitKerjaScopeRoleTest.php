@@ -6,7 +6,16 @@ use App\Enums\EnumRole;
 use App\Filament\Pages\BukuAnggaran;
 use App\Filament\Pages\MonitoringProgramKerja;
 use App\Filament\Pages\MonitoringRealisasi;
+use App\Filament\Pages\PerbandinganMonitoring;
 use App\Filament\Resources\RekeningBanks\RekeningBankResource;
+use App\Filament\Widgets\AksiCepatWidget;
+use App\Filament\Widgets\PenyerapanBulananWidget;
+use App\Filament\Widgets\PeriodeBerjalanWidget;
+use App\Filament\Widgets\PintasanMenuWidget;
+use App\Filament\Widgets\RingkasanAnggaranWidget;
+use App\Filament\Widgets\RingkasanProgramKerjaWidget;
+use App\Filament\Widgets\SisaWaktuTahunKerjaWidget;
+use App\Filament\Widgets\TentangSistemWidget;
 use App\Models\UnitKerja;
 use App\Models\User;
 use App\Services\PermissionRegistrar;
@@ -110,13 +119,22 @@ class UnitKerjaScopeRoleTest extends TestCase
 
         $diizinkan = [
             ...PermissionRegistrar::permissionNamesForNavGroups(['Pelaksanaan', 'Pemasukan', 'Perencanaan']),
-            // Menu satuan di luar ketiga grup: rekening bank (tanpa hapus), buku
-            // anggaran unit, monitoring program kerja, dan monitoring realisasi.
+            // Menu satuan di luar ketiga grup: rekening bank (tanpa hapus massal), buku
+            // anggaran unit, tiga menu monitoring, dan widget dashboard.
             ...PermissionRegistrar::permissionNamesForMenus([
-                RekeningBankResource::class => ['view_any', 'view', 'create', 'update'],
+                RekeningBankResource::class => ['view_any', 'view', 'create', 'update', 'delete'],
                 BukuAnggaran::class => null,
                 MonitoringProgramKerja::class => null,
                 MonitoringRealisasi::class => null,
+                PerbandinganMonitoring::class => null,
+                TentangSistemWidget::class => null,
+                PeriodeBerjalanWidget::class => null,
+                SisaWaktuTahunKerjaWidget::class => null,
+                RingkasanAnggaranWidget::class => null,
+                RingkasanProgramKerjaWidget::class => null,
+                AksiCepatWidget::class => null,
+                PintasanMenuWidget::class => null,
+                PenyerapanBulananWidget::class => null,
             ]),
         ];
 
@@ -133,9 +151,11 @@ class UnitKerjaScopeRoleTest extends TestCase
         $this->assertContains('view_page_monitoring_realisasi', $granted);
 
         // Menu lain di luar ketiga grup itu — termasuk master data dan manajemen akses
-        // — tidak boleh ikut terbawa, begitu pula penghapusan rekening bank dan
-        // pintasan lewati pembatasan data.
-        $this->assertNotContains('delete_rekening_bank', $granted);
+        // — tidak boleh ikut terbawa, begitu pula hapus massal rekening bank dan
+        // pintasan melihat seluruh unit / lewati pembatasan data.
+        $this->assertContains('delete_rekening_bank', $granted);
+        $this->assertNotContains('delete_any_rekening_bank', $granted);
+        $this->assertNotContains('view_all_unit_data', $granted);
         $this->assertNotContains('view_any_unit_kerja', $granted);
         $this->assertNotContains('view_any_role', $granted);
         $this->assertNotContains('view_any_pagu_anggaran', $granted);

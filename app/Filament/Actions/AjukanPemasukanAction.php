@@ -4,6 +4,7 @@ namespace App\Filament\Actions;
 
 use App\Enums\EnumStatusPemasukan;
 use App\Filament\Forms\Components\CatatanRevisi;
+use App\Filament\Resources\Pemasukans\PemasukanResource;
 use App\Models\Pemasukan;
 use App\Services\Notifikasi\NotifikasiVerifikasi;
 use Filament\Actions\Action;
@@ -33,7 +34,7 @@ class AjukanPemasukanAction extends Action
             ->icon(fn (Pemasukan $record): string => static::adalahPerbaikan($record) ? 'heroicon-o-pencil-square' : 'heroicon-o-paper-airplane')
             ->color('info')
             ->requiresConfirmation()
-            ->visible(fn (Pemasukan $record): bool => $record->dapatDiajukan())
+            ->visible(fn (Pemasukan $record): bool => PemasukanResource::currentUserCanAbility('update') && $record->dapatDiajukan())
             ->modalHeading(fn (Pemasukan $record): string => static::adalahPerbaikan($record) ? 'Ajukan Ulang Pemasukan' : 'Ajukan Pemasukan')
             ->modalDescription(fn (Pemasukan $record): string => static::adalahPerbaikan($record)
                 ? 'Pastikan data pemasukan sudah diperbaiki sesuai catatan revisi. Pemasukan akan dikirim kembali ke tahap yang meminta revisi.'

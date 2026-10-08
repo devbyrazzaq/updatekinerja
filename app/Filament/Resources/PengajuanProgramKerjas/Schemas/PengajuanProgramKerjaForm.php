@@ -5,6 +5,7 @@ namespace App\Filament\Resources\PengajuanProgramKerjas\Schemas;
 use App\Enums\EnumStatusPengajuan;
 use App\Enums\EnumStatusTahunKerja;
 use App\Filament\Forms\Components\MoneyInput;
+use App\Filament\Resources\PengajuanProgramKerjas\PengajuanProgramKerjaResource;
 use App\Models\PaguAnggaran;
 use App\Models\PenawaranProgramKerja;
 use App\Models\PengajuanProgramKerja;
@@ -111,7 +112,7 @@ class PengajuanProgramKerjaForm
             ->schema([
                 Select::make('unit_kerja_id')
                     ->label('Unit Kerja')
-                    ->relationship('unitKerja', 'name', fn (Builder $query): Builder => UnitKerjaAktif::batasiKueri($query))
+                    ->relationship('unitKerja', 'name', fn (Builder $query): Builder => UnitKerjaAktif::batasiKueri($query, PengajuanProgramKerjaResource::getPermissionName('view_any')))
                     ->searchable()
                     ->preload()
                     ->required()

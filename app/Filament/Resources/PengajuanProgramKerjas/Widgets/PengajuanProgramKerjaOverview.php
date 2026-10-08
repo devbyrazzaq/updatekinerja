@@ -12,6 +12,7 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Widgets\StatsOverviewWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use Illuminate\Database\Eloquent\Builder;
+use Livewire\Attributes\Locked;
 use Livewire\Attributes\Reactive;
 
 /**
@@ -27,6 +28,14 @@ class PengajuanProgramKerjaOverview extends StatsOverviewWidget
      */
     #[Reactive]
     public ?int $unitKerjaId = null;
+
+    /**
+     * Permission menu induk widget ini, diisi halaman induk lewat data widget. Menjadi
+     * dasar apakah akses seluruh unit pengguna berlaku di menu tersebut (lihat
+     * User::canViewAllUnitData()). Terkunci agar tidak bisa diganti dari peramban.
+     */
+    #[Locked]
+    public ?string $permissionLingkup = null;
 
     protected ?string $pollingInterval = null;
 
@@ -102,7 +111,7 @@ class PengajuanProgramKerjaOverview extends StatsOverviewWidget
 
         $user = auth()->user();
 
-        if ($user === null || $user->isPrivileged()) {
+        if ($user === null || $user->canViewAllUnitData($this->permissionLingkup)) {
             return null;
         }
 

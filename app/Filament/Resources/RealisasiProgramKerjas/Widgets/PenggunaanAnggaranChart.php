@@ -10,6 +10,7 @@ use Filament\Widgets\ChartWidget;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Livewire\Attributes\Locked;
 use Livewire\Attributes\Reactive;
 
 /**
@@ -28,6 +29,14 @@ class PenggunaanAnggaranChart extends ChartWidget
      */
     #[Reactive]
     public ?int $unitKerjaId = null;
+
+    /**
+     * Permission menu induk widget ini, diisi halaman induk lewat data widget. Menjadi
+     * dasar apakah akses seluruh unit pengguna berlaku di menu tersebut (lihat
+     * User::canViewAllUnitData()). Terkunci agar tidak bisa diganti dari peramban.
+     */
+    #[Locked]
+    public ?string $permissionLingkup = null;
 
     protected ?string $pollingInterval = null;
 
@@ -195,7 +204,7 @@ class PenggunaanAnggaranChart extends ChartWidget
 
         $user = auth()->user();
 
-        if ($user === null || $user->isPrivileged()) {
+        if ($user === null || $user->canViewAllUnitData($this->permissionLingkup)) {
             return null;
         }
 

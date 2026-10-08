@@ -7,6 +7,7 @@ use App\Enums\EnumStatusPenyelesaianAnggaran;
 use App\Enums\EnumStatusRealisasi;
 use App\Filament\Forms\Components\CatatanRevisi;
 use App\Filament\Forms\Components\MoneyInput;
+use App\Filament\Resources\RealisasiProgramKerjas\RealisasiProgramKerjaResource;
 use App\Models\RealisasiProgramKerja;
 use App\Models\Setting;
 use Filament\Actions\Action;
@@ -54,8 +55,8 @@ class KirimLaporanRealisasiAction extends Action
                 : 'Laporkan hasil pelaksanaan kegiatan: evaluasi pengerjaan, penyerapan anggaran, ketercapaian target, dan dokumen laporannya.')
             ->modalSubmitActionLabel(fn (RealisasiProgramKerja $record): string => $record->adalahRevisiLaporan() ? 'Kirim Ulang Laporan' : 'Kirim Laporan')
             ->modalWidth(Width::TwoExtraLarge)
-            ->visible(fn (RealisasiProgramKerja $record): bool => $record->status === EnumStatusRealisasi::MenungguLaporan
-                || $record->adalahRevisiLaporan())
+            ->visible(fn (RealisasiProgramKerja $record): bool => RealisasiProgramKerjaResource::currentUserCanAbility('update')
+                && ($record->status === EnumStatusRealisasi::MenungguLaporan || $record->adalahRevisiLaporan()))
             ->fillForm(fn (RealisasiProgramKerja $record): array => [
                 'evaluasi_pengerjaan' => $record->evaluasi_pengerjaan,
                 'status_anggaran' => $record->status_anggaran?->value,

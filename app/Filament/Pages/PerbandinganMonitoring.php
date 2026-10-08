@@ -483,7 +483,7 @@ class PerbandinganMonitoring extends Page
 
         $user = auth()->user();
 
-        if ($user !== null && ! $user->isPrivileged()) {
+        if ($user !== null && ! $user->canViewAllUnitData(static::getPagePermission())) {
             $query->whereIn('id', PermissionRegistrar::permittedUnitIds($user)->all());
         }
 

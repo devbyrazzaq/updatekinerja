@@ -38,6 +38,7 @@ class PermissionRegistrar
      */
     public static array $customPermissions = [
         'bypass_data_scope' => 'Lewati pembatasan data (akses semua data)',
+        'view_all_unit_data' => 'Lihat data seluruh unit kerja (hak akses menu tetap berlaku)',
     ];
 
     /**

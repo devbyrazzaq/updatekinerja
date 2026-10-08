@@ -7,6 +7,9 @@ use App\Filament\Actions\AuthorizedEditAction;
 use App\Filament\Actions\AuthorizedViewAction;
 use App\Filament\Actions\CaptchaDeleteAction;
 use App\Filament\Actions\CaptchaDeleteBulkAction;
+use App\Filament\Actions\MasukSebagaiAction;
+use App\Filament\Actions\ResetKataSandiAction;
+use App\Filament\Actions\UbahUsernameAction;
 use App\Models\User;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
@@ -80,6 +83,9 @@ class UsersTable
                 ActionGroup::make([
                     AuthorizedViewAction::make()->label('Lihat'),
                     AuthorizedEditAction::make()->label('Ubah'),
+                    UbahUsernameAction::make(),
+                    ResetKataSandiAction::make(),
+                    MasukSebagaiAction::make(),
                     CaptchaDeleteAction::make(),
                 ]),
             ])

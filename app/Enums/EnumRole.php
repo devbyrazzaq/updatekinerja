@@ -25,7 +25,11 @@ enum EnumRole: string
     case UnitKerja = 'Unit Kerja';
     case PimpinanUnit = 'Pimpinan Unit';
     case Rektor = 'Rektor';
-    case WakilRektor = 'Wakil Rektor';
+    // Wakil Rektor II memegang verifikasi realisasi & pemasukan; Wakil Rektor I dan
+    // III hanya memantau, sehingga ketiganya dipisah meski hak aksesnya berdekatan.
+    case WakilRektorI = 'Wakil Rektor I';
+    case WakilRektorII = 'Wakil Rektor II';
+    case WakilRektorIII = 'Wakil Rektor III';
     case BiroKeuangan = 'Biro Keuangan';
     case VerifikatorLaporan = 'Verifikator Laporan';
 

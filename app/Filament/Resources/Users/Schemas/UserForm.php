@@ -3,6 +3,8 @@
 namespace App\Filament\Resources\Users\Schemas;
 
 use App\Enums\EnumJenisKelamin;
+use App\Enums\EnumPermission;
+use App\Models\User;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
@@ -17,11 +19,14 @@ use Illuminate\Database\Eloquent\Builder;
 class UserForm
 {
     /**
-     * @param  string|null  $personaRole  Role utama menu pemanggil. Bila diisi, role
-     *                                    tersebut melekat otomatis pada akun sehingga
-     *                                    tidak ikut ditawarkan sebagai role tambahan.
+     * @param  array<int, string>  $personaRoles  Role utama menu pemanggil. Role ini
+     *                                            melekat lewat menu sehingga tidak ikut
+     *                                            ditawarkan sebagai role tambahan.
+     * @param  array<string, string>  $pilihanPersona  Bila menu memuat lebih dari satu
+     *                                                 persona, opsi persona yang boleh
+     *                                                 dipilih pengguna saat ini.
      */
-    public static function configure(Schema $schema, ?string $personaRole = null): Schema
+    public static function configure(Schema $schema, array $personaRoles = [], array $pilihanPersona = []): Schema
     {
         return $schema
             ->components([
@@ -96,29 +101,75 @@ class UserForm
                     ->columnSpanFull(),
                 Section::make('Penempatan dan Hak Akses')
                     ->schema([
+                        Select::make('persona_role')
+                            ->label('Jenis Akun')
+                            ->options($pilihanPersona)
+                            ->in(array_keys($pilihanPersona))
+                            ->required()
+                            ->native(false)
+                            ->visible($pilihanPersona !== [])
+                            // Jenis akun sendiri dikunci agar tidak tanpa sengaja
+                            // menurunkan hak akses akun yang sedang dipakai.
+                            ->disabled(fn (?User $record): bool => $record?->is(auth()->user()) ?? false)
+                            ->afterStateHydrated(function (Select $component, ?User $record) use ($personaRoles): void {
+                                if ($record !== null) {
+                                    $component->state($record->roles->pluck('name')->first(
+                                        fn (string $role): bool => in_array($role, $personaRoles, true),
+                                    ));
+                                }
+                            })
+                            ->helperText(fn (?User $record): ?string => $record?->is(auth()->user())
+                                ? 'Jenis akun sendiri tidak dapat diubah.'
+                                : null)
+                            ->columnSpanFull(),
                         Select::make('unit_kerja_id')
                             ->label('Unit Kerja')
                             ->relationship('unitKerja', 'name')
                             ->searchable()
                             ->preload(),
                         Select::make('roles')
-                            ->label($personaRole === null ? 'Role' : 'Role Tambahan')
+                            ->label($personaRoles === [] ? 'Role' : 'Role Tambahan')
                             ->relationship(
                                 'roles',
                                 'name',
-                                fn (Builder $query): Builder => $personaRole === null
-                                    ? $query
-                                    : $query->where('name', '!=', $personaRole),
+                                fn (Builder $query): Builder => static::opsiRoleTambahan($query, $personaRoles),
                             )
                             ->multiple()
                             ->searchable()
                             ->preload()
-                            ->helperText($personaRole === null
-                                ? null
-                                : "Role utama \"{$personaRole}\" melekat otomatis dan tidak perlu dipilih di sini."),
+                            ->helperText(match (true) {
+                                $personaRoles === [] => null,
+                                $pilihanPersona !== [] => 'Jenis akun di atas sudah menjadi role utama dan tidak perlu dipilih di sini.',
+                                default => 'Role utama "'.implode('", "', $personaRoles).'" melekat otomatis dan tidak perlu dipilih di sini.',
+                            }),
                     ])
                     ->columns(2)
                     ->columnSpanFull(),
             ]);
+    }
+
+    /**
+     * Role yang dapat ditambahkan pada akun: tanpa role utama menu, dan tanpa role
+     * berakses penuh bila pengguna saat ini sendiri tidak berakses penuh — agar hak
+     * akses tidak dapat dinaikkan melebihi milik pemberinya.
+     *
+     * @param  array<int, string>  $personaRoles
+     */
+    protected static function opsiRoleTambahan(Builder $query, array $personaRoles): Builder
+    {
+        if ($personaRoles !== []) {
+            $query->whereNotIn('name', $personaRoles);
+        }
+
+        $pengguna = auth()->user();
+
+        if (! ($pengguna instanceof User && $pengguna->isPrivileged())) {
+            $query->whereDoesntHave(
+                'permissions',
+                fn (Builder $permissions): Builder => $permissions->where('name', EnumPermission::BypassDataScope->value),
+            );
+        }
+
+        return $query;
     }
 }

@@ -214,7 +214,7 @@ class ImporLama2023
             'roles' => [match ($user->role) {
                 'admin' => EnumRole::Admin->value,
                 'rektor' => EnumRole::Rektor->value,
-                'wakil-rektor' => EnumRole::WakilRektor->value,
+                'wakil-rektor' => EnumRole::WakilRektorII->value,
                 default => EnumRole::UnitKerja->value,
             }],
         ]);

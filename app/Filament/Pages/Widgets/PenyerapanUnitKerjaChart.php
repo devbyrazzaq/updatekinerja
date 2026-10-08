@@ -12,9 +12,7 @@ use Illuminate\Support\Str;
 use Livewire\Attributes\Reactive;
 
 /**
- * Pagu dan penyerapannya tiap unit kerja berdampingan, dengan garis persentase
- * penyerapan pada sumbu kanan — sehingga unit bertaraf anggaran kecil yang menyerap
- * hampir habis tetap terbaca setara dengan unit besar.
+ * Pagu dan penyerapannya tiap unit kerja sebagai batang berdampingan.
  *
  * Tahun kerjanya mengikuti penyaring di halaman {@see RingkasanUnitKerja}.
  */
@@ -64,25 +62,15 @@ class PenyerapanUnitKerjaChart extends ChartWidget
                 scales: {
                     y: {
                         beginAtZero: true,
-                        position: 'left',
                         ticks: {
                             callback: (value) => 'Rp ' + new Intl.NumberFormat('id-ID', { notation: 'compact' }).format(value),
                         },
-                    },
-                    persentase: {
-                        beginAtZero: true,
-                        position: 'right',
-                        suggestedMax: 100,
-                        grid: { drawOnChartArea: false },
-                        ticks: { callback: (value) => value + '%' },
                     },
                 },
                 plugins: {
                     tooltip: {
                         callbacks: {
-                            label: (context) => context.dataset.yAxisID === 'persentase'
-                                ? context.dataset.label + ': ' + context.parsed.y.toLocaleString('id-ID') + '%'
-                                : context.dataset.label + ': Rp ' + new Intl.NumberFormat('id-ID').format(context.parsed.y),
+                            label: (context) => context.dataset.label + ': Rp ' + new Intl.NumberFormat('id-ID').format(context.parsed.y),
                         },
                     },
                 },
@@ -120,18 +108,6 @@ class PenyerapanUnitKerjaChart extends ChartWidget
                     'borderColor' => 'rgb(59, 130, 246)',
                     'borderWidth' => 1,
                     'borderRadius' => 4,
-                ],
-                [
-                    'type' => 'line',
-                    'label' => 'Penyerapan (%)',
-                    'yAxisID' => 'persentase',
-                    'data' => $unit->map(fn (RingkasanMonitoring $baris): float => round($baris->persentasePenyerapan() ?? 0, 1))->all(),
-                    'borderColor' => 'rgb(16, 185, 129)',
-                    'backgroundColor' => 'rgb(16, 185, 129)',
-                    'borderWidth' => 2,
-                    'tension' => 0.3,
-                    'pointRadius' => 3,
-                    'fill' => false,
                 ],
             ],
             'labels' => $unit->map(fn (RingkasanMonitoring $baris): string => Str::limit($baris->label, 24))->all(),

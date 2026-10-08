@@ -6,7 +6,9 @@ use App\Enums\EnumStatusPencairan;
 use App\Filament\Actions\AuthorizedEditAction;
 use App\Filament\Actions\AuthorizedViewAction;
 use App\Filament\Actions\CaptchaDeleteAction;
+use App\Filament\Actions\ResetPencairanAction;
 use App\Filament\Resources\JadwalPencairans\JadwalPencairanResource;
+use App\Filament\Resources\JadwalPencairans\RelationManagers\RealisasiProgramKerjasRelationManager;
 use App\Models\JadwalPencairan;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
@@ -15,13 +17,14 @@ use Filament\Support\Enums\Width;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Livewire\Component;
 
 class JadwalPencairansTable
 {
     public static function configure(Table $table): Table
     {
         return $table
-            ->defaultSort('tanggal_pencairan')
+            ->defaultSort('tanggal_pencairan', 'desc')
             ->emptyStateHeading('Belum ada jadwal pencairan')
             ->emptyStateDescription('Klik tombol tambah di kanan atas untuk membuat jadwal pencairan baru.')
             ->emptyStateIcon('heroicon-o-calendar-date-range')
@@ -64,6 +67,7 @@ class JadwalPencairansTable
                 ActionGroup::make([
                     AuthorizedViewAction::make()->label('Detail'),
                     AuthorizedEditAction::make()->label('Ubah'),
+                    ResetPencairanAction::make(),
                     CaptchaDeleteAction::make(),
                 ]),
             ]);
@@ -91,7 +95,7 @@ class JadwalPencairansTable
             ->visible(fn (JadwalPencairan $record): bool => ! $record->sudahDicairkan()
                 && $record->jumlahRealisasi() > 0
                 && JadwalPencairanResource::currentUserCanCairkan())
-            ->action(function (JadwalPencairan $record): void {
+            ->action(function (JadwalPencairan $record, Component $livewire): void {
                 // Pencairan dibatalkan seluruhnya selama masih ada realisasi yang cara
                 // pembayarannya belum lengkap, agar tidak ada anggaran yang tercatat cair
                 // tanpa tujuan yang jelas.
@@ -108,6 +112,8 @@ class JadwalPencairansTable
                 }
 
                 $jumlah = $record->cairkan(auth()->id());
+
+                $livewire->dispatch(RealisasiProgramKerjasRelationManager::EVENT_JADWAL_DIPERBARUI);
 
                 Notification::make()
                     ->title('Anggaran ditandai sudah dicairkan')

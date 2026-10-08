@@ -234,7 +234,7 @@ class PenyelesaianTahunLalu extends Page implements HasTable
 
         $user = auth()->user();
 
-        if ($user !== null && ! $user->isPrivileged()) {
+        if ($user !== null && ! $user->canViewAllUnitData(static::getPagePermission())) {
             $unitIds = PermissionRegistrar::permittedUnitIds($user)->all();
             $query->whereHas('pengajuanProgramKerja', fn (Builder $q): Builder => $q->whereIn('unit_kerja_id', $unitIds));
         }

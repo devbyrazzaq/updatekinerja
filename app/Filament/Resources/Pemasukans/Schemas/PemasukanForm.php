@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Pemasukans\Schemas;
 use App\Enums\EnumJenisWaktuPemasukan;
 use App\Enums\EnumSumberPemasukan;
 use App\Filament\Forms\Components\MoneyInput;
+use App\Filament\Resources\Pemasukans\PemasukanResource;
 use App\Models\Pemasukan;
 use App\Models\PengajuanProgramKerja;
 use App\Models\RealisasiProgramKerja;
@@ -49,7 +50,7 @@ class PemasukanForm
                         Grid::make(2)->schema([
                             Select::make('unit_kerja_id')
                                 ->label('Unit Kerja')
-                                ->relationship('unitKerja', 'name', fn (Builder $query): Builder => UnitKerjaAktif::batasiKueri($query))
+                                ->relationship('unitKerja', 'name', fn (Builder $query): Builder => UnitKerjaAktif::batasiKueri($query, PemasukanResource::getPermissionName('view_any')))
                                 ->searchable()->preload()->required()
                                 ->default(fn (): ?int => UnitKerjaAktif::id())
                                 ->columnSpan(1),

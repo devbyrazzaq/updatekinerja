@@ -154,6 +154,12 @@
     @apply lg:border-e lg:border-gray-950/5 dark:lg:border-white/10;
 }
 
+/* Banner "Masuk Sebagai" menempel di bawah topbar dengan tinggi 3rem, jadi
+   sidebar yang juga menempel digeser ke bawahnya agar tidak saling menimpa. */
+.fi-body:has(.fi-impersonasi-banner) .fi-sidebar {
+    @apply lg:top-[7rem] lg:h-[calc(100dvh-7rem)];
+}
+
 .fi-sidebar-item-btn,
 .fi-sidebar-group-btn {
     @apply rounded-full;

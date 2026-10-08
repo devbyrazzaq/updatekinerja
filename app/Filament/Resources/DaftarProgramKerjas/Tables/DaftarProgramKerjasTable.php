@@ -10,6 +10,7 @@ use Filament\Actions\Action;
 use Filament\Actions\ViewAction;
 use Filament\Forms\Components\RichEditor;
 use Filament\Notifications\Notification;
+use Filament\Resources\Pages\Page;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -82,6 +83,9 @@ class DaftarProgramKerjasTable
             ->label('Ajukan')
             ->icon('heroicon-o-paper-airplane')
             ->color('primary')
+            // Resource diambil dari halaman aktif karena tabel ini dipakai bersama oleh
+            // salinan Perencanaan yang permission-nya berbeda.
+            ->visible(fn (Page $livewire): bool => $livewire::getResource()::currentUserCanAbility('ajukan'))
             ->modalHeading('Ajukan Program Kerja')
             ->schema([
                 MoneyInput::make('alokasi_anggaran')

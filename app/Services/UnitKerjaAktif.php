@@ -99,13 +99,14 @@ class UnitKerjaAktif
      * aktif. Pengguna berakses penuh tidak dibatasi.
      *
      * @param  Builder<UnitKerja>  $query
+     * @param  string|null  $permission  permission menu pemilik form (lihat User::canViewAllUnitData())
      * @return Builder<UnitKerja>
      */
-    public static function batasiKueri(Builder $query): Builder
+    public static function batasiKueri(Builder $query, ?string $permission = null): Builder
     {
         $user = static::pengguna();
 
-        if ($user === null || $user->isPrivileged()) {
+        if ($user === null || $user->canViewAllUnitData($permission)) {
             return $query;
         }
 
@@ -121,7 +122,7 @@ class UnitKerjaAktif
     {
         $user ??= static::pengguna();
 
-        if ($user === null || $user->isPrivileged()) {
+        if ($user === null || $user->canViewAllUnitData()) {
             return Setting::brandInstansi();
         }
 
@@ -142,7 +143,7 @@ class UnitKerjaAktif
     {
         $user ??= static::pengguna();
 
-        if (! $user instanceof User || $user->isPrivileged()) {
+        if (! $user instanceof User || $user->canViewAllUnitData()) {
             return false;
         }
 
