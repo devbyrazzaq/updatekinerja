@@ -20,6 +20,7 @@ use App\Models\TahunKerja;
 use App\Models\UnitKerja;
 use App\Services\KonteksProgramKerja;
 use App\Services\PermissionRegistrar;
+use App\Services\UnitKerjaAktif;
 use Filament\Actions\Action;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
@@ -182,7 +183,7 @@ class AksiCepatWidget extends Widget implements HasActions, HasSchemas
             ->modalWidth(Width::TwoExtraLarge)
             ->tahunKerja(fn (): ?TahunKerja => KonteksProgramKerja::tahunBerjalan())
             ->unitKerjaOptions(fn (): array => $this->unitKerjaOptions())
-            ->defaultUnitKerja(fn (): ?int => auth()->user()?->unit_kerja_id)
+            ->defaultUnitKerja(fn (): ?int => UnitKerjaAktif::id() ?? auth()->user()?->unit_kerja_id)
             ->successRedirectUrl(fn (): string => MonitoringProgramKerja::canAccess()
                 ? MonitoringProgramKerja::getUrl()
                 : RealisasiProgramKerjaResource::getUrl('index'));

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\EnumRole;
 use App\Enums\EnumStatusPengajuan;
 use App\Enums\EnumStatusTahunKerja;
 use App\Filament\Resources\DaftarProgramKerjas\Pages\ListDaftarProgramKerjas;
@@ -19,6 +20,7 @@ use App\Models\RealisasiProgramKerja;
 use App\Models\TahunKerja;
 use App\Models\UnitKerja;
 use App\Models\User;
+use App\Services\UnitKerjaAktif;
 use Filament\Actions\Testing\TestAction;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -90,6 +92,36 @@ class PelaksanaanSmokeTest extends TestCase
             'penawaran_program_kerja_id' => $penawaran->id,
             'alokasi_anggaran' => 15000000,
             'status' => EnumStatusPengajuan::Diajukan->value,
+        ]);
+    }
+
+    /**
+     * Pengguna yang merangkap dua unit mengajukan program kerja unit keduanya:
+     * pengajuan wajib tercatat di unit program kerja, bukan unit utama akunnya.
+     */
+    public function test_ajukan_mengikuti_unit_program_kerja_bukan_unit_utama_pengaju(): void
+    {
+        $penawaran = $this->seedPenawaran();
+        $unitUtama = UnitKerja::create(['name' => 'Sumber Daya Insan']);
+
+        $user = auth()->user();
+        $user->update(['unit_kerja_id' => $unitUtama->id]);
+        $user->assignRole(EnumRole::unitScopeName($penawaran->unitKerja->name));
+
+        $this->startSession();
+        UnitKerjaAktif::set($penawaran->unit_kerja_id);
+
+        Livewire::test(ListDaftarProgramKerjas::class)
+            ->callAction(TestAction::make('ajukan')->table($penawaran), [
+                'alokasi_anggaran' => 15000000,
+            ]);
+
+        $this->assertDatabaseHas(PengajuanProgramKerja::class, [
+            'penawaran_program_kerja_id' => $penawaran->id,
+            'unit_kerja_id' => $penawaran->unit_kerja_id,
+        ]);
+        $this->assertDatabaseMissing(PengajuanProgramKerja::class, [
+            'unit_kerja_id' => $unitUtama->id,
         ]);
     }
 

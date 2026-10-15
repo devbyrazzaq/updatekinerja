@@ -100,10 +100,12 @@ class DaftarProgramKerjasTable
                         'bulletList', 'orderedList', 'link', 'undo', 'redo',
                     ]),
             ])
+            // Pengajuan selalu milik unit kerja program kerjanya, bukan unit utama akun
+            // pengaju — pengguna yang merangkap beberapa unit mengajukan untuk unit mana pun.
             ->action(function (array $data, PenawaranProgramKerja $record): void {
                 PengajuanProgramKerja::create([
                     'penawaran_program_kerja_id' => $record->id,
-                    'unit_kerja_id' => auth()->user()?->unit_kerja_id ?? $record->unit_kerja_id,
+                    'unit_kerja_id' => $record->unit_kerja_id,
                     'user_id' => auth()->id(),
                     'alokasi_anggaran' => $data['alokasi_anggaran'],
                     'deskripsi_kegiatan' => $data['deskripsi_kegiatan'] ?? null,
